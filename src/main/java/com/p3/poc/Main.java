@@ -11,9 +11,7 @@ import java.util.Set;
 public class Main {
     public static void main(String[] args) throws IOException {
         final InputBean inputBean = BeanBuilder.buildInputBean(args[0]);
-        final QueryProcessor queryProcessor = new QueryProcessor();
-        final Set<String> tableListing = queryProcessor.getTableListing(inputBean.getSqlQuery());
-        System.out.println(tableListing);
+        final QueryProcessor queryProcessor = new QueryProcessor(inputBean.getSqlQuery());
+        queryProcessor.init();
     }
-
 }

@@ -13,8 +13,7 @@ dependencies {
     implementation group: 'io.trino', name: 'trino-parser', version: '403'
     implementation group: 'io.trino', name: 'trino-jdbc', version: '403'
 
-
-
+    implementation 'org.apache.commons:commons-collections4:4.4'
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
