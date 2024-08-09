@@ -11,4 +11,5 @@ public class ColumnInfo {
     @Builder.Default private String id = UUID.randomUUID().toString();
     private String name;
     private String alias;
+    private String referenceTable;
 }
