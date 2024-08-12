@@ -1,11 +1,12 @@
 package com.p3.poc;
 
+
 import com.p3.poc.bean.BeanBuilder;
 import com.p3.poc.bean.InputBean;
-import com.p3.poc.query_processor.QueryProcessor;
+import com.p3.poc.bean.query_processor.QueryProcessor;
+
 
 import java.io.IOException;
-import java.util.Set;
 
 
 public class Main {

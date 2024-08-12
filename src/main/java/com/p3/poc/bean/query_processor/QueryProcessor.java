@@ -1,4 +1,4 @@
-package com.p3.poc.query_processor;
+package com.p3.poc.bean.query_processor;
 
 import com.p3.poc.bean.response.ColumnInfo;
 import com.p3.poc.bean.response.QueryResultBean;
@@ -32,10 +32,10 @@ public class QueryProcessor {
         query = parsableQueryCleanup();
         Statement statement = new SqlParser().createStatement(query, new ParsingOptions());
         final QueryResultBean queryResultBean = QueryResultBean.builder().build();
-        getApplicationSchemaTableInfo(statement,queryResultBean);
+        getApplicationSchemaTableInfo(statement);
     }
 
-    private void getApplicationSchemaTableInfo(Node node, QueryResultBean queryResultBean) {
+    private void getApplicationSchemaTableInfo(Node node) {
         final List<? extends Node> children = node.getChildren();
         for (Node child : children) {
             final boolean checkQSInstance = child instanceof QuerySpecification;
@@ -53,15 +53,5 @@ public class QueryProcessor {
         }
     }
 
-    private String [] parseApplicationSchemaNames(String appNameSchemaName) {
-        final String[] parts = appNameSchemaName.split("_");
-        final StringBuilder appName = new StringBuilder();
 
-        for (int i = 0; i < parts.length -1; i++) {
-            appName.append(parts[i]);
-        }
-        final String schemaName = parts[parts.length - 1];
-
-        return  new String[] {appName.toString(), schemaName};
-    }
 }
