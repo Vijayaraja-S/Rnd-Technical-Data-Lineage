@@ -1,4 +1,4 @@
-package com.p3.poc.parsing.bean;
+package com.p3.poc.parser.bean;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.p3.poc.parsing.node;
+package com.p3.poc.parser.node;
 
 import lombok.Getter;
 

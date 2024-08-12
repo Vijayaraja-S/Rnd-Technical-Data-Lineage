@@ -1,7 +1,7 @@
-package com.p3.poc.parsing.command;
+package com.p3.poc.parser.command;
 
-import com.p3.poc.parsing.node.SQLNode;
-import com.p3.poc.parsing.node.SQLNodeVisitor;
+import com.p3.poc.parser.node.SQLNode;
+import com.p3.poc.parser.node.SQLNodeVisitor;
 
 public class PopulateDetailsCommand implements SQLCommand {
     protected SQLNodeVisitor<Void> visitor;

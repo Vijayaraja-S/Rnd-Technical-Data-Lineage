@@ -1,20 +1,18 @@
-package com.p3.poc.parsing.node.query_node;
+package com.p3.poc.parser.node.query_node;
 
-import com.p3.poc.parsing.node.SQLNode;
-import com.p3.poc.parsing.node.SQLNodeVisitor;
+import com.p3.poc.parser.node.SQLNode;
+import com.p3.poc.parser.node.SQLNodeVisitor;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class FromNode extends SQLNode {
-    private List<String> tables; // Stores table names
+    private final List<String> tables; // Stores table names
 
     public FromNode(List<String> tables) {
         super("FROM");
         this.tables = tables;
-    }
-
-    public List<String> getTables() {
-        return tables;
     }
 
     @Override

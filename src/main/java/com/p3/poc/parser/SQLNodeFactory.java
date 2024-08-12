@@ -1,9 +1,7 @@
-package com.p3.poc.parsing;
+package com.p3.poc.parser;
 
-import com.p3.poc.parsing.node.SQLNode;
-import com.p3.poc.parsing.node.query_node.*;
-
-import java.util.List;
+import com.p3.poc.parser.node.SQLNode;
+import com.p3.poc.parser.node.query_node.*;
 
 
 public class SQLNodeFactory {

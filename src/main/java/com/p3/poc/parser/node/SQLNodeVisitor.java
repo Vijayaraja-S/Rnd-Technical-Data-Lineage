@@ -1,6 +1,6 @@
-package com.p3.poc.parsing.node;
+package com.p3.poc.parser.node;
 
-import com.p3.poc.parsing.node.query_node.*;
+import com.p3.poc.parser.node.query_node.*;
 
 public interface SQLNodeVisitor<R> {
     R visit(SelectNode selectNode);
