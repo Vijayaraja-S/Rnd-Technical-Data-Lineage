@@ -2,15 +2,15 @@
 #          from APPLICATION1.SCHEMA1_TABLE_1 as t
 #          where column_1 = 10
 #  LIMIT 20
-sqlQuery: SELECT
-  t1.COLUMN_1 AS C1,
-  t1.COLUMN_2 AS C2,
-  t2.COLUMN_4 AS additional_info,
-  t3.COLUMN_5 AS more_info,
-  COUNT(*) AS count
-
-  FROM
-  application1_schema1.table_1 t1
+#sqlQuery: SELECT
+#  t1.COLUMN_1 AS C1,
+#  t1.COLUMN_2 AS C2,
+#  t2.COLUMN_4 AS additional_info,
+#  t3.COLUMN_5 AS more_info,
+#  COUNT(*) AS count
+#
+#  FROM
+#  application1_schema1.table_1 t1
 #
 #  JOIN
 #  application1.schema1_table_2 t2
@@ -140,3 +140,102 @@ sqlQuery: SELECT
 #
 #  OFFSET 10
 #  LIMIT 20
+
+
+
+#sqlQuery: WITH RankedSales AS (
+#  SELECT
+#  SalesOrderID,
+#  CustomerID,
+#  ProductID,
+#  OrderDate,
+#  Quantity,
+#  Price,
+#  ROW_NUMBER() OVER(PARTITION BY CustomerID ORDER BY OrderDate DESC) AS RowNum,
+#  RANK() OVER(PARTITION BY ProductID ORDER BY Price DESC) AS PriceRank,
+#  LAG(Price, 1, 0) OVER(PARTITION BY ProductID ORDER BY OrderDate) AS PreviousPrice,
+#  LEAD(Price, 1, 0) OVER(PARTITION BY ProductID ORDER BY OrderDate) AS NextPrice
+#  FROM
+#  SalesOrders
+#  WHERE
+#  OrderDate >= startDate
+#  AND OrderDate <= endDate
+#  ),
+#  FilteredSales AS (
+#  SELECT
+#  *,
+#  CASE
+#  WHEN Price > PreviousPrice THEN 'Price Increased'
+#  WHEN Price < PreviousPrice THEN 'Price Decreased'
+#  ELSE 'Price Stable'
+#  END AS PriceChange,
+#  CASE
+#  WHEN Quantity > 10 THEN 'Large Order'
+#  WHEN Quantity BETWEEN 5 AND 10 THEN 'Medium Order'
+#  ELSE 'Small Order'
+#  END AS OrderSize
+#  FROM
+#  RankedSales
+#  WHERE
+#  RowNum = 1
+#  )
+#  SELECT
+#  SalesOrderID,
+#  CustomerID,
+#  ProductID,
+#  OrderDate,
+#  Quantity,
+#  Price,
+#  PriceRank,
+#  PreviousPrice,
+#  NextPrice,
+#  PriceChange,
+#  OrderSize
+#  FROM
+#  FilteredSales
+#  ORDER BY
+#  OrderDate DESC
+
+
+
+
+sqlQuery: WITH RECURSIVE EmployeeHierarchy AS (
+  SELECT
+  EmployeeID,
+  ManagerID,
+  EmployeeName,
+  1 AS Level
+  FROM Employees
+  WHERE ManagerID IS NULL
+  
+  UNION ALL
+
+
+  SELECT
+  e.EmployeeID,
+  e.ManagerID,
+  e.EmployeeName,
+  eh.Level + 1 AS Level
+  FROM Employees e
+  INNER JOIN EmployeeHierarchy eh ON e.ManagerID = eh.EmployeeID
+  ),
+  DepartmentEmployeeCounts AS (
+  SELECT
+  d.DepartmentID,
+  d.DepartmentName,
+  COUNT(e.EmployeeID) AS EmployeeCount
+  FROM Departments d
+  LEFT JOIN Employees e ON d.DepartmentID = e.DepartmentID
+  GROUP BY d.DepartmentID, d.DepartmentName
+  )
+  
+  SELECT
+  eh.EmployeeName,
+  eh.Level,
+  dec.DepartmentName,
+  dec.EmployeeCount
+  FROM EmployeeHierarchy eh
+  INNER JOIN Employees e ON eh.EmployeeID = e.EmployeeID
+  INNER JOIN DepartmentEmployeeCounts dec ON e.DepartmentID = dec.DepartmentID
+  ORDER BY eh.Level, eh.EmployeeName
+

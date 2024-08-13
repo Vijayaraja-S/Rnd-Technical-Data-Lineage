@@ -1,7 +1,7 @@
-package com.p3.poc.parser;
+package com.p3.poc.parser.factory;
 
-import com.p3.poc.parser.node.SQLNode;
-import com.p3.poc.parser.node.query_node.*;
+import com.p3.poc.parser.composite.SQLNode;
+import com.p3.poc.parser.composite.query_node.*;
 
 
 public class SQLNodeFactory {

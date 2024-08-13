@@ -1,5 +1,6 @@
-package com.p3.poc.parser.node;
+package com.p3.poc.parser.composite;
 
+import com.p3.poc.parser.visitors.SQLNodeVisitor;
 import lombok.Getter;
 
 @Getter

@@ -1,7 +1,7 @@
-package com.p3.poc.parser.node.query_node;
+package com.p3.poc.parser.composite.query_node;
 
-import com.p3.poc.parser.node.SQLNode;
-import com.p3.poc.parser.node.SQLNodeVisitor;
+import com.p3.poc.parser.composite.SQLNode;
+import com.p3.poc.parser.visitors.SQLNodeVisitor;
 
 public class HavingNode extends SQLNode {
     private String condition;

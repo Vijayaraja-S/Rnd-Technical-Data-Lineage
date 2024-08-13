@@ -1,7 +1,7 @@
-package com.p3.poc.parser.node.query_node;
+package com.p3.poc.parser.composite.query_node;
 
-import com.p3.poc.parser.node.SQLNode;
-import com.p3.poc.parser.node.SQLNodeVisitor;
+import com.p3.poc.parser.composite.SQLNode;
+import com.p3.poc.parser.visitors.SQLNodeVisitor;
 import lombok.Getter;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class FromNode extends SQLNode {
     }
 
     @Override
-    public <R> void accept(SQLNodeVisitor<R> visitor) {
+    public <T> void accept(SQLNodeVisitor<T> visitor) {
         visitor.visit(this);
     }
 }

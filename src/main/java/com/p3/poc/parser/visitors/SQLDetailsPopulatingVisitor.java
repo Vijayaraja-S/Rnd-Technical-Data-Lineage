@@ -1,7 +1,7 @@
-package com.p3.poc.parser.node;
+package com.p3.poc.parser.visitors;
 
 import com.p3.poc.parser.bean.SQLQueryDetails;
-import com.p3.poc.parser.node.query_node.*;
+import com.p3.poc.parser.composite.query_node.*;
 import lombok.Getter;
 
 @Getter

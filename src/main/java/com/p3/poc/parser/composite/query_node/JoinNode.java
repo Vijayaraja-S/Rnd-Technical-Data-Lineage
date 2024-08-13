@@ -1,13 +1,17 @@
-package com.p3.poc.parser.node.query_node;
+package com.p3.poc.parser.composite.query_node;
 
-import com.p3.poc.parser.node.SQLNode;
-import com.p3.poc.parser.node.SQLNodeVisitor;
+import com.p3.poc.parser.composite.SQLNode;
+import com.p3.poc.parser.visitors.SQLNodeVisitor;
 
+import lombok.Getter;
+
+
+@Getter
 public class JoinNode extends SQLNode {
-    private String joinType; // INNER, LEFT, FULL OUTER, CROSS
-    private String leftTable;
-    private String rightTable;
-    private String joinCondition;
+    private final String joinType; // INNER, LEFT, FULL OUTER, CROSS
+    private final String leftTable;
+    private final String rightTable;
+    private final String joinCondition;
 
     public JoinNode(String joinType,
                     String leftTable, String rightTable, String joinCondition) {

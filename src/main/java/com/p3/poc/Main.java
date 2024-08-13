@@ -4,12 +4,12 @@ package com.p3.poc;
 import com.google.gson.Gson;
 import com.p3.poc.bean.BeanBuilder;
 import com.p3.poc.bean.InputBean;
-import com.p3.poc.parser.SQLNodeFactory;
+import com.p3.poc.parser.factory.SQLNodeFactory;
 import com.p3.poc.parser.SQLParserApplication;
 import com.p3.poc.parser.bean.SQLQueryDetails;
 import com.p3.poc.parser.command.PopulateDetailsCommand;
 import com.p3.poc.parser.command.SQLCommand;
-import com.p3.poc.parser.node.SQLDetailsPopulatingVisitor;
+import com.p3.poc.parser.visitors.SQLDetailsPopulatingVisitor;
 
 import java.io.IOException;
 
@@ -19,9 +19,7 @@ import static java.lang.System.out;
 public class Main {
     public static void main(String[] args) throws IOException {
         final InputBean inputBean = BeanBuilder.buildInputBean(args[0]);
-
         final SQLParserApplication app = initParsing();
-
         SQLQueryDetails details = app.parse(inputBean.getSqlQuery());
         out.println(new Gson().toJson(details));
     }
@@ -30,8 +28,6 @@ public class Main {
         SQLDetailsPopulatingVisitor visitor = new SQLDetailsPopulatingVisitor();
         SQLNodeFactory factory = SQLNodeFactory.getFactory();
         SQLCommand command = new PopulateDetailsCommand(visitor);
-
-        SQLParserApplication app = new SQLParserApplication(command, factory);
-        return app;
+        return new SQLParserApplication(command, factory);
     }
 }
