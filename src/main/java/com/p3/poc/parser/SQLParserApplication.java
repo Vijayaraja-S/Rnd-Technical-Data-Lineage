@@ -1,34 +1,44 @@
 package com.p3.poc.parser;
 
-import com.p3.poc.parser.bean.SQLQueryDetails;
-import com.p3.poc.parser.command.ProcessBaseNodes;
-import com.p3.poc.parser.command.BaseNodes;
-import com.p3.poc.parser.factory.SQLNodeFactory;
-import com.p3.poc.parser.visitors.SQLDetailsPopulatingVisitor;
+import com.p3.poc.parser.bean.QueryParsedDetails;
+import com.p3.poc.parser.parsing.exception.InvalidStatement;
+import com.p3.poc.parser.parsing.handler.HandlerChecker;
 import io.trino.sql.parser.ParsingOptions;
 import io.trino.sql.parser.SqlParser;
-import io.trino.sql.tree.Node;
 import io.trino.sql.tree.Query;
 import io.trino.sql.tree.Statement;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.AbstractMap;
+import java.util.Optional;
+
+@Slf4j
 public class SQLParserApplication {
-    private final BaseNodes command;
-    private final SQLNodeFactory factory;
 
-    public SQLParserApplication(BaseNodes command, SQLNodeFactory factory) {
-        this.command = command;
-        this.factory = factory;
+    private final HandlerChecker checker;
+
+    public SQLParserApplication(HandlerChecker checker) {
+        this.checker = checker;
     }
 
-    public SQLQueryDetails parse(String sqlQuery) {
+    public QueryParsedDetails parse(String sqlQuery) throws InvalidStatement {
         SqlParser parser = new SqlParser();
         Statement statement = parser.createStatement(sqlQuery, new ParsingOptions());
         if (statement instanceof Query query) {
-            for (Node child : query.getChildren()) {
+            var children = query.getChildren();
 
+            if (children.isEmpty()) {
+                log.warn("The query object is empty");
+            } else {
+                Optional.of(children)
+                        .ifPresent(childList -> childList.stream()
+                                .map(child -> new AbstractMap.SimpleEntry<>(child, checker.checkQueryObjectHandler(child)))
+                                .filter(entry -> entry.getValue() != null)
+                                .forEach(entry -> entry.getValue().processQueryObject(entry.getKey())));
             }
+        } else {
+            throw new InvalidStatement("Invalid statement object");
         }
-
         return null;
     }
 
