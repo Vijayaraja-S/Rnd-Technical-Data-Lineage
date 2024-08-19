@@ -1,19 +1,22 @@
 package com.p3.poc.parser.parsing.handler.query.operations;
 
 import com.p3.poc.parser.bean.QueryParsedDetails;
+import com.p3.poc.parser.bean.WithObjectInfo;
 import com.p3.poc.parser.bean.WithQueryObjectDetails;
 import com.p3.poc.parser.parsing.handler.query.QueryProcessor;
-import io.trino.sql.tree.Identifier;
 import io.trino.sql.tree.Node;
 import io.trino.sql.tree.With;
 import io.trino.sql.tree.WithQuery;
+import lombok.Data;
 
 import java.util.List;
-import java.util.Optional;
 
+
+@Data
 public class WithHandler implements QueryProcessor {
     private final QueryParsedDetails queryDetails;
     private WithQueryObjectDetails withQueryObjectDetails;
+    private  WithObjectInfo initialWithObjectBean;
 
     public WithHandler(QueryParsedDetails queryDetails) {
         this.queryDetails = queryDetails;
@@ -24,19 +27,19 @@ public class WithHandler implements QueryProcessor {
     @Override
     public void processQueryObject(Node node) {
         final With withNode = (With) node;
+        this.initialWithObjectBean = WithObjectInfo.builder().build();
+        List<WithQueryObjectDetails> resultWithQueryObject = withNode.getQueries()
+                .stream()
+                .map(this::processWithNode)
+                .toList();
 
-        final boolean recursive = withNode.isRecursive();
+        initialWithObjectBean.setWithQueryDetails(resultWithQueryObject);
+        queryDetails.setWithQuery(initialWithObjectBean);
+    }
 
-        final List<WithQuery> withQuery = withNode.getQueries();
-        if (!withQuery.isEmpty()) {
-            for (WithQuery query : withQuery) {
-                final Optional<List<Identifier>> columnNames = query.getColumnNames();
-                final Identifier name = query.getName();
-                final List<Node> queryObject = query.getChildren();
-                if (!queryObject.isEmpty()) {
-                }
-            }
-        }
 
+
+    private WithQueryObjectDetails processWithNode(WithQuery withQuery) {
+        return null;
     }
 }

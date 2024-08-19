@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 public class WithObjectInfo {
     @Builder.Default private boolean isRecursive=false;
-    private int numberOfWithQuery;
+    @Builder.Default private int numberOfWithQuery=0;
     private List<WithQueryObjectDetails> withQueryDetails;
-    @Builder.Default private Map<UUID,List<WithObjectInfo>> withObjectInfos = new LinkedHashMap<>();
+    @Builder.Default private Map<UUID,List<WithObjectInfo>> nestedWithObject = new LinkedHashMap<>();
 }
