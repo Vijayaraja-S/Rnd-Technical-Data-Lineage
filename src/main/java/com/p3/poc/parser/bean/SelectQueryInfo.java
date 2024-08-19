@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SelectQueryInfo {
-    private String alias;
-//    private QueryExpressionInfo queryExpressionInfo;
+    private boolean distinct;
+    private SelectColumnInfo selectColumnInfo;
 
 }

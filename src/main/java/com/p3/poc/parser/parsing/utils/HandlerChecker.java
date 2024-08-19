@@ -4,6 +4,7 @@ import com.p3.poc.parser.bean.QueryParsedDetails;
 import com.p3.poc.parser.parsing.handler.BaseClassHandler;
 import com.p3.poc.parser.parsing.handler.CommonQueryParser;
 import com.p3.poc.parser.parsing.handler.query.*;
+import com.p3.poc.parser.parsing.handler.query.WithHandler;
 import com.p3.poc.parser.parsing.handler.query_body.*;
 import com.p3.poc.parser.parsing.handler.query_spec.SelectHandler;
 import lombok.Data;

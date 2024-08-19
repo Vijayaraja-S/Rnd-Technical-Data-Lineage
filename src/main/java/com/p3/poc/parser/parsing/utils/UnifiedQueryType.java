@@ -42,12 +42,6 @@ public enum UnifiedQueryType {
 
 
 
-
-
-
-
-
-
     private final Class<?> [] typeClasses;
 
     UnifiedQueryType(Class<?>... typeClass) {
