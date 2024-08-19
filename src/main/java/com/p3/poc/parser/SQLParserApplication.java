@@ -2,7 +2,7 @@ package com.p3.poc.parser;
 
 import com.p3.poc.parser.bean.QueryParsedDetails;
 import com.p3.poc.parser.parsing.exception.InvalidStatement;
-import com.p3.poc.parser.parsing.handler.HandlerChecker;
+import com.p3.poc.parser.parsing.utils.HandlerChecker;
 import io.trino.sql.parser.ParsingOptions;
 import io.trino.sql.parser.SqlParser;
 import io.trino.sql.tree.Query;
@@ -15,12 +15,6 @@ import java.util.Optional;
 @Slf4j
 public class SQLParserApplication {
 
-    private final HandlerChecker checker;
-
-    public SQLParserApplication(HandlerChecker checker) {
-        this.checker = checker;
-    }
-
     public QueryParsedDetails parse(String sqlQuery) throws InvalidStatement {
         SqlParser parser = new SqlParser();
         Statement statement = parser.createStatement(sqlQuery, new ParsingOptions());
@@ -32,9 +26,9 @@ public class SQLParserApplication {
             } else {
                 Optional.of(children)
                         .ifPresent(childList -> childList.stream()
-                                .map(child -> new AbstractMap.SimpleEntry<>(child, checker.checkQueryObjectHandler(child)))
+                                .map(child -> new AbstractMap.SimpleEntry<>(child, HandlerChecker.getHandler(child)))
                                 .filter(entry -> entry.getValue() != null)
-                                .forEach(entry -> entry.getValue().processQueryObject(entry.getKey())));
+                                .forEach(entry -> entry.getValue().processQuery(entry.getKey())));
             }
         } else {
             throw new InvalidStatement("Invalid statement object");

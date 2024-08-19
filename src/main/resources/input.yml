@@ -2,44 +2,44 @@
 #          from APPLICATION1.SCHEMA1_TABLE_1 as t
 #          where column_1 = 10
 #  LIMIT 20
-#sqlQuery: SELECT
-#  t1.COLUMN_1 AS C1,
-#  t1.COLUMN_2 AS C2,
-#  t2.COLUMN_4 AS additional_info,
-#  t3.COLUMN_5 AS more_info,
-#  COUNT(*) AS count
-#
-#  FROM
-#  application1_schema1.table_1 t1
-#
-#  JOIN
-#  application1.schema1_table_2 t2
-#  ON t1.COLUMN_3 = t2.COLUMN_3
-#
-#  LEFT JOIN
-#  application1.schema1_table_3 t3
-#  ON t1.COLUMN_4 = t3.COLUMN_4
-#
-#  INNER JOIN
-#  application1_schema1_table_4 t4
-#  ON t2.COLUMN_5 = t4.COLUMN_5
-#
-#  WHERE
-#  t1.column_1 = 10
-#  AND t4.column_6 IS NOT NULL
-#  AND t2.column_7 BETWEEN '2023-01-01' AND '2023-12-31'
-#
-#  GROUP BY
-#  t1.COLUMN_1, t1.COLUMN_2, t2.COLUMN_4, t3.COLUMN_5
-#
-#  HAVING
-#  COUNT(*) > 2
-#
-#  ORDER BY
-#  t1.COLUMN_1 ASC, t2.COLUMN_4 DESC
-#
-#  OFFSET 10
-#  LIMIT 20
+sqlQuery: SELECT
+  t1.COLUMN_1 AS C1,
+  t1.COLUMN_2 AS C2,
+  t2.COLUMN_4 AS additional_info,
+  t3.COLUMN_5 AS more_info,
+  COUNT(*) AS count
+
+  FROM
+  application1_schema1.table_1 t1
+
+  JOIN
+  application1.schema1_table_2 t2
+  ON t1.COLUMN_3 = t2.COLUMN_3
+
+  LEFT JOIN
+  application1.schema1_table_3 t3
+  ON t1.COLUMN_4 = t3.COLUMN_4
+
+  INNER JOIN
+  application1_schema1_table_4 t4
+  ON t2.COLUMN_5 = t4.COLUMN_5
+
+  WHERE
+  t1.column_1 = 10
+  AND t4.column_6 IS NOT NULL
+  AND t2.column_7 BETWEEN '2023-01-01' AND '2023-12-31'
+
+  GROUP BY
+  t1.COLUMN_1, t1.COLUMN_2, t2.COLUMN_4, t3.COLUMN_5
+
+  HAVING
+  COUNT(*) > 2
+
+  ORDER BY
+  t1.COLUMN_1 ASC, t2.COLUMN_4 DESC
+
+  OFFSET 10
+  LIMIT 20
 
 
 #sqlQuery: WITH RankedResults AS (
@@ -342,56 +342,56 @@
 #              FROM FinalResults fr
 
 
-
-sqlQuery: WITH
-  Level1 AS (
-  WITH
-  Level2 AS (
-  WITH
-  Level3 AS (
-  WITH
-  Level4 AS (
-  WITH
-  Level5 AS (
-  WITH
-  Level6 AS (
-  WITH
-  Level7 AS (
-  WITH
-  Level8 AS (
-  WITH
-  Level9 AS (
-  WITH
-  
-  Level10 AS (
-  SELECT 'Level 10 Result' AS Result
-  )
-  SELECT 'Level 9 Result' AS Result, l10.Result AS NestedResult
-  FROM Level10 l10
-  )
-  SELECT 'Level 8 Result' AS Result, l9.Result AS NestedResult
-  FROM Level9 l9
-  )
-  SELECT 'Level 7 Result' AS Result, l8.Result AS NestedResult
-  FROM Level8 l8
-  )
-  SELECT 'Level 6 Result' AS Result, l7.Result AS NestedResult
-  FROM Level7 l7
-  )
-  SELECT 'Level 5 Result' AS Result, l6.Result AS NestedResult
-  FROM Level6 l6
-  )
-  SELECT 'Level 4 Result' AS Result, l5.Result AS NestedResult
-  FROM Level5 l5
-  )
-  SELECT 'Level 3 Result' AS Result, l4.Result AS NestedResult
-  FROM Level4 l4
-  )
-  SELECT 'Level 2 Result' AS Result, l3.Result AS NestedResult
-  FROM Level3 l3
-  )
-  SELECT 'Level 1 Result' AS Result, l2.Result AS NestedResult
-  FROM Level2 l2
-  )
-  SELECT Result, NestedResult
-  FROM Level1
+#
+#sqlQuery: WITH
+#  Level1 AS (
+#  WITH
+#  Level2 AS (
+#  WITH
+#  Level3 AS (
+#  WITH
+#  Level4 AS (
+#  WITH
+#  Level5 AS (
+#  WITH
+#  Level6 AS (
+#  WITH
+#  Level7 AS (
+#  WITH
+#  Level8 AS (
+#  WITH
+#  Level9 AS (
+#  WITH
+#
+#  Level10 AS (
+#  SELECT 'Level 10 Result' AS Result
+#  )
+#  SELECT 'Level 9 Result' AS Result, l10.Result AS NestedResult
+#  FROM Level10 l10
+#  )
+#  SELECT 'Level 8 Result' AS Result, l9.Result AS NestedResult
+#  FROM Level9 l9
+#  )
+#  SELECT 'Level 7 Result' AS Result, l8.Result AS NestedResult
+#  FROM Level8 l8
+#  )
+#  SELECT 'Level 6 Result' AS Result, l7.Result AS NestedResult
+#  FROM Level7 l7
+#  )
+#  SELECT 'Level 5 Result' AS Result, l6.Result AS NestedResult
+#  FROM Level6 l6
+#  )
+#  SELECT 'Level 4 Result' AS Result, l5.Result AS NestedResult
+#  FROM Level5 l5
+#  )
+#  SELECT 'Level 3 Result' AS Result, l4.Result AS NestedResult
+#  FROM Level4 l4
+#  )
+#  SELECT 'Level 2 Result' AS Result, l3.Result AS NestedResult
+#  FROM Level3 l3
+#  )
+#  SELECT 'Level 1 Result' AS Result, l2.Result AS NestedResult
+#  FROM Level2 l2
+#  )
+#  SELECT Result, NestedResult
+#  FROM Level1
