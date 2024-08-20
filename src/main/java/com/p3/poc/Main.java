@@ -10,7 +10,7 @@ import com.p3.poc.parser.parsing.exception.InvalidStatement;
 
 import java.io.IOException;
 
-import static java.lang.System.out;
+import static java.lang.System.err;
 
 
 public class Main {
@@ -18,6 +18,6 @@ public class Main {
         final InputBean inputBean = BeanBuilder.buildInputBean(args[0]);
         final SQLParserApplication app = new SQLParserApplication();
         QueryParsedDetails details = app.parse(inputBean.getSqlQuery());
-        out.println(new Gson().toJson(details));
+        err.println(new Gson().toJson(details));
     }
 }

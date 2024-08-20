@@ -12,7 +12,7 @@ public class QueryDetailsSingleton {
 
     public static QueryParsedDetails getInstance() {
         if (instance == null) {
-            instance = new QueryParsedDetails();
+            instance = QueryParsedDetails.builder().build();
         }
         return instance;
     }

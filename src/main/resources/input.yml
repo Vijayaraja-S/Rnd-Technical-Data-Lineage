@@ -1,45 +1,45 @@
-#sqlQuery: select COLUMN_1 as veeran, COLUMN_2 as vijay
-#          from APPLICATION1.SCHEMA1_TABLE_1 as t
+sqlQuery: select t.COLUMN_1 as veeran, t.COLUMN_2 as vijay
+          from APPLICATION1.SCHEMA1_TABLE_1 as t
 #          where column_1 = 10
 #  LIMIT 20
-sqlQuery: SELECT
-  t1.COLUMN_1 AS C1,
-  t1.COLUMN_2 AS C2,
-  t2.COLUMN_4 AS additional_info,
-  t3.COLUMN_5 AS more_info,
-  COUNT(*) AS count
-
-  FROM
-  application1_schema1.table_1 t1
-
-  JOIN
-  application1.schema1_table_2 t2
-  ON t1.COLUMN_3 = t2.COLUMN_3
-
-  LEFT JOIN
-  application1.schema1_table_3 t3
-  ON t1.COLUMN_4 = t3.COLUMN_4
-
-  INNER JOIN
-  application1_schema1_table_4 t4
-  ON t2.COLUMN_5 = t4.COLUMN_5
-
-  WHERE
-  t1.column_1 = 10
-  AND t4.column_6 IS NOT NULL
-  AND t2.column_7 BETWEEN '2023-01-01' AND '2023-12-31'
-
-  GROUP BY
-  t1.COLUMN_1, t1.COLUMN_2, t2.COLUMN_4, t3.COLUMN_5
-
-  HAVING
-  COUNT(*) > 2
-
-  ORDER BY
-  t1.COLUMN_1 ASC, t2.COLUMN_4 DESC
-
-  OFFSET 10
-  LIMIT 20
+#sqlQuery: SELECT
+#  t1.COLUMN_1 AS C1,
+#  t1.COLUMN_2 AS C2,
+#  t2.COLUMN_4 AS additional_info,
+#  t3.COLUMN_5 AS more_info,
+#  COUNT(*) AS count
+#
+#  FROM
+#  application1_schema1.table_1 t1
+#
+#  JOIN
+#  application1.schema1_table_2 t2
+#  ON t1.COLUMN_3 = t2.COLUMN_3
+#
+#  LEFT JOIN
+#  application1.schema1_table_3 t3
+#  ON t1.COLUMN_4 = t3.COLUMN_4
+#
+#  INNER JOIN
+#  application1_schema1_table_4 t4
+#  ON t2.COLUMN_5 = t4.COLUMN_5
+#
+#  WHERE
+#  t1.column_1 = 10
+#  AND t4.column_6 IS NOT NULL
+#  AND t2.column_7 BETWEEN '2023-01-01' AND '2023-12-31'
+#
+#  GROUP BY
+#  t1.COLUMN_1, t1.COLUMN_2, t2.COLUMN_4, t3.COLUMN_5
+#
+#  HAVING
+#  COUNT(*) > 2
+#
+#  ORDER BY
+#  t1.COLUMN_1 ASC, t2.COLUMN_4 DESC
+#
+#  OFFSET 10
+#  LIMIT 20
 
 
 #sqlQuery: WITH RankedResults AS (

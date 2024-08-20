@@ -1,10 +1,16 @@
 package com.p3.poc.parser.bean;
 
-import lombok.Data;
+import lombok.*;
+
+import java.util.List;
 
 @Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SelectQueryInfo {
-    private boolean distinct;
-    private SelectColumnInfo selectColumnInfo;
-
+    @Builder.Default private boolean distinct=false;
+    private List<SelectColumnInfo> selectColumnInfo;
 }

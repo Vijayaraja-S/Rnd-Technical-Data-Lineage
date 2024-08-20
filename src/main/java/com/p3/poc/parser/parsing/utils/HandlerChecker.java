@@ -16,7 +16,7 @@ public final class HandlerChecker {
 
     private static final QueryParsedDetails queryDetails = QueryDetailsSingleton.getInstance();
 
-    private HandlerChecker(){
+    private HandlerChecker() {
         // Private constructor to prevent instantiation
     }
 
@@ -53,4 +53,5 @@ public final class HandlerChecker {
             case TABLE_FUNCTION_INVOCATION -> null;
         };
     }
+
 }

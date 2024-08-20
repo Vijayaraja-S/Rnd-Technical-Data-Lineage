@@ -3,6 +3,7 @@ package com.p3.poc.parser;
 import com.p3.poc.parser.bean.QueryParsedDetails;
 import com.p3.poc.parser.parsing.exception.InvalidStatement;
 import com.p3.poc.parser.parsing.utils.HandlerChecker;
+import com.p3.poc.parser.parsing.utils.QueryDetailsSingleton;
 import io.trino.sql.parser.ParsingOptions;
 import io.trino.sql.parser.SqlParser;
 import io.trino.sql.tree.Query;
@@ -33,7 +34,7 @@ public class SQLParserApplication {
         } else {
             throw new InvalidStatement("Invalid statement object");
         }
-        return null;
+        return QueryDetailsSingleton.getInstance();
     }
 
 
