@@ -1,4 +1,4 @@
-package com.p3.poc.parser.bean;
+package com.p3.poc.parser.bean.expression;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ExpressionDetailInfo {
-    // DE - REFERENCE
+public class DeReferenceExpressionDetailInfo {
     private String baseReference;
     private String columnName;
 }

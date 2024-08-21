@@ -1,7 +1,43 @@
-sqlQuery: select t.COLUMN_1 as veeran, t.COLUMN_2 as vijay
-          from APPLICATION1.SCHEMA1_TABLE_1 as t
-#          where column_1 = 10
-#  LIMIT 20
+#sqlQuery: SELECT
+#  t1.department_id,
+#  COUNT(t1.id) AS employee_count,
+#  SUM(t1.salary) AS total_salary,
+#  AVG(t1.salary * 2) AS avg_increased_salary,
+#  CASE
+#  WHEN AVG(t1.age) > 35 THEN 'Senior Department'
+#  ELSE 'Junior Department'
+#  END AS department_category,
+#  MAX(t1.hire_date) AS latest_hire_date,
+#  (SELECT AVG(sub.salary) FROM employees sub WHERE sub.department_id = t1.department_id) AS avg_department_salary
+#  FROM
+#  employees t1
+#  WHERE
+#  (t1.status = 'active' AND t1.salary > 50000)
+#  OR
+#  (t1.age < 25 AND t1.experience_years > 2)
+#  GROUP BY
+#  t1.department_id
+#  HAVING
+#  COUNT(t1.id) > 5
+#  ORDER BY
+#  total_salary DESC,
+#  latest_hire_date ASC
+#  OFFSET 10
+#  LIMIT 10
+
+sqlQuery: SELECT
+              e.id,
+              e.name,
+              e.salary
+              FROM
+              hr.employees e  
+              WHERE
+              e.salary > 50000
+              ORDER BY
+              e.salary DESC
+
+
+
 #sqlQuery: SELECT
 #  t1.COLUMN_1 AS C1,
 #  t1.COLUMN_2 AS C2,

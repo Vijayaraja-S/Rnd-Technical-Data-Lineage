@@ -1,4 +1,4 @@
-package com.p3.poc.parser.bean;
+package com.p3.poc.parser.bean.select;
 
 import lombok.*;
 

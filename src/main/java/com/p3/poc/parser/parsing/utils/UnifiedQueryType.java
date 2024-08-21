@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 @Getter
 public enum UnifiedQueryType {
 
-    BASE_CLASS(QueryBody.class,QuerySpecification.class),
+    BASE_CLASS(QueryBody.class),
 
     // QUERY
     WITH(With.class),
@@ -25,6 +25,8 @@ public enum UnifiedQueryType {
     TABLE(Table.class),
     UNION(Union.class),
     VALUES(Values.class),
+
+    QUERY_SPECIFICATION(QuerySpecification.class),
 
     // QUERY SPECIFICATION
     SELECT(Select.class),

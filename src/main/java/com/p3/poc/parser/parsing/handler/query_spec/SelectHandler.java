@@ -1,9 +1,9 @@
 package com.p3.poc.parser.parsing.handler.query_spec;
 
-import com.p3.poc.parser.bean.QueryExpressionInfo;
+import com.p3.poc.parser.bean.expression.ExpressionDetails;
 import com.p3.poc.parser.bean.QueryParsedDetails;
-import com.p3.poc.parser.bean.SelectColumnInfo;
-import com.p3.poc.parser.bean.SelectQueryInfo;
+import com.p3.poc.parser.bean.select.SelectColumnInfo;
+import com.p3.poc.parser.bean.select.SelectQueryInfo;
 import com.p3.poc.parser.parsing.handler.CommonQueryParser;
 import com.p3.poc.parser.parsing.handler.expression.CommonExpressionHandler;
 import io.trino.sql.tree.*;
@@ -54,7 +54,7 @@ public class SelectHandler implements CommonQueryParser {
         final SelectColumnInfo selectColumnInfoBean = getSelectColumnInfo();
         selectColumnInfoBean.setWholeColumnName(singleColumn.toString());
         selectColumnInfoBean.setAlias(alias.isPresent() ? String.valueOf(alias.get()) : "");
-        final List<QueryExpressionInfo> queryExpressionInfo = commonExpressionHandler.handleExpression(expression);
+        final List<ExpressionDetails> queryExpressionInfo = commonExpressionHandler.handleExpression(expression);
         selectColumnInfoBean.setQueryExpressionInfo(queryExpressionInfo);
 
         return selectColumnInfoBean;

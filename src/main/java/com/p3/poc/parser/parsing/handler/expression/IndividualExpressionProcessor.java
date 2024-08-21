@@ -1,7 +1,7 @@
 package com.p3.poc.parser.parsing.handler.expression;
 
-import com.p3.poc.parser.bean.ExpressionDetailInfo;
-import com.p3.poc.parser.bean.QueryExpressionInfo;
+import com.p3.poc.parser.bean.expression.DeReferenceExpressionDetailInfo;
+import com.p3.poc.parser.bean.expression.ExpressionDetails;
 import io.trino.sql.tree.DereferenceExpression;
 import io.trino.sql.tree.Expression;
 import io.trino.sql.tree.FunctionCall;
@@ -13,8 +13,8 @@ import static com.p3.poc.parser.parsing.handler.expression.indentifier.Expressio
 
 public class IndividualExpressionProcessor {
     
-    public QueryExpressionInfo processExpression(QueryExpressionInfo expressionInfo, DereferenceExpression expression) {
-        ExpressionDetailInfo expressionDetailInfo = getExpressionDetailInfo();
+    public ExpressionDetails processExpression(ExpressionDetails expressionInfo, DereferenceExpression expression) {
+        DeReferenceExpressionDetailInfo expressionDetailInfo = getExpressionDetailInfo();
 
         final Optional<Identifier> field = expression.getField();
         final Expression base = expression.getBase();
@@ -25,16 +25,16 @@ public class IndividualExpressionProcessor {
         expressionDetailInfo.setColumnName(field.isPresent()?field.get().toString():"");
 
         expressionInfo.getExpressionType().add(DE_REFERENCE);
-        expressionInfo.getExpressionDetails().put(DE_REFERENCE, expressionDetailInfo);
+        expressionInfo.setDeReferenceExpressionDetailInfo(expressionDetailInfo);
         return expressionInfo;
     }
 
 
-    public QueryExpressionInfo processExpression(QueryExpressionInfo expressionInfo, FunctionCall expression) {
+    public ExpressionDetails processExpression(ExpressionDetails expressionInfo, FunctionCall expression) {
         return expressionInfo;
     }
 
-    private ExpressionDetailInfo getExpressionDetailInfo() {
-        return ExpressionDetailInfo.builder().build();
+    private DeReferenceExpressionDetailInfo getExpressionDetailInfo() {
+        return DeReferenceExpressionDetailInfo.builder().build();
     }
 }

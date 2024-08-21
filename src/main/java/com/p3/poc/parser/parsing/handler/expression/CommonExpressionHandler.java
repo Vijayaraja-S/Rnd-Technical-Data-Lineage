@@ -1,6 +1,6 @@
 package com.p3.poc.parser.parsing.handler.expression;
 
-import com.p3.poc.parser.bean.QueryExpressionInfo;
+import com.p3.poc.parser.bean.expression.ExpressionDetails;
 import io.trino.sql.tree.DereferenceExpression;
 import io.trino.sql.tree.Expression;
 import io.trino.sql.tree.FunctionCall;
@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class CommonExpressionHandler {
     private final IndividualExpressionProcessor expressionHandler;
 
-    private final Map<Class<? extends Expression>, Function<Expression, QueryExpressionInfo>> handlers;
+    private final Map<Class<? extends Expression>, Function<Expression, ExpressionDetails>> handlers;
 
     public CommonExpressionHandler() {
         this.expressionHandler = new IndividualExpressionProcessor();
@@ -25,32 +25,31 @@ public class CommonExpressionHandler {
         );
     }
 
-    public List<QueryExpressionInfo> handleExpression(Expression expression) {
-        log.info("Start parsing expression");
-        List<QueryExpressionInfo> expressionResultList = new ArrayList<>();
-        QueryExpressionInfo expressionResult = handlers.getOrDefault(expression.getClass(), this::handleUnknownExpression)
+    public List<ExpressionDetails> handleExpression(Expression expression) {
+        List<ExpressionDetails> expressionResultList = new ArrayList<>();
+        ExpressionDetails expressionResult = handlers.getOrDefault(expression.getClass(), this::handleUnknownExpression)
                 .apply(expression);
         expressionResultList.add(expressionResult);
         return expressionResultList;
     }
 
-    private QueryExpressionInfo handleDereferenceExpression(Expression expression) {
+    private ExpressionDetails handleDereferenceExpression(Expression expression) {
         DereferenceExpression dereferenceExpression = (DereferenceExpression) expression;
         return expressionHandler.processExpression(getExpressionInfoBean(), dereferenceExpression);
     }
 
-    private QueryExpressionInfo handleFunctionCall(Expression expression) {
+    private ExpressionDetails handleFunctionCall(Expression expression) {
         FunctionCall functionCall = (FunctionCall) expression;
         return expressionHandler.processExpression(getExpressionInfoBean(), functionCall);
     }
 
-    private QueryExpressionInfo handleUnknownExpression(Expression expression) {
+    private ExpressionDetails handleUnknownExpression(Expression expression) {
         log.warn("Unsupported expression type: {}", expression.getClass());
         return getExpressionInfoBean();
     }
 
-    private QueryExpressionInfo getExpressionInfoBean() {
-        return QueryExpressionInfo.builder().build();
+    private ExpressionDetails getExpressionInfoBean() {
+        return ExpressionDetails.builder().build();
     }
 }
 

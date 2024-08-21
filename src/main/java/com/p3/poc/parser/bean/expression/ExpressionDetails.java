@@ -1,4 +1,4 @@
-package com.p3.poc.parser.bean;
+package com.p3.poc.parser.bean.expression;
 
 import com.p3.poc.parser.parsing.handler.expression.indentifier.ExpressionTypes;
 import lombok.Builder;
@@ -12,9 +12,9 @@ import java.util.*;
 @Builder
 @Setter
 @Getter
-public class QueryExpressionInfo {
+public class ExpressionDetails {
     @Builder.Default
     private List<ExpressionTypes> expressionType = new ArrayList<>();
-    @Builder.Default
-    private Map<ExpressionTypes,ExpressionDetailInfo> expressionDetails = new LinkedHashMap<>();
+    // 70 expression types is there
+    private DeReferenceExpressionDetailInfo deReferenceExpressionDetailInfo;
 }

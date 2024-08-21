@@ -1,8 +1,8 @@
 package com.p3.poc.parser.parsing.handler.query;
 
 import com.p3.poc.parser.bean.QueryParsedDetails;
-import com.p3.poc.parser.bean.WithObjectInfo;
-import com.p3.poc.parser.bean.WithQueryObjectDetails;
+import com.p3.poc.parser.bean.with.WithObjectInfo;
+import com.p3.poc.parser.bean.with.WithQueryObjectDetails;
 import com.p3.poc.parser.parsing.handler.CommonQueryParser;
 import io.trino.sql.tree.With;
 import io.trino.sql.tree.WithQuery;
