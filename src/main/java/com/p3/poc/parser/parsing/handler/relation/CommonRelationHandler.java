@@ -1,10 +1,9 @@
 package com.p3.poc.parser.parsing.handler.relation;
 
-import com.p3.poc.parser.bean.from_relation.BaseRelationInfoBean;
-import com.p3.poc.parser.bean.from_relation.sub_bean.AliasedRelationInfo;
-import com.p3.poc.parser.bean.from_relation.sub_bean.JoinRelationInfo;
-import com.p3.poc.parser.bean.from_relation.sub_bean.TableRelationInfo;
-import com.p3.poc.parser.parsing.exception.RelationHandler;
+import com.p3.poc.parser.bean.from_relation.BaseRelationInfo;
+import com.p3.poc.parser.bean.from_relation.sub_relation.AliasedRelationInfo;
+import com.p3.poc.parser.bean.from_relation.sub_relation.JoinRelationInfo;
+import com.p3.poc.parser.bean.from_relation.sub_relation.TableRelationInfo;
 import io.trino.sql.tree.AliasedRelation;
 import io.trino.sql.tree.Join;
 import io.trino.sql.tree.Relation;
@@ -21,7 +20,7 @@ import java.util.function.Function;
 public class CommonRelationHandler {
     private final IndividualRelationProcessor relationHandler;
 
-    private final Map<Class<? extends Relation>, Function<Relation, ? extends BaseRelationInfoBean>> handlers;
+    private final Map<Class<? extends Relation>, Function<Relation, ? extends BaseRelationInfo>> handlers;
 
     @SneakyThrows
     public CommonRelationHandler() {
@@ -29,47 +28,34 @@ public class CommonRelationHandler {
         this.handlers = Map.of(
                 AliasedRelation.class, this::aliasedRelationHandler,
                 Join.class, this::joinRelationHandler,
-                Table.class,this::tableRelationHandler
+                Table.class, this::tableRelationHandler
         );
     }
 
-    public <T extends BaseRelationInfoBean> T handleExpression(Relation relation) {
-        Function<Relation, ? extends BaseRelationInfoBean> handler =
+    @SuppressWarnings("unchecked")
+    public <T extends BaseRelationInfo> T handleExpression(Relation relation) {
+        Function<Relation, ? extends BaseRelationInfo> handler =
                 handlers.getOrDefault(relation.getClass(), this::handleUnknownExpression);
-
         return (T) handler.apply(relation);
     }
 
-    private JoinRelationInfo joinRelationHandler(Relation relation) throws RelationHandler {
+    private JoinRelationInfo joinRelationHandler(Relation relation) {
         final Join joinRelation = (Join) relation;
-        if (joinRelation != null) {
-         return  relationHandler.processRelation(JoinRelationInfo.getBean(), joinRelation);
-        }else {
-            throw new RelationHandler("Join relation is null");
-        }
+        return relationHandler.processRelation(JoinRelationInfo.getBean(), joinRelation);
     }
 
-    private AliasedRelationInfo aliasedRelationHandler(Relation relation) throws RelationHandler {
+    private AliasedRelationInfo aliasedRelationHandler(Relation relation) {
         final AliasedRelation aliasedRelation = (AliasedRelation) relation;
-        if (aliasedRelation != null) {
-            return relationHandler.processRelation( AliasedRelationInfo.getBean(), aliasedRelation);
-        }else {
-            throw new RelationHandler("aliasRelation relation is null");
-        }
+        return relationHandler.processRelation(AliasedRelationInfo.getBean(), aliasedRelation);
     }
-    private TableRelationInfo tableRelationHandler(Relation relation) throws RelationHandler {
+
+    private TableRelationInfo tableRelationHandler(Relation relation) {
         final Table table = (Table) relation;
-        if (table != null) {
-         return relationHandler.processRelation(TableRelationInfo.getBean(), table);
-        }else {
-            throw new RelationHandler("table relation is null");
-        }
+        return relationHandler.processRelation(TableRelationInfo.getBean(), table);
     }
 
-
-    private BaseRelationInfoBean handleUnknownExpression(Relation relation) {
-        log.warn("Unsupported relation type: {}", relation.getClass());
-        return BaseRelationInfoBean.getBean();
+    private BaseRelationInfo handleUnknownExpression(Relation relation) {
+        return null;
     }
 
 

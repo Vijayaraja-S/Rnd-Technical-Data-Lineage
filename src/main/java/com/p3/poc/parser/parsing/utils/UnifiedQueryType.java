@@ -7,16 +7,12 @@ import java.util.stream.Stream;
 
 @Getter
 public enum UnifiedQueryType {
-
     BASE_CLASS(QueryBody.class),
 
-    // QUERY
     WITH(With.class),
     LIMIT(Limit.class),
     OFFSET(Offset.class),
     ORDER_BY(OrderBy.class),
-
-    // QUERY BODY AND RELATION
 
     EXCEPT(Except.class),
     INTERSECT(Intersect.class),
@@ -28,23 +24,11 @@ public enum UnifiedQueryType {
 
     QUERY_SPECIFICATION(QuerySpecification.class),
 
-    // QUERY SPECIFICATION
     SELECT(Select.class),
+    GROUP_BY(GroupBy.class);
 
 
-    //RELATION
-    ALIAS_RELATION(AliasedRelation.class),
-    JOIN(Join.class),
-    LATERAL(Lateral.class),
-    PATTERN_RECOGNITION_RELATION(PatternRecognitionRelation.class),
-    SAMPLED_RELATION(SampledRelation.class),
-    TABLE_FUNCTION_INVOCATION(TableFunctionInvocation.class);
-
-    //EXPRESSION
-
-
-
-    private final Class<?> [] typeClasses;
+    private final Class<?>[] typeClasses;
 
     UnifiedQueryType(Class<?>... typeClass) {
         this.typeClasses = typeClass;

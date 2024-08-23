@@ -1,6 +1,6 @@
 package com.p3.poc.parser.parsing.handler.query_spec;
 
-import com.p3.poc.parser.bean.expression.ExpressionDetails;
+import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
 import com.p3.poc.parser.bean.QueryParsedDetails;
 import com.p3.poc.parser.bean.select.SelectColumnInfo;
 import com.p3.poc.parser.bean.select.SelectQueryInfo;
@@ -44,7 +44,7 @@ public class SelectHandler implements CommonQueryParser {
 
         selectInfo.setDistinct(selectNode.isDistinct());
         selectInfo.setSelectColumnInfo(selectColumnInfoList);
-        queryParsedDetails.getSelectColumns().add(selectInfo);
+        queryParsedDetails.setSelectColumns(selectInfo);
     }
 
     private SelectColumnInfo processSingleColumn(SingleColumn singleColumn) {
@@ -54,8 +54,8 @@ public class SelectHandler implements CommonQueryParser {
         final SelectColumnInfo selectColumnInfoBean = getSelectColumnInfo();
         selectColumnInfoBean.setWholeColumnName(singleColumn.toString());
         selectColumnInfoBean.setAlias(alias.isPresent() ? String.valueOf(alias.get()) : "");
-        final List<ExpressionDetails> queryExpressionInfo = commonExpressionHandler.handleExpression(expression);
-        selectColumnInfoBean.setQueryExpressionInfo(queryExpressionInfo);
+        final BaseExpressionInfo baseExpressionInfo = commonExpressionHandler.handleExpression(expression);
+        selectColumnInfoBean.setQueryExpressionInfo(baseExpressionInfo);
 
         return selectColumnInfoBean;
     }

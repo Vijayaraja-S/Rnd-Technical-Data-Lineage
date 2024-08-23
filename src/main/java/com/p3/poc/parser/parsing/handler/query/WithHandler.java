@@ -26,19 +26,5 @@ public class WithHandler implements CommonQueryParser {
     @Override
     public void processQuery(Object node) {
 
-        final With withNode = (With) node;
-        this.initialWithObjectBean = WithObjectInfo.builder().build();
-        List<WithQueryObjectDetails> resultWithQueryObject = withNode.getQueries()
-                .stream()
-                .map(this::processWithNode)
-                .toList();
-
-        initialWithObjectBean.setWithQueryDetails(resultWithQueryObject);
-        queryDetails.setWithQuery(initialWithObjectBean);
-
-    }
-
-    private WithQueryObjectDetails processWithNode(WithQuery withQuery) {
-        return null;
     }
 }

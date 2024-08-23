@@ -6,7 +6,8 @@ import com.p3.poc.parser.parsing.handler.CommonQueryParser;
 import com.p3.poc.parser.parsing.handler.query.*;
 import com.p3.poc.parser.parsing.handler.query.WithHandler;
 import com.p3.poc.parser.parsing.handler.query_body.*;
-import com.p3.poc.parser.parsing.handler.query_spec.QuerySpecificationHandler;
+import com.p3.poc.parser.parsing.handler.query_body.QuerySpecificationHandler;
+import com.p3.poc.parser.parsing.handler.query_spec.GroupByHandler;
 import com.p3.poc.parser.parsing.handler.query_spec.SelectHandler;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +27,6 @@ public final class HandlerChecker {
 
         return switch (type) {
             case BASE_CLASS -> new BaseClassHandler(queryDetails);
-
-            // QUERY
             case WITH -> new WithHandler(queryDetails);
             case LIMIT -> new LimitHandler(queryDetails);
             case OFFSET -> new OffsetHandler(queryDetails);
@@ -46,13 +45,8 @@ public final class HandlerChecker {
             case QUERY_SPECIFICATION -> new QuerySpecificationHandler(queryDetails);
             case SELECT -> new SelectHandler(queryDetails);
 
-            // RELATION
-            case ALIAS_RELATION -> null;
-            case JOIN -> null;
-            case LATERAL -> null;
-            case PATTERN_RECOGNITION_RELATION -> null;
-            case SAMPLED_RELATION -> null;
-            case TABLE_FUNCTION_INVOCATION -> null;
+
+            case GROUP_BY -> new GroupByHandler(queryDetails);
         };
     }
 

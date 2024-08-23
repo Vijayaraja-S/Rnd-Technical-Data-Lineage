@@ -23,9 +23,7 @@ public class BaseClassHandler implements CommonQueryParser {
             children
                     .forEach(child -> {
                         CommonQueryParser handler = HandlerChecker.getHandler(child);
-                        if (handler != null) {
-                            handler.processQuery(child);
-                        }
+                        handler.processQuery(child);
                     });
         }
     }

@@ -1,40 +1,46 @@
 package com.p3.poc.parser.parsing.handler.expression;
 
-import com.p3.poc.parser.bean.expression.DeReferenceExpressionDetailInfo;
-import com.p3.poc.parser.bean.expression.ExpressionDetails;
-import io.trino.sql.tree.DereferenceExpression;
-import io.trino.sql.tree.Expression;
-import io.trino.sql.tree.FunctionCall;
-import io.trino.sql.tree.Identifier;
+import com.p3.poc.parser.bean.expression.sub_expression.ComparisonExpInfo;
+import com.p3.poc.parser.bean.expression.sub_expression.DeReferenceExpInfo;
+import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
+import com.p3.poc.parser.bean.expression.sub_expression.FunctionCallExpInfo;
+import io.trino.sql.tree.*;
 
 import java.util.Optional;
 
-import static com.p3.poc.parser.parsing.handler.expression.indentifier.ExpressionTypes.DE_REFERENCE;
-
 public class IndividualExpressionProcessor {
-    
-    public ExpressionDetails processExpression(ExpressionDetails expressionInfo, DereferenceExpression expression) {
-        DeReferenceExpressionDetailInfo expressionDetailInfo = getExpressionDetailInfo();
 
+    public DeReferenceExpInfo processExpression(DeReferenceExpInfo deReferenceExpInfo, DereferenceExpression expression) {
         final Optional<Identifier> field = expression.getField();
         final Expression base = expression.getBase();
 
-        if (base instanceof Identifier identifier){
-         expressionDetailInfo.setBaseReference(identifier.getValue());
+        // need to change fo identifier
+        if (base instanceof Identifier identifier) {
+            deReferenceExpInfo.setBaseReference(identifier.getValue());
         }
-        expressionDetailInfo.setColumnName(field.isPresent()?field.get().toString():"");
+        deReferenceExpInfo.setColumnName(field.isPresent() ? field.get().toString() : "");
 
-        expressionInfo.getExpressionType().add(DE_REFERENCE);
-        expressionInfo.setDeReferenceExpressionDetailInfo(expressionDetailInfo);
-        return expressionInfo;
+        return deReferenceExpInfo;
     }
 
 
-    public ExpressionDetails processExpression(ExpressionDetails expressionInfo, FunctionCall expression) {
-        return expressionInfo;
+    public FunctionCallExpInfo processExpression(FunctionCallExpInfo functionCallExpInfo, FunctionCall expression) {
+        return null;
     }
 
-    private DeReferenceExpressionDetailInfo getExpressionDetailInfo() {
-        return DeReferenceExpressionDetailInfo.builder().build();
+
+    public ComparisonExpInfo processExpression(ComparisonExpInfo comparisonExpInfo, ComparisonExpression comparisonExpression) {
+        final BaseExpressionInfo left = getBaseExpressionInfo(comparisonExpression.getLeft());
+        final BaseExpressionInfo right = getBaseExpressionInfo(comparisonExpression.getRight());
+
+        comparisonExpInfo.setOperator(comparisonExpression.getOperator());
+        comparisonExpInfo.setLeft(left);
+        comparisonExpInfo.setRight(right);
+
+        return comparisonExpInfo;
+    }
+
+    private static BaseExpressionInfo getBaseExpressionInfo(Expression expression) {
+        return new CommonExpressionHandler().handleExpression(expression);
     }
 }

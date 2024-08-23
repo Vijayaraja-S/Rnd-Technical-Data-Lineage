@@ -1,7 +1,10 @@
-package com.p3.poc.parser.parsing.handler.query_spec;
+package com.p3.poc.parser.parsing.handler.query_body;
 
 import com.p3.poc.parser.bean.QueryParsedDetails;
 import com.p3.poc.parser.parsing.handler.CommonQueryParser;
+import com.p3.poc.parser.parsing.handler.query_spec.FromHandler;
+import com.p3.poc.parser.parsing.handler.query_spec.HavingHandler;
+import com.p3.poc.parser.parsing.handler.query_spec.WhereHandler;
 import com.p3.poc.parser.parsing.utils.HandlerChecker;
 import io.trino.sql.tree.Expression;
 import io.trino.sql.tree.QuerySpecification;

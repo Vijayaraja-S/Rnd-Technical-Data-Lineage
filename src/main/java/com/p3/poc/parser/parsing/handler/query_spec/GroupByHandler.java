@@ -3,26 +3,27 @@ package com.p3.poc.parser.parsing.handler.query_spec;
 import com.p3.poc.parser.bean.QueryParsedDetails;
 import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
 import com.p3.poc.parser.bean.having.HavingQueryInfo;
-import com.p3.poc.parser.bean.where.WhereQueryInfo;
+import com.p3.poc.parser.parsing.handler.CommonQueryParser;
 import com.p3.poc.parser.parsing.handler.expression.CommonExpressionHandler;
 import io.trino.sql.tree.Expression;
-import lombok.Builder;
+import io.trino.sql.tree.GroupBy;
 import lombok.Data;
 
 @Data
-public class WhereHandler {
+public class GroupByHandler implements CommonQueryParser {
     private QueryParsedDetails queryParsedDetails;
     private CommonExpressionHandler commonExpressionHandler;
-    public WhereHandler(QueryParsedDetails queryParsedDetails) {
+
+    public GroupByHandler(QueryParsedDetails queryParsedDetails) {
         this.queryParsedDetails = queryParsedDetails;
         this.commonExpressionHandler = new CommonExpressionHandler();
     }
-    public void processNode(Expression whereExpression) {
-        final BaseExpressionInfo baseExpressionInfo = commonExpressionHandler.handleExpression(whereExpression);
-        queryParsedDetails.setWhereQueryInfo(WhereQueryInfo
-                .builder()
-                .queryExpressionInfo(baseExpressionInfo)
-                .build());
-    }
 
+
+    @Override
+    public void processQuery(Object node) {
+        final GroupBy groupBy = (GroupBy) node;
+
+        //
+    }
 }
