@@ -16,7 +16,7 @@ public class FromHandler {
     }
 
     public void processNode(Relation relation) {
-        final BaseRelationInfo baseRelationInfoBean = commonRelationHandler.handleExpression(relation);
+        final BaseRelationInfo baseRelationInfoBean = commonRelationHandler.handleRelation(relation);
         queryParsedDetails.setFromRelationInfo(baseRelationInfoBean);
     }
 }

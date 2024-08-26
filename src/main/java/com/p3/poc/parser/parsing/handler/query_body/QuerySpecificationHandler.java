@@ -31,9 +31,7 @@ public class QuerySpecificationHandler implements CommonQueryParser {
                     .forEach(child -> {
                         if (!(child instanceof Expression) && !(child instanceof Relation)) {
                             CommonQueryParser handler = HandlerChecker.getHandler(child);
-                            if (handler != null) {
-                                handler.processQuery(child);
-                            }
+                            handler.processQuery(child);
                         }
                     });
         }

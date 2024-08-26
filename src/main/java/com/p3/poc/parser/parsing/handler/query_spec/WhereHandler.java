@@ -2,11 +2,9 @@ package com.p3.poc.parser.parsing.handler.query_spec;
 
 import com.p3.poc.parser.bean.QueryParsedDetails;
 import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
-import com.p3.poc.parser.bean.having.HavingQueryInfo;
-import com.p3.poc.parser.bean.where.WhereQueryInfo;
+import com.p3.poc.parser.bean.others.WhereQueryInfo;
 import com.p3.poc.parser.parsing.handler.expression.CommonExpressionHandler;
 import io.trino.sql.tree.Expression;
-import lombok.Builder;
 import lombok.Data;
 
 @Data

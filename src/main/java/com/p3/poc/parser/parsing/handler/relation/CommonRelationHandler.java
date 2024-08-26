@@ -33,7 +33,7 @@ public class CommonRelationHandler {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends BaseRelationInfo> T handleExpression(Relation relation) {
+    public <T extends BaseRelationInfo> T handleRelation(Relation relation) {
         Function<Relation, ? extends BaseRelationInfo> handler =
                 handlers.getOrDefault(relation.getClass(), this::handleUnknownExpression);
         return (T) handler.apply(relation);
