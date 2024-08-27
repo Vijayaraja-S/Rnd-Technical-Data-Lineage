@@ -9,7 +9,6 @@ import io.trino.sql.parser.SqlParser;
 import io.trino.sql.tree.Query;
 import io.trino.sql.tree.Statement;
 import lombok.extern.slf4j.Slf4j;
-
 import java.util.AbstractMap;
 import java.util.Optional;
 
@@ -37,5 +36,9 @@ public class SQLParserApplication {
         return QueryDetailsSingleton.getInstance();
     }
 
-
+    public static void main(String[] args) {
+        String sqlQuery = "";
+        final String s = sqlQuery.replace("@@", "").replaceAll("\\$\\{(.*?)}", "123");
+        System.out.println(s);
+    }
 }

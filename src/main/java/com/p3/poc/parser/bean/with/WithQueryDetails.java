@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class WithQueryObjectDetails {
+public class WithQueryDetails {
     private UUID id;
     private String name;
     private boolean hasNestedWith;

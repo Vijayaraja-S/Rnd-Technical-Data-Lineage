@@ -27,7 +27,7 @@ public final class HandlerChecker {
 
         return switch (type) {
             case BASE_CLASS -> new BaseClassHandler(queryDetails);
-            case WITH -> new WithHandler(queryDetails);
+            case WITH -> new WithHandler();
             case LIMIT -> new LimitHandler(queryDetails);
             case OFFSET -> new OffsetHandler(queryDetails);
             case ORDER_BY -> new OrderByHandler(queryDetails);
@@ -49,5 +49,4 @@ public final class HandlerChecker {
             case GROUP_BY -> new GroupByHandler(queryDetails);
         };
     }
-
 }

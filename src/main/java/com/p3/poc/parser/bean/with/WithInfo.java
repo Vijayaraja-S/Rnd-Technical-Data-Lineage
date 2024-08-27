@@ -3,16 +3,17 @@ package com.p3.poc.parser.bean.with;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @Data
 @Builder
-public class WithObjectInfo {
+public class WithInfo {
     @Builder.Default private boolean isRecursive=false;
     @Builder.Default private int numberOfWithQuery=0;
-    private List<WithQueryObjectDetails> withQueryDetails;
-    @Builder.Default private Map<UUID,List<WithObjectInfo>> nestedWithObject = new LinkedHashMap<>();
+    @Builder.Default private int numberOfNestedWithQuery=0;
+    private List<WithQueryDetails> withQueryDetails;
+    @Builder.Default private Map<UUID,WithInfo>uuidWithInfoMap=new HashMap<>();
 }

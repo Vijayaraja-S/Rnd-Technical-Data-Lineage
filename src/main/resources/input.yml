@@ -45,46 +45,46 @@
 
 
 
-sqlQuery: SELECT
-  t1.COLUMN_1 AS C1,
-  t1.COLUMN_2 AS C2,
-  t2.COLUMN_4 AS additional_info,
-  t3.COLUMN_5 AS more_info,
-  COUNT(*) AS count
+#sqlQuery: SELECT
+#  t1.COLUMN_1 AS C1,
+#  t1.COLUMN_2 AS C2,
+#  t2.COLUMN_4 AS additional_info,
+#  t3.COLUMN_5 AS more_info,
+#  COUNT(*) AS count
+#
+#  FROM
+#  application1_schema1.table_1 t1
+#
+#  JOIN
+#  application1.schema1_table_2 t2
+#  ON t1.COLUMN_3 = t2.COLUMN_3
+#
+#  LEFT JOIN
+#  application1.schema1_table_3 t3
+#  ON t1.COLUMN_4 = t3.COLUMN_4
+#
+#  INNER JOIN
+#  application1_schema1_table_4 t4
+#  ON t2.COLUMN_5 = t4.COLUMN_5
+#
+#  WHERE
+#  t1.column_1 = 10
+#  AND t4.column_6 IS NOT NULL
+#  AND t2.column_7 BETWEEN '2023-01-01' AND '2023-12-31'
+#
+#  GROUP BY
+#  t1.COLUMN_1, t1.COLUMN_2, t2.COLUMN_4, t3.COLUMN_5
+#
+#  HAVING
+#  COUNT(*) > 2
+#
+#  ORDER BY
+#  t1.COLUMN_1 ASC, t2.COLUMN_4 DESC
+#
+#  OFFSET 10
+#  LIMIT 20
 
-  FROM
-  application1_schema1.table_1 t1
-
-  JOIN
-  application1.schema1_table_2 t2
-  ON t1.COLUMN_3 = t2.COLUMN_3
-
-  LEFT JOIN
-  application1.schema1_table_3 t3
-  ON t1.COLUMN_4 = t3.COLUMN_4
-
-  INNER JOIN
-  application1_schema1_table_4 t4
-  ON t2.COLUMN_5 = t4.COLUMN_5
-
-  WHERE
-  t1.column_1 = 10
-  AND t4.column_6 IS NOT NULL
-  AND t2.column_7 BETWEEN '2023-01-01' AND '2023-12-31'
-
-  GROUP BY
-  t1.COLUMN_1, t1.COLUMN_2, t2.COLUMN_4, t3.COLUMN_5
-
-  HAVING
-  COUNT(*) > 2
-
-  ORDER BY
-  t1.COLUMN_1 ASC, t2.COLUMN_4 DESC
-
-  OFFSET 10
-  LIMIT 20
-
-
+#
 #sqlQuery: WITH RankedResults AS (
 #  SELECT
 #  TRIM(t1.COLUMN_1) AS C1,
@@ -241,7 +241,7 @@ sqlQuery: SELECT
 
 
 
-#
+
 #  sqlQuery: WITH EmployeeSales AS (
 #              SELECT e.EmployeeID, e.EmployeeName, SUM(s.SaleAmount) AS TotalSales
 #              FROM employees e
@@ -384,57 +384,177 @@ sqlQuery: SELECT
 #              SELECT fr.DepartmentName, fr.TotalTopContribution
 #              FROM FinalResults fr
 
+#sqlQuery: WITH RECURSIVE factorial(n, fact) AS (
+#          SELECT 1, 1
+#          UNION ALL
+#          SELECT n + 1, (n + 1) * fact
+#          FROM factorial
+#          WHERE n < 5
+#          )
+#          SELECT * FROM factorial
 
+
+sqlQuery: WITH
+  Level1 AS (
+  WITH
+  Level2 AS (
+  WITH
+  Level3 AS (
+  WITH
+  Level4 AS (
+  WITH
+  Level5 AS (
+  WITH
+  Level6 AS (
+  WITH
+  Level7 AS (
+  WITH
+  Level8 AS (
+  WITH
+  Level9 AS (
+  WITH
+
+  Level10 AS (
+  SELECT 'Level 10 Result' AS Result
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
+  )
+  SELECT 'Level 9 Result' AS Result, l10.Result AS NestedResult
+  FROM Level10 l10
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
+  )
+  SELECT 'Level 8 Result' AS Result, l9.Result AS NestedResult
+  FROM Level9 l9
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
+  )
+  SELECT 'Level 7 Result' AS Result, l8.Result AS NestedResult
+  FROM Level8 l8
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
+  )
+  SELECT 'Level 6 Result' AS Result, l7.Result AS NestedResult
+  FROM Level7 l7
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
+  )
+  SELECT 'Level 5 Result' AS Result, l6.Result AS NestedResult
+  FROM Level6 l6
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
+  )
+  SELECT 'Level 4 Result' AS Result, l5.Result AS NestedResult
+  FROM Level5 l5
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
+  )
+  SELECT 'Level 3 Result' AS Result, l4.Result AS NestedResult
+  FROM Level4 l4
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
+  )
+  SELECT 'Level 2 Result' AS Result, l3.Result AS NestedResult
+  FROM Level3 l3
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
+  )
+  SELECT 'Level 1 Result' AS Result, l2.Result AS NestedResult
+  FROM Level2 l2
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
+  )
+  SELECT Result, NestedResult
+  FROM Level1
+  ORDER BY Result
+  OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY
+
+
+#sqlQuery:  SELECT CASE WHEN t2.TRAN_POSTDATE IS NULL THEN t1.ORIGINAL_TRANID
+#  WHEN t2.ORIGINAL_TRANID IS NULL THEN NULL
+#  ELSE t2.ORIGINAL_TRANID END AS INV_TRAN_ID,
+#  t2.APP_TRANID AS APPLICATION,
+#  CASE WHEN t2.TRAN_POSTDATE IS NULL THEN t1.REFNO
+#  ELSE t2.REFNO END AS REFNO,
+#  CASE WHEN t2.TRAN_POSTDATE IS NULL THEN CAST(t1.TRAN_POSTDATE AS VARCHAR)
+#  ELSE CAST(t2.TRAN_POSTDATE AS VARCHAR) END AS TRAN_POSTDATE,
+#  CASE WHEN t2.TRAN_POSTDATE IS NULL THEN CAST(t1.TRANAMT AS DECIMAL(10,2))
+#  WHEN t2.ORIGINAL_TRANID IS NULL THEN CAST(t2.PMTAMT AS DECIMAL(10,2))
+#  ELSE CAST(t2.TRANAMT AS DECIMAL(10,2)) END AS TRANAMT,
+#  CASE WHEN t2.TRAN_POSTDATE IS NOT NULL THEN CAST(COALESCE(t2.BALANCE, 0) AS DECIMAL(10,2))
+#  ELSE CAST(COALESCE(t1.BALANCE, 0) AS DECIMAL(10,2)) END AS BALANCE_1,
+#  CASE WHEN t2.BALANCE IS NOT NULL THEN CAST(t2.BALANCE AS DECIMAL(10,1))
+#  ELSE NULL END AS BALANCE_2
+#  FROM (
+#  SELECT DISTINCT TI.TRANID AS JOIN_TRANID,
+#  TI.TRANID AS ORIGINAL_TRANID,
+#  TI.POSTDATE AS TRAN_POSTDATE,
+#  TI.TRANAMT AS TRANAMT,
+#  NULL AS REFNO,
+#  NULL AS BALANCE
+#  FROM MAS500_REF_DBO.TARINVOICE TI
+#  LEFT OUTER JOIN MAS500_REF_DBO.TARCUSTOMER TC ON TC.CUSTKEY = TI.CUSTKEY
+#  WHERE UPPER(TRIM(TC.CUSTID)) = UPPER(TRIM('123'))
+#  AND any_match(regexp_split('123', ','), x -> x = TC.COMPANYID) = true
 #
-#sqlQuery: WITH
-#  Level1 AS (
-#  WITH
-#  Level2 AS (
-#  WITH
-#  Level3 AS (
-#  WITH
-#  Level4 AS (
-#  WITH
-#  Level5 AS (
-#  WITH
-#  Level6 AS (
-#  WITH
-#  Level7 AS (
-#  WITH
-#  Level8 AS (
-#  WITH
-#  Level9 AS (
-#  WITH
+#  UNION ALL
 #
-#  Level10 AS (
-#  SELECT 'Level 10 Result' AS Result
-#  )
-#  SELECT 'Level 9 Result' AS Result, l10.Result AS NestedResult
-#  FROM Level10 l10
-#  )
-#  SELECT 'Level 8 Result' AS Result, l9.Result AS NestedResult
-#  FROM Level9 l9
-#  )
-#  SELECT 'Level 7 Result' AS Result, l8.Result AS NestedResult
-#  FROM Level8 l8
-#  )
-#  SELECT 'Level 6 Result' AS Result, l7.Result AS NestedResult
-#  FROM Level7 l7
-#  )
-#  SELECT 'Level 5 Result' AS Result, l6.Result AS NestedResult
-#  FROM Level6 l6
-#  )
-#  SELECT 'Level 4 Result' AS Result, l5.Result AS NestedResult
-#  FROM Level5 l5
-#  )
-#  SELECT 'Level 3 Result' AS Result, l4.Result AS NestedResult
-#  FROM Level4 l4
-#  )
-#  SELECT 'Level 2 Result' AS Result, l3.Result AS NestedResult
-#  FROM Level3 l3
-#  )
-#  SELECT 'Level 1 Result' AS Result, l2.Result AS NestedResult
-#  FROM Level2 l2
-#  )
-#  SELECT Result, NestedResult
-#  FROM Level1
+#  SELECT TCP.TRANID AS JOIN_TRANID,
+#  TCP.TRANID AS ORIGINAL_TRANID,
+#  TCP.POSTDATE AS TRAN_POSTDATE,
+#  -(TCP.TRANAMT) AS TRANAMT,
+#  TCRD.REFNO AS REFNO,
+#  CASE WHEN TCP.RevrsCustPmtKey IS NULL THEN -(TCP.TRANAMT)
+#  ELSE NULL END AS BALANCE
+#  FROM MAS500_REF_DBO.TARCUSTOMER TC
+#  INNER JOIN MAS500_REF_DBO.TARCUSTPMT TCP ON TC.CUSTKEY = TCP.CUSTKEY
+#  INNER JOIN MAS500_REF_DBO.tcmCashRcptDetl TCRD ON TCP.CUSTPMTKEY = TCRD.CUSTPMTKEY
+#  LEFT JOIN MAS500_REF_DBO.TARCUSTPMTAPPL TCPA ON TCP.CUSTPMTKEY = TCPA.CUSTPMTKEY
+#  WHERE TCPA.CUSTPMTKEY IS NULL
+#  AND TCP.RevrsCustPmtKey IS NOT NULL
+#  AND TCP.TRANAMT != 0
+#  AND UPPER(TRIM(TC.CUSTID)) = UPPER(TRIM('123'))
+#  AND any_match(regexp_split('123', ','), x -> x = TC.COMPANYID) = true
+#  ) t1
+#  LEFT JOIN (
+#  SELECT DISTINCT TI.TRANTYPE,
+#  TI.TRANID AS ORIGINAL_TRANID,
+#  NULL AS APP_TRANID,
+#  TI.TRANAMT AS TRANAMT,
+#  TI.POSTDATE AS TRAN_POSTDATE,
+#  TI.BALANCE AS BALANCE,
+#  NULL AS PMTAMT,
+#  NULL AS REFNO,
+#  TI.TRANID AS ORIGINAL_TRANID_TOSORT
+#  FROM MAS500_REF_DBO.TARINVOICE TI
+#  LEFT OUTER JOIN MAS500_REF_DBO.TARINVOICEAPPL TA ON TI.INVCKEY = TA.APPLYTOINVCKEY
+#  LEFT OUTER JOIN MAS500_REF_DBO.TARCUSTOMER TC ON TC.CUSTKEY = TI.CUSTKEY
+#  LEFT OUTER JOIN MAS500_REF_DBO.TARCUSTPMT TCP ON TCP.CUSTPMTKEY = TA.APPLYFROMPMTKEY
+#  LEFT OUTER JOIN MAS500_REF_DBO.TCMCASHRCPTDETL TCRD ON TCRD.CUSTPMTKEY = TCP.CUSTPMTKEY
+#  WHERE UPPER(TRIM(TC.CUSTID)) = UPPER(TRIM('123'))
+#  AND any_match(regexp_split('123', ','), x -> x = TC.COMPANYID) = true
+#
+#  UNION ALL
+#
+#  SELECT TI.TRANTYPE AS TRANTYPE,
+#  NULL AS ORIGINAL_TRANID,
+#  TA.APPLYFROMTRANID AS APP_TRANID,
+#  NULL AS TRANAMT,
+#  TA.APPLYFROMTRANDATE AS TRAN_POSTDATE,
+#  TI.POSTDATE AS TRAN_POSTDATE_2,
+#  NULL AS BALANCE,
+#  -(TA.PMTAMT) AS PMTAMT,
+#  TCRD.REFNO AS REFNO,
+#  TI.TRANID AS ORIGINAL_TRANID_TOSORT
+#  FROM MAS500_REF_DBO.TARINVOICE TI
+#  LEFT OUTER JOIN MAS500_REF_DBO.TARINVOICEAPPL TA ON TI.INVCKEY = TA.APPLYTOINVCKEY
+#  LEFT OUTER JOIN MAS500_REF_DBO.TARCUSTOMER TC ON TC.CUSTKEY = TI.CUSTKEY
+#  LEFT OUTER JOIN MAS500_REF_DBO.TARCUSTPMT TCP ON TCP.CUSTPMTKEY = TA.APPLYFROMPMTKEY
+#  LEFT OUTER JOIN MAS500_REF_DBO.TCMCASHRCPTDETL TCRD ON TCRD.CUSTPMTKEY = TCP.CUSTPMTKEY
+#  WHERE UPPER(TRIM(TC.CUSTID)) = UPPER(TRIM('123'))
+#  AND any_match(regexp_split('123', ','), x -> x = TC.COMPANYID) = true
+#  AND (TA.APPLYFROMTRANID IS NOT NULL AND TA.APPLYFROMTRANDATE IS NOT NULL)
+#  ) t2 ON t1.JOIN_TRANID = t2.ORIGINAL_TRANID_TOSORT
+#  ORDER BY t1.TRAN_POSTDATE, t1.TRANAMT DESC, t1.JOIN_TRANID,
+#  CASE WHEN t2.ORIGINAL_TRANID IS NULL THEN 0 ELSE 1 END DESC,
+#  t2.ORIGINAL_TRANID DESC, t2.APP_TRANID DESC
