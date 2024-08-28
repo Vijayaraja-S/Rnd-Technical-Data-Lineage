@@ -1,15 +1,15 @@
 package com.p3.poc.parser.parsing.handler;
 
-import com.p3.poc.parser.bean.QueryParsedDetails;
+import com.p3.poc.parser.bean.QuerySpecDetails;
 import com.p3.poc.parser.parsing.utils.HandlerChecker;
 import io.trino.sql.tree.Node;
 import lombok.Data;
 
 @Data
 public class BaseClassHandler implements CommonQueryParser {
-    private QueryParsedDetails queryParsedDetails;
+    private QuerySpecDetails queryParsedDetails;
 
-    public BaseClassHandler(QueryParsedDetails queryDetails) {
+    public BaseClassHandler(QuerySpecDetails queryDetails) {
         this.queryParsedDetails = queryDetails;
     }
 

@@ -1,18 +1,18 @@
 package com.p3.poc.parser.parsing.utils;
 
-import com.p3.poc.parser.bean.QueryParsedDetails;
+import com.p3.poc.parser.bean.QuerySpecDetails;
 
 public class QueryDetailsSingleton {
 
-    private static QueryParsedDetails instance;
+    private static QuerySpecDetails instance;
 
     private QueryDetailsSingleton() {
         // Private constructor to prevent instantiation
     }
 
-    public static QueryParsedDetails getInstance() {
+    public static QuerySpecDetails getInstance() {
         if (instance == null) {
-            instance = QueryParsedDetails.builder().build();
+            instance = QuerySpecDetails.builder().build();
         }
         return instance;
     }

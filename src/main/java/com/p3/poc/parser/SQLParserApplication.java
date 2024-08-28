@@ -1,6 +1,6 @@
 package com.p3.poc.parser;
 
-import com.p3.poc.parser.bean.QueryParsedDetails;
+import com.p3.poc.parser.bean.QuerySpecDetails;
 import com.p3.poc.parser.parsing.exception.InvalidStatement;
 import com.p3.poc.parser.parsing.utils.HandlerChecker;
 import com.p3.poc.parser.parsing.utils.QueryDetailsSingleton;
@@ -15,9 +15,15 @@ import java.util.Optional;
 @Slf4j
 public class SQLParserApplication {
 
-    public QueryParsedDetails parse(String sqlQuery) throws InvalidStatement {
+    public void parse(String sqlQuery) throws InvalidStatement {
         SqlParser parser = new SqlParser();
         Statement statement = parser.createStatement(sqlQuery, new ParsingOptions());
+
+
+
+
+
+
         if (statement instanceof Query query) {
             var children = query.getChildren();
 
@@ -33,8 +39,7 @@ public class SQLParserApplication {
         } else {
             throw new InvalidStatement("Invalid statement object");
         }
-        return QueryDetailsSingleton.getInstance();
-    }
+     }
 
     public static void main(String[] args) {
         String sqlQuery = "";

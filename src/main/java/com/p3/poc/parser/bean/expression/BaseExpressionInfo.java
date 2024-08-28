@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class BaseExpressionInfo {
+public class BaseExpressionInfo {
     private ExpressionTypes expressionType;
 }
