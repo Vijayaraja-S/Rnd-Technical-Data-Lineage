@@ -1,15 +1,16 @@
 package com.p3.poc.parser.bean.query.query_body.query_specification.others;
 
 import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.QuerySpecDetails;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WhereQueryInfo extends QuerySpecDetails {
+public class WhereQueryInfo {
     private BaseExpressionInfo queryExpressionInfo;
 
     public static WhereQueryInfo getBean() {

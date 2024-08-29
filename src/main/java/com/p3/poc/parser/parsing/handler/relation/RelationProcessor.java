@@ -1,24 +1,21 @@
 package com.p3.poc.parser.parsing.handler.relation;
 
-import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.relation.BaseRelationInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.relation.sub_relation.AliasedRelationInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.relation.sub_relation.JoinRelationInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.relation.sub_relation.TableRelationInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.relation.sub_relation.join_criteria.JoinCriteriaInfo;
-import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
+import com.p3.poc.parser.bean.relation.BaseRelationInfo;
+import com.p3.poc.parser.bean.relation.sub_relation.AliasedRelationInfo;
+import com.p3.poc.parser.bean.relation.sub_relation.JoinRelationInfo;
+import com.p3.poc.parser.bean.relation.sub_relation.TableRelationInfo;
 import io.trino.sql.tree.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.Optional;
 
-@Data
+@EqualsAndHashCode(callSuper = true)
 @Slf4j
-public class RelationProcessor {
+public class RelationProcessor extends RelationHelper {
 
-    public AliasedRelationInfo processRelation(AliasedRelationInfo relationInfo, AliasedRelation aliasedRelation) {
+    public AliasedRelationInfo processAlias(AliasedRelation aliasedRelation) {
+        final AliasedRelationInfo relationInfo = AliasedRelationInfo.getBean();
         final Relation relation = aliasedRelation.getRelation();
         final BaseRelationInfo baseRelationInfoBean = getNestedRelationInfo(relation);
         relationInfo.setRelationInfoDetails(baseRelationInfoBean);
@@ -26,7 +23,8 @@ public class RelationProcessor {
         return relationInfo;
     }
 
-    public JoinRelationInfo processRelation(JoinRelationInfo relationInfo, Join join) {
+    public JoinRelationInfo processJoin(Join join) {
+        final JoinRelationInfo relationInfo = JoinRelationInfo.getBean();
         relationInfo.setType(String.valueOf(join.getType()));
         relationInfo.setLeft(getNestedRelationInfo(join.getLeft()));
         relationInfo.setRight(getNestedRelationInfo(join.getRight()));
@@ -35,24 +33,8 @@ public class RelationProcessor {
         return relationInfo;
     }
 
-    private JoinCriteriaInfo handleJoinCriteria(JoinCriteria joinCriteria) {
-        final JoinCriteriaInfo criteriaInfo = JoinCriteriaInfo.builder().build();
-        if (joinCriteria instanceof JoinOn join) {
-            criteriaInfo.setLeftExpression(getNestedExpressionInfo(join.getExpression()));
-        } else if (joinCriteria instanceof JoinUsing joinUsing) {
-            final List<String> listOfColumns = joinUsing.getColumns()
-                    .stream()
-                    .map(Identifier::getValue)
-                    .toList();
-            criteriaInfo.setColumns(listOfColumns);
-        } else {
-            log.warn("Unknown join criteria type: {}", joinCriteria.getClass().getName());
-        }
-        return criteriaInfo;
-    }
-
-
-    public TableRelationInfo processRelation(TableRelationInfo relationInfo, Table tableRelation) {
+    public TableRelationInfo processTable(Table tableRelation) {
+        final TableRelationInfo relationInfo = TableRelationInfo.getBean();
         final QualifiedName name = tableRelation.getName();
         final Optional<QualifiedName> schemaName = name.getPrefix();
         schemaName.ifPresent(qualifiedName -> relationInfo.setSchemaName(String.valueOf(qualifiedName)));
@@ -62,11 +44,4 @@ public class RelationProcessor {
     }
 
 
-    private BaseRelationInfo getNestedRelationInfo(Relation relation) {
-        return new RelationHandler().handleRelation(relation);
-    }
-
-    private BaseExpressionInfo getNestedExpressionInfo(Expression expression) {
-        return new ExpressionHandler().handleExpression(expression);
-    }
 }

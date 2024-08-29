@@ -3,17 +3,20 @@ package com.p3.poc.parser.parsing.handler.query_specification;
 import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.group.BaseGroupElementInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.group.GroupQueryInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.order_by.OrderByInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.order_by.SortInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.others.HavingQueryInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.others.LimitInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.others.OffsetInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.others.WhereQueryInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.relation.BaseRelationInfo;
+import com.p3.poc.parser.bean.relation.BaseRelationInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.select.SelectColumnInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.select.SelectQueryInfo;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
 import com.p3.poc.parser.parsing.handler.relation.RelationHandler;
 import io.trino.sql.tree.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,7 +46,7 @@ public class QuerySpecProcessor extends QuerySpecHelper {
         final SelectQueryInfo bean = SelectQueryInfo.getBean();
         bean.setDistinct(selectNode.isDistinct());
         bean.setSelectColumnInfo(selectColumnInfoList);
-        return null;
+        return bean;
     }
 
     public BaseRelationInfo processFromNode(Relation relation) {
@@ -91,5 +94,22 @@ public class QuerySpecProcessor extends QuerySpecHelper {
 
     private BaseExpressionInfo processExpression(Expression havingValue) {
         return commonExpressionHandler.handleExpression(havingValue);
+    }
+
+    public OrderByInfo processOrderByNode(OrderBy orderBy) {
+        final OrderByInfo orderByInfo = OrderByInfo.getBean();
+        final List<SortInfo> sortInfos = new ArrayList<>();
+        orderBy.getSortItems().forEach(sortItem ->
+                {
+                    final SortInfo build = SortInfo.builder()
+                            .normalOrder(sortItem.getOrdering())
+                            .nullOrder(sortItem.getNullOrdering())
+                            .expressionInfo(processExpression(sortItem.getSortKey()))
+                            .build();
+                    sortInfos.add(build);
+                }
+        );
+        orderByInfo.setSortInfos(sortInfos);
+        return orderByInfo;
     }
 }

@@ -1,8 +1,8 @@
-package com.p3.poc.parser.bean;
+package com.p3.poc.bean;
 
-import com.p3.poc.parser.bean.query.query_body.query_specification.others.*;
 import com.p3.poc.parser.bean.query.query_body.query_specification.order_by.OrderByInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.relation.BaseRelationInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.others.*;
+import com.p3.poc.parser.bean.relation.BaseRelationInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.group.GroupQueryInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.select.SelectQueryInfo;
 import lombok.Builder;

@@ -1,49 +1,30 @@
 package com.p3.poc.parser;
 
-import com.p3.poc.parser.bean.QuerySpecDetails;
+import com.p3.poc.parser.bean.query.BaseQueryInfo;
 import com.p3.poc.parser.parsing.exception.InvalidStatement;
-import com.p3.poc.parser.parsing.utils.HandlerChecker;
-import com.p3.poc.parser.parsing.utils.QueryDetailsSingleton;
+import com.p3.poc.parser.parsing.handler.statement.StatementHandler;
 import io.trino.sql.parser.ParsingOptions;
 import io.trino.sql.parser.SqlParser;
 import io.trino.sql.tree.Query;
 import io.trino.sql.tree.Statement;
 import lombok.extern.slf4j.Slf4j;
-import java.util.AbstractMap;
-import java.util.Optional;
 
 @Slf4j
 public class SQLParserApplication {
+    private final StatementHandler statementHandler;
 
-    public void parse(String sqlQuery) throws InvalidStatement {
+    public SQLParserApplication() {
+        this.statementHandler = new StatementHandler();
+    }
+
+    public BaseQueryInfo parse(String sqlQuery) throws InvalidStatement {
         SqlParser parser = new SqlParser();
         Statement statement = parser.createStatement(sqlQuery, new ParsingOptions());
-
-
-
-
-
-
         if (statement instanceof Query query) {
-            var children = query.getChildren();
-
-            if (children.isEmpty()) {
-                log.warn("The query object is empty");
-            } else {
-                Optional.of(children)
-                        .ifPresent(childList -> childList.stream()
-                                .map(child -> new AbstractMap.SimpleEntry<>(child, HandlerChecker.getHandler(child)))
-                                .filter(entry -> entry.getValue() != null)
-                                .forEach(entry -> entry.getValue().processQuery(entry.getKey())));
-            }
+            return statementHandler.handleQuery(query);
         } else {
             throw new InvalidStatement("Invalid statement object");
         }
-     }
-
-    public static void main(String[] args) {
-        String sqlQuery = "";
-        final String s = sqlQuery.replace("@@", "").replaceAll("\\$\\{(.*?)}", "123");
-        System.out.println(s);
     }
+
 }

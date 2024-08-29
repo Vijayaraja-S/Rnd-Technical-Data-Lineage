@@ -1,7 +1,7 @@
-package com.p3.poc.parser.bean.query.query_body.query_specification.relation.sub_relation;
+package com.p3.poc.parser.bean.relation.sub_relation;
 
-import com.p3.poc.parser.bean.query.query_body.query_specification.relation.BaseRelationInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.relation.identifier.RelationType;
+import com.p3.poc.parser.bean.relation.BaseRelationInfo;
+import com.p3.poc.parser.bean.relation.identifier.RelationType;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -11,10 +11,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AliasedRelationInfo  extends BaseRelationInfo {
     private BaseRelationInfo relationInfoDetails;
     private String aliasName;
-     private List<String> columns = new ArrayList<>();
+    @Builder.Default private List<String> columns = new ArrayList<>();
 
     public static AliasedRelationInfo getBean() {
         AliasedRelationInfo bean = new AliasedRelationInfo();

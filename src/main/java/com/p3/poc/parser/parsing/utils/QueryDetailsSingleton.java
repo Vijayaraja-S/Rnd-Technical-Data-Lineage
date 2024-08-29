@@ -1,6 +1,6 @@
 package com.p3.poc.parser.parsing.utils;
 
-import com.p3.poc.parser.bean.QuerySpecDetails;
+import com.p3.poc.bean.QuerySpecDetails;
 
 public class QueryDetailsSingleton {
 

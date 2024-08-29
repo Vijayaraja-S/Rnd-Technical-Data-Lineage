@@ -34,6 +34,6 @@ public class QueryBodyHandler {
 
     private QuerySpecificationDetails handleQuerySpecification(QueryBody queryBody) {
         final QuerySpecification querySpecification = (QuerySpecification) queryBody;
-        return queryBodyProcessor.processQueryBody(querySpecification);
+        return queryBodyProcessor.processQuerySpec(querySpecification);
     }
 }

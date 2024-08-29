@@ -1,11 +1,14 @@
 package com.p3.poc.parser.bean.query.query_body;
 
-import com.p3.poc.parser.bean.query.query_body.query_specification.QuerySpecDetails;
-import com.p3.poc.parser.bean.query.query_body.query_specification.QuerySpecType;
+import com.p3.poc.parser.bean.relation.BaseRelationInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.group.GroupQueryInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.order_by.OrderByInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.others.HavingQueryInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.others.LimitInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.others.OffsetInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.others.WhereQueryInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.select.SelectQueryInfo;
 import lombok.*;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -13,7 +16,13 @@ import java.util.Map;
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
 public class QuerySpecificationDetails extends BaseQueryBodyInfo {
-    private Map<QuerySpecType, QuerySpecDetails> specificationBeanHashMap = new EnumMap<>(QuerySpecType.class);
+    private SelectQueryInfo selectQueryInfo;
+    private BaseRelationInfo baseRelationInfo;
+    private WhereQueryInfo whereQueryInfo;
+    private HavingQueryInfo havingQueryInfo;
+    private OrderByInfo orderByInfo;
+    private LimitInfo limitInfo;
+    private OffsetInfo offsetInfo;
+    private GroupQueryInfo groupQueryInfo;
 }

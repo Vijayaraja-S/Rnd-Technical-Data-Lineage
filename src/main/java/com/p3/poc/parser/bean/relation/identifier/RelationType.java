@@ -1,4 +1,4 @@
-package com.p3.poc.parser.bean.query.query_body.query_specification.relation.identifier;
+package com.p3.poc.parser.bean.relation.identifier;
 
 public enum RelationType {
     ALIASED_RELATION,
