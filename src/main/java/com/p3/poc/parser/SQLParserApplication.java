@@ -1,6 +1,5 @@
 package com.p3.poc.parser;
 
-import com.google.common.graph.Graph;
 import com.p3.poc.parser.bean.query.BaseQueryInfo;
 import com.p3.poc.parser.parsing.exception.InvalidStatement;
 import com.p3.poc.parser.parsing.handler.statement.StatementHandler;

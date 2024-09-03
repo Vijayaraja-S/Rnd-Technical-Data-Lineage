@@ -1,4 +1,4 @@
-package com.p3.poc.lineage;
+package com.p3.poc.lineage.bean.graph;
 
 import lombok.*;
 import lombok.Data;
@@ -6,13 +6,12 @@ import lombok.Data;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class ListIdMap {
-    private Map<String, List<String>> mappingList =new LinkedHashMap<>();
+public class RelationshipIdMap{
+    @Builder.Default private Map<String, List<String>> relationMappingId =new LinkedHashMap<>();
 }

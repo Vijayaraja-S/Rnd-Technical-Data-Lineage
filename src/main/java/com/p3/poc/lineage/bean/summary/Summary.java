@@ -1,4 +1,4 @@
-package com.p3.poc.lineage;
+package com.p3.poc.lineage.bean.summary;
 
 import lombok.*;
 import lombok.Data;

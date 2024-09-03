@@ -1,5 +1,6 @@
-package com.p3.poc.lineage;
+package com.p3.poc.lineage.bean.flow;
 
+import com.p3.poc.lineage.bean.flow.db_objs.Server;
 import lombok.*;
 import lombok.Data;
 

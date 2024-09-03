@@ -1,5 +1,6 @@
-package com.p3.poc.lineage;
+package com.p3.poc.lineage.bean.flow.db_objs;
 
+import com.p3.poc.lineage.bean.flow.Coordinate;
 import lombok.*;
 import lombok.Data;
 

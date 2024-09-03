@@ -1,5 +1,8 @@
-package com.p3.poc.lineage;
+package com.p3.poc.lineage.bean;
 
+import com.p3.poc.lineage.bean.flow.SqlQueryFlow;
+import com.p3.poc.lineage.bean.summary.Summary;
+import com.p3.poc.lineage.bean.graph.Graph;
 import lombok.*;
 
 @AllArgsConstructor
@@ -12,4 +15,5 @@ public class Data{
     private Summary summary;
     private SqlQueryFlow sqlQueryFlow;
     private Graph graph;
+
 }
