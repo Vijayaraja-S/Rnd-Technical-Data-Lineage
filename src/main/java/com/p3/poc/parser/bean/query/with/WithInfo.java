@@ -1,18 +1,15 @@
 package com.p3.poc.parser.bean.query.with;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.*;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 public class WithInfo {
+    private String id;
     private boolean isrecursive;
-    @Builder.Default
-    private List<WithQueryInfo> withQueryInfos = new ArrayList<>();
 }

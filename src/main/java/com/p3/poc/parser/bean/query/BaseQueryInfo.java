@@ -7,7 +7,6 @@ import com.p3.poc.parser.bean.query.query_body.query_specification.others.Offset
 import com.p3.poc.parser.bean.query.with.WithInfo;
 import lombok.*;
 
-@Data
 @NoArgsConstructor
 @Getter
 @AllArgsConstructor

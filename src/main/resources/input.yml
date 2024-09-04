@@ -40,149 +40,149 @@
 #
 #    HAVING
 #    t1.COLUMN_5 IS NOT NULL
+#
+#
+#
 
 
+#sqlQuery: SELECT
+#  t1.COLUMN_1 AS C1,
+#  t1.COLUMN_2 AS C2,
+#  t2.COLUMN_4 AS additional_info,
+#  t3.COLUMN_5 AS more_info,
+#  COUNT(*) AS count
+#
+#  FROM
+#  application1_schema1.table_1 t1
+#
+#  JOIN
+#  application1.schema1_table_2 t2
+#  ON t1.COLUMN_3 = t2.COLUMN_3
+#
+#  LEFT JOIN
+#  application1.schema1_table_3 t3
+#  ON t1.COLUMN_4 = t3.COLUMN_4
+#
+#  INNER JOIN
+#  application1_schema1_table_4 t4
+#  ON t2.COLUMN_5 = t4.COLUMN_5
+#
+#  WHERE
+#  t1.column_1 = 10
+#  AND t4.column_6 IS NOT NULL
+#  AND t2.column_7 BETWEEN '2023-01-01' AND '2023-12-31'
+#
+#  GROUP BY
+#  t1.COLUMN_1, t1.COLUMN_2, t2.COLUMN_4, t3.COLUMN_5
+#
+#  HAVING
+#  COUNT(*) > 2
+#
+#  ORDER BY
+#  t1.COLUMN_1 ASC, t2.COLUMN_4 DESC
+#
+#  OFFSET 10
+#  LIMIT 20
 
 
-
-sqlQuery: SELECT
-  t1.COLUMN_1 AS C1,
-  t1.COLUMN_2 AS C2,
-  t2.COLUMN_4 AS additional_info,
-  t3.COLUMN_5 AS more_info,
-  COUNT(*) AS count
-
-  FROM
-  application1_schema1.table_1 t1
-
-  JOIN
-  application1.schema1_table_2 t2
-  ON t1.COLUMN_3 = t2.COLUMN_3
-
-  LEFT JOIN
-  application1.schema1_table_3 t3
-  ON t1.COLUMN_4 = t3.COLUMN_4
-
-  INNER JOIN
-  application1_schema1_table_4 t4
-  ON t2.COLUMN_5 = t4.COLUMN_5
-
-  WHERE
-  t1.column_1 = 10
-  AND t4.column_6 IS NOT NULL
-  AND t2.column_7 BETWEEN '2023-01-01' AND '2023-12-31'
-
-  GROUP BY
-  t1.COLUMN_1, t1.COLUMN_2, t2.COLUMN_4, t3.COLUMN_5
-
-  HAVING
-  COUNT(*) > 2
-
-  ORDER BY
-  t1.COLUMN_1 ASC, t2.COLUMN_4 DESC
-
-  OFFSET 10
-  LIMIT 20
-
-
-sqlQuery: WITH RankedResults AS (
-  SELECT
-  TRIM(t1.COLUMN_1) AS C1,
-  COALESCE(t1.COLUMN_2, 'Unknown') AS C2,
-  CASE
-  WHEN t2.COLUMN_4 IS NOT NULL THEN t2.COLUMN_4
-  ELSE 'No Info'
-  END AS additional_info,
-  t3.COLUMN_5 AS more_info,
-  COUNT(*) AS count,
-  ROW_NUMBER() OVER (PARTITION BY TRIM(t1.COLUMN_1) ORDER BY t2.COLUMN_4 DESC) AS row_num,
-  RANK() OVER (ORDER BY TRIM(t1.COLUMN_1) ASC) AS rank,
-  NTILE(4) OVER (ORDER BY TRIM(t1.COLUMN_1)) AS quartile,
-  LEAD(t2.COLUMN_4, 1, 'No Next Info') OVER (ORDER BY TRIM(t1.COLUMN_1)) AS next_info,
-  LAG(t3.COLUMN_5, 1, 'No Previous Info') OVER (ORDER BY TRIM(t1.COLUMN_1)) AS previous_info
-
-  FROM
-  application1_schema1.table_1 t1
-
-  JOIN
-  application1.schema1_table_2 t2
-  ON TRIM(t1.COLUMN_3) = TRIM(t2.COLUMN_3)
-
-  LEFT JOIN
-  application1.schema1_table_3 t3
-  ON TRIM(t1.COLUMN_4) = TRIM(t3.COLUMN_4)
-
-  INNER JOIN
-  application1_schema1_table_4 t4
-  ON TRIM(t2.COLUMN_5) = TRIM(t4.COLUMN_5)
-
-  FULL OUTER JOIN
-  application2.schema2_table_1 t5
-  ON TRIM(t4.COLUMN_8) = TRIM(t5.COLUMN_8)
-
-  CROSS JOIN
-  application3_schema2.table_6 t6
-
-  WHERE
-  TRIM(t1.COLUMN_1) = '10'
-  AND t4.COLUMN_6 IS NOT NULL
-  AND t2.COLUMN_7 BETWEEN '2023-01-01' AND '2023-12-31'
-  AND t5.COLUMN_9 LIKE '%example%'
-  AND t6.COLUMN_10 IN ('A', 'B', 'C')
-
-  GROUP BY
-  TRIM(t1.COLUMN_1),
-  COALESCE(t1.COLUMN_2, 'Unknown'),
-  CASE
-  WHEN t2.COLUMN_4 IS NOT NULL THEN t2.COLUMN_4
-  ELSE 'No Info'
-  END,
-  t3.COLUMN_5
-
-  HAVING
-  COUNT(*) > 2
-  AND SUM(CASE WHEN t4.COLUMN_6 IS NOT NULL THEN 1 ELSE 0 END) > 1
-  AND AVG(CASE WHEN t6.COLUMN_10 = 'A' THEN t2.COLUMN_7 ELSE NULL END) > '2023-06-01'
-  )
-
-  SELECT
-  C1,
-  C2,
-  additional_info,
-  more_info,
-  count,
-  row_num,
-  rank,
-  quartile,
-  next_info,
-  previous_info,
-  SUM(count) OVER (PARTITION BY C1 ORDER BY rank) AS running_total_count
-
-  FROM
-  RankedResults
-
-  GROUP BY
-  C1,
-  C2,
-  additional_info,
-  more_info,
-  count,
-  row_num,
-  rank,
-  quartile,
-  next_info,
-  previous_info
-
-  HAVING
-  SUM(count) > 5
-  AND MAX(rank) <= 10
-
-  ORDER BY
-  rank ASC,
-  quartile DESC
-
-  OFFSET 10
-  LIMIT 20
+#sqlQuery: WITH RankedResults AS (
+#  SELECT
+#  TRIM(t1.COLUMN_1) AS C1,
+#  COALESCE(t1.COLUMN_2, 'Unknown') AS C2,
+#  CASE
+#  WHEN t2.COLUMN_4 IS NOT NULL THEN t2.COLUMN_4
+#  ELSE 'No Info'
+#  END AS additional_info,
+#  t3.COLUMN_5 AS more_info,
+#  COUNT(*) AS count,
+#  ROW_NUMBER() OVER (PARTITION BY TRIM(t1.COLUMN_1) ORDER BY t2.COLUMN_4 DESC) AS row_num,
+#  RANK() OVER (ORDER BY TRIM(t1.COLUMN_1) ASC) AS rank,
+#  NTILE(4) OVER (ORDER BY TRIM(t1.COLUMN_1)) AS quartile,
+#  LEAD(t2.COLUMN_4, 1, 'No Next Info') OVER (ORDER BY TRIM(t1.COLUMN_1)) AS next_info,
+#  LAG(t3.COLUMN_5, 1, 'No Previous Info') OVER (ORDER BY TRIM(t1.COLUMN_1)) AS previous_info
+#
+#  FROM
+#  application1_schema1.table_1 t1
+#
+#  JOIN
+#  application1.schema1_table_2 t2
+#  ON TRIM(t1.COLUMN_3) = TRIM(t2.COLUMN_3)
+#
+#  LEFT JOIN
+#  application1.schema1_table_3 t3
+#  ON TRIM(t1.COLUMN_4) = TRIM(t3.COLUMN_4)
+#
+#  INNER JOIN
+#  application1_schema1_table_4 t4
+#  ON TRIM(t2.COLUMN_5) = TRIM(t4.COLUMN_5)
+#
+#  FULL OUTER JOIN
+#  application2.schema2_table_1 t5
+#  ON TRIM(t4.COLUMN_8) = TRIM(t5.COLUMN_8)
+#
+#  CROSS JOIN
+#  application3_schema2.table_6 t6
+#
+#  WHERE
+#  TRIM(t1.COLUMN_1) = '10'
+#  AND t4.COLUMN_6 IS NOT NULL
+#  AND t2.COLUMN_7 BETWEEN '2023-01-01' AND '2023-12-31'
+#  AND t5.COLUMN_9 LIKE '%example%'
+#  AND t6.COLUMN_10 IN ('A', 'B', 'C')
+#
+#  GROUP BY
+#  TRIM(t1.COLUMN_1),
+#  COALESCE(t1.COLUMN_2, 'Unknown'),
+#  CASE
+#  WHEN t2.COLUMN_4 IS NOT NULL THEN t2.COLUMN_4
+#  ELSE 'No Info'
+#  END,
+#  t3.COLUMN_5
+#
+#  HAVING
+#  COUNT(*) > 2
+#  AND SUM(CASE WHEN t4.COLUMN_6 IS NOT NULL THEN 1 ELSE 0 END) > 1
+#  AND AVG(CASE WHEN t6.COLUMN_10 = 'A' THEN t2.COLUMN_7 ELSE NULL END) > '2023-06-01'
+#  )
+#
+#  SELECT
+#  C1,
+#  C2,
+#  additional_info,
+#  more_info,
+#  count,
+#  row_num,
+#  rank,
+#  quartile,
+#  next_info,
+#  previous_info,
+#  SUM(count) OVER (PARTITION BY C1 ORDER BY rank) AS running_total_count
+#
+#  FROM
+#  RankedResults
+#
+#  GROUP BY
+#  C1,
+#  C2,
+#  additional_info,
+#  more_info,
+#  count,
+#  row_num,
+#  rank,
+#  quartile,
+#  next_info,
+#  previous_info
+#
+#  HAVING
+#  SUM(count) > 5
+#  AND MAX(rank) <= 10
+#
+#  ORDER BY
+#  rank ASC,
+#  quartile DESC
+#
+#  OFFSET 10
+#  LIMIT 20
 
 
 
@@ -241,7 +241,7 @@ sqlQuery: WITH RankedResults AS (
 
 
 
-
+#
 #  sqlQuery: WITH EmployeeSales AS (
 #              SELECT e.EmployeeID, e.EmployeeName, SUM(s.SaleAmount) AS TotalSales
 #              FROM employees e
@@ -392,8 +392,8 @@ sqlQuery: WITH RankedResults AS (
 #          WHERE n < 5
 #          )
 #          SELECT * FROM factorial
-
 #
+
 sqlQuery: WITH
   Level1 AS (
   WITH

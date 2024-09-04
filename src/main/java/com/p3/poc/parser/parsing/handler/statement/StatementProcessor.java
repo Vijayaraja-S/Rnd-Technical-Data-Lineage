@@ -1,6 +1,5 @@
 package com.p3.poc.parser.parsing.handler.statement;
 
-import com.google.common.graph.Graph;
 import com.p3.poc.parser.bean.query.BaseQueryInfo;
 import com.p3.poc.parser.parsing.handler.query.QueryHandler;
 import io.trino.sql.tree.*;
@@ -9,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-public class StatementProcessor {
+public class StatementProcessor extends BaseProcessor{
     private final QueryHandler queryHandler;
 
     public StatementProcessor() {
