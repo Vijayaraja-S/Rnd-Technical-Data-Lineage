@@ -1,50 +1,53 @@
 package com.p3.poc.parser.parsing.handler.query;
 
-import com.p3.poc.parser.bean.CollectorsUtil;
-import com.p3.poc.parser.bean.query.BaseQueryInfo;
 import com.p3.poc.parser.bean.query.query_body.BaseQueryBodyInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.order_by.OrderByInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.others.LimitInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.others.OffsetInfo;
 import com.p3.poc.parser.bean.query.with.WithInfo;
-import com.p3.poc.parser.bean.query.with.WithQueryInfo;
-import com.p3.poc.parser.parsing.handler.query_body.QueryBodyHandler;
-import com.p3.poc.parser.parsing.handler.statement.StatementProcessor;
-import io.trino.sql.tree.*;
+import com.p3.poc.parser.parsing.handler.query.service.*;
+import com.p3.poc.parser.parsing.handler.query.service_impl.*;
+import io.trino.sql.tree.Node;
+import io.trino.sql.tree.QueryBody;
+import io.trino.sql.tree.With;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
-
+@Slf4j
 public class QueryProcessor {
 
-    private static String  referenceId = "root";
+    private final OffsetHandler offsetHandler;
+    private final WithHandler withHandler;
     private final QueryBodyHandler queryBodyHandler;
+    private final OrderByHandler orderByHandler;
+    private final LimitHandler limitHandler;
 
     public QueryProcessor() {
-        this.queryBodyHandler = new QueryBodyHandler();
+        this.offsetHandler = new OffsetHandlerImpl();
+        this.withHandler = new WithHandlerImpl();
+        this.queryBodyHandler = new QueryBodyHandlerImpl();
+        this.orderByHandler = new OrderByHandlerImpl();
+        this.limitHandler = new LimitHandlerImpl();
     }
 
-    public BaseQueryBodyInfo processQueryBody(QueryBody queryBody) {
+    public WithInfo handleWith(Node node) {
+        final With with = (With) node;
+        return withHandler.handleWith(with);
+    }
+
+    public BaseQueryBodyInfo handleQueryBody(Node node) {
+        final QueryBody queryBody = (QueryBody) node;
         return queryBodyHandler.handleQueryBody(queryBody);
     }
 
-    public WithInfo processWith(With with) {
-        final int withCount = CollectorsUtil.getWithCount();
-        final WithInfo withInfo = WithInfo.builder()
-                .id("with:"+ withCount)
-                .isrecursive(with.isRecursive())
-                .build();
+    public OffsetInfo handleOffset(Node node) {
+        return offsetHandler.handleOffset(node);
+    }
 
-        final List<WithQuery> queries = with.getQueries();
-        final List<WithQueryInfo>withQueryInfos = queries.stream()
-                .map(withQuery -> {
-                    final Optional<List<Identifier>> columnNames = withQuery.getColumnNames();
-                    final BaseQueryInfo query = new StatementProcessor().processQuery(withQuery.getQuery());
-                    return WithQueryInfo.builder()
-                            .beanId("WithQueryInfo:"+ CollectorsUtil.getWithQueryInfoCount())
-                            .name(String.valueOf(withQuery.getName()))
-                            .columnNames(columnNames.orElseGet(ArrayList::new))
-                            .query(query)
-                            .withReferenceId(withInfo.getId())
-                            .build();
-                }).toList();
-        CollectorsUtil.withQueryInfoMap.put(withInfo.getId(), withQueryInfos);
-        return withInfo;
+    public OrderByInfo handleOrderBy(Node node) {
+        return orderByHandler.handleOrderBy(node);
+    }
+
+    public LimitInfo handleLimit(Node node) {
+        return limitHandler.handleLimit(node);
     }
 }

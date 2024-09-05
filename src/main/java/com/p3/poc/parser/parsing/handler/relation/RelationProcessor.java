@@ -18,8 +18,10 @@ public class RelationProcessor extends RelationHelper {
         final AliasedRelationInfo relationInfo = AliasedRelationInfo.getBean();
         final Relation relation = aliasedRelation.getRelation();
         final BaseRelationInfo baseRelationInfoBean = getNestedRelationInfo(relation);
+
         relationInfo.setRelationInfoDetails(baseRelationInfoBean);
         relationInfo.setAliasName(String.valueOf(aliasedRelation.getAlias()));
+
         return relationInfo;
     }
 
@@ -28,8 +30,10 @@ public class RelationProcessor extends RelationHelper {
         relationInfo.setType(String.valueOf(join.getType()));
         relationInfo.setLeft(getNestedRelationInfo(join.getLeft()));
         relationInfo.setRight(getNestedRelationInfo(join.getRight()));
+
         final Optional<JoinCriteria> criteria = join.getCriteria();
         criteria.ifPresent(joinCriteria -> relationInfo.setJoinCriteria(handleJoinCriteria(joinCriteria)));
+
         return relationInfo;
     }
 
@@ -37,9 +41,12 @@ public class RelationProcessor extends RelationHelper {
         final TableRelationInfo relationInfo = TableRelationInfo.getBean();
         final QualifiedName name = tableRelation.getName();
         final Optional<QualifiedName> schemaName = name.getPrefix();
+
         schemaName.ifPresent(qualifiedName -> relationInfo.setSchemaName(String.valueOf(qualifiedName)));
+
         relationInfo.setTableName(String.valueOf(name.getSuffix()));
         relationInfo.setFullTableName(name.toString());
+
         return relationInfo;
     }
 

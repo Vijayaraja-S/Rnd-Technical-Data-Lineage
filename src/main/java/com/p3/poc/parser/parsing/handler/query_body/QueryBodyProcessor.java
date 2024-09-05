@@ -1,43 +1,37 @@
 package com.p3.poc.parser.parsing.handler.query_body;
 
-import com.p3.poc.parser.bean.query.query_body.QueryBodyType;
+import com.p3.poc.parser.bean.query.query_body.BaseQueryBodyInfo;
 import com.p3.poc.parser.bean.query.query_body.QuerySpecificationDetails;
-import com.p3.poc.parser.parsing.handler.query_specification.QuerySpecHandler;
-import io.trino.sql.tree.*;
-import lombok.extern.slf4j.Slf4j;
+import com.p3.poc.parser.parsing.handler.query_body.service.QuerySpecificationHandler;
+import io.trino.sql.tree.QueryBody;
+import io.trino.sql.tree.QuerySpecification;
 
-@Slf4j
-public class QueryBodyProcessor extends QueryBodyHelper {
-    private final QuerySpecHandler querySpecHandler;
+import java.util.Map;
+import java.util.function.Function;
 
-    public QueryBodyProcessor() {
-        this.querySpecHandler = new QuerySpecHandler();
+public class QueryBodyProcessor {
+    private final QuerySpecificationHandler querySpecificationHandler;
+    private final Map<Class<? extends QueryBody>, Function<QueryBody, ? extends BaseQueryBodyInfo>> handlers;
+
+
+    public QueryBodyProcessor(QuerySpecificationHandler querySpecificationHandler) {
+        this.querySpecificationHandler = querySpecificationHandler;
+        this.handlers = Map.of(QuerySpecification.class, this::handleQuerySpecification);
     }
 
-    public QuerySpecificationDetails processQuerySpec(QuerySpecification querySpecification) {
-        final QuerySpecificationDetails querySpec = new QuerySpecificationDetails();
-        var children = querySpecification.getChildren();
-        if (!children.isEmpty()) {
-            children
-                    .forEach(child -> {
-                        if (child instanceof Select select) {
-                            querySpec.setSelectQueryInfo(querySpecHandler.handleSelect(select));
-                        } else if (child instanceof Relation relation) {
-                            querySpec.setBaseRelationInfo(querySpecHandler.handleFrom(relation));
-                        } else if (child instanceof GroupBy groupBy) {
-                            querySpec.setGroupQueryInfo(querySpecHandler.handleGroupBy(groupBy));
-                        } else if (child instanceof OrderBy orderBy) {
-                            querySpec.setOrderByInfo(querySpecHandler.handleOrderBY(orderBy));
-                        } else if (child instanceof Limit limit) {
-                            querySpec.setLimitInfo(querySpecHandler.handleLimit(limit));
-                        } else if (child instanceof Offset offset) {
-                            querySpec.setOffsetInfo(querySpecHandler.handleOffset(offset));
-                        }
-                    });
-            querySpec.setWhereQueryInfo(getWhereQueryInfo(querySpecification));
-            querySpec.setHavingQueryInfo(getHavingQueryInfo(querySpecification));
-            querySpec.setQueryBodyType(QueryBodyType.QUERY_SPECIFICATION);
-        }
-        return querySpec;
+    @SuppressWarnings("unchecked")
+    public <T extends BaseQueryBodyInfo> T handleQueryBody(QueryBody queryBody) {
+        final Function<QueryBody, ? extends BaseQueryBodyInfo> handler = handlers.
+                getOrDefault(queryBody.getClass(), this::handleUnknownExpression);
+        return (T) handler.apply(queryBody);
+    }
+
+    private QuerySpecificationDetails handleQuerySpecification(QueryBody queryBody) {
+        final QuerySpecification querySpecification = (QuerySpecification) queryBody;
+        return querySpecificationHandler.handleQuerySpecification(querySpecification);
+    }
+
+    private BaseQueryBodyInfo handleUnknownExpression(QueryBody queryBody) {
+        return null;
     }
 }

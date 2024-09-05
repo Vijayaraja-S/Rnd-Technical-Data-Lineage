@@ -1,35 +1,36 @@
 package com.p3.poc.parser.parsing.handler.statement;
 
 import com.p3.poc.parser.bean.query.BaseQueryInfo;
-import com.p3.poc.parser.parsing.handler.query.QueryHandler;
+import com.p3.poc.parser.parsing.handler.query.QueryProcessor;
+import com.p3.poc.parser.parsing.handler.query.service_impl.*;
 import io.trino.sql.tree.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 @Slf4j
-public class StatementProcessor extends BaseProcessor{
-    private final QueryHandler queryHandler;
+public class StatementProcessor extends BaseProcessor {
+    private final QueryProcessor queryProcessor;
 
     public StatementProcessor() {
-        queryHandler = new QueryHandler();
+        queryProcessor = new QueryProcessor();
     }
 
     public BaseQueryInfo processQuery(Query query) {
         final BaseQueryInfo queryInfo = BaseQueryInfo.builder().build();
         final List<Node> children = query.getChildren();
-         if (!children.isEmpty()) {
+        if (!children.isEmpty()) {
             children.forEach(node -> {
                 if (node instanceof QueryBody) {
-                    queryInfo.setBaseQueryBodyInfo(queryHandler.handleQueryBody(node));
+                    queryInfo.setBaseQueryBodyInfo(queryProcessor.handleQueryBody(node));
                 } else if (node instanceof With) {
-                    queryInfo.setWithInfo(queryHandler.handleWith(node));
+                    queryInfo.setWithInfo(queryProcessor.handleWith(node));
                 } else if (node instanceof Limit) {
-                    queryInfo.setLimitInfo(queryHandler.handleLimit(node));
+                    queryInfo.setLimitInfo(queryProcessor.handleLimit(node));
                 } else if (node instanceof Offset) {
-                    queryInfo.setOffsetInfo(queryHandler.handleOffset(node));
+                    queryInfo.setOffsetInfo(queryProcessor.handleOffset(node));
                 } else if (node instanceof OrderBy) {
-                    queryInfo.setOffsetInfo(queryHandler.handleOrderBy(node));
+                    queryInfo.setOrderByInfo(queryProcessor.handleOrderBy(node));
                 }
             });
         } else {

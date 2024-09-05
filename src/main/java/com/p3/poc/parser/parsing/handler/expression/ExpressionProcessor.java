@@ -40,7 +40,7 @@ public class ExpressionProcessor {
         return comparisonExpInfo;
     }
 
-    private static BaseExpressionInfo getBaseExpressionInfo(Expression expression) {
+    private  BaseExpressionInfo getBaseExpressionInfo(Expression expression) {
         return new ExpressionHandler().handleExpression(expression);
     }
 }

@@ -1,46 +1,35 @@
-package com.p3.poc.parser.parsing.handler.query_specification;
+package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 
 import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.group.BaseGroupElementInfo;
+import com.p3.poc.parser.bean.query.query_body.query_specification.group.GroupQueryInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.group.identifier.GroupType;
-import com.p3.poc.parser.bean.query.query_body.query_specification.select.SelectColumnInfo;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
+import com.p3.poc.parser.parsing.handler.query_specification.service.GroupByNodeHandler;
 import io.trino.sql.tree.*;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-@Slf4j
-public class QuerySpecHelper {
+public class GroupHandlerImpl implements GroupByNodeHandler {
+    private final ExpressionHandler expressionHandler ;
 
-    private final ExpressionHandler commonExpressionHandler;
-
-    public QuerySpecHelper() {
-        this.commonExpressionHandler = new ExpressionHandler();
+    public GroupHandlerImpl() {
+        this.expressionHandler = new ExpressionHandler();
     }
 
-    SelectColumnInfo processSingleColumn(SingleColumn singleColumn) {
-        final Optional<Identifier> alias = singleColumn.getAlias();
-        final Expression expression = singleColumn.getExpression();
-
-        final SelectColumnInfo selectColumnInfoBean = getSelectColumnInfo();
-        selectColumnInfoBean.setWholeColumnName(singleColumn.toString());
-        selectColumnInfoBean.setAlias(alias.isPresent() ? String.valueOf(alias.get()) : "");
-        final BaseExpressionInfo baseExpressionInfo = commonExpressionHandler.handleExpression(expression);
-        selectColumnInfoBean.setQueryExpressionInfo(baseExpressionInfo);
-
-        return selectColumnInfoBean;
+    @Override
+    public GroupQueryInfo processGroupNode(GroupBy groupBy) {
+        final List<BaseGroupElementInfo> groupElementInfoList = groupBy.getGroupingElements()
+                .stream()
+                .map(this::handlerGroupElements)
+                .toList();
+        final GroupQueryInfo bean = GroupQueryInfo.getBean();
+        bean.setDistinct(groupBy.isDistinct());
+        bean.setGroupElementInfos(groupElementInfoList);
+        return bean;
     }
 
-    SelectColumnInfo processAllColumn(AllColumns allColumns) {
-        return null;
-    }
-
-    private SelectColumnInfo getSelectColumnInfo() {
-        return SelectColumnInfo.builder().build();
-    }
     BaseGroupElementInfo handlerGroupElements(GroupingElement groupingElement) {
         List<BaseExpressionInfo> expressionInfos = new ArrayList<>();
         final BaseGroupElementInfo bean = BaseGroupElementInfo.getBean();
@@ -50,7 +39,7 @@ public class QuerySpecHelper {
 
         } else {
             for (Expression expression : groupingElement.getExpressions()) {
-                final BaseExpressionInfo baseExpressionInfo = commonExpressionHandler.handleExpression(expression);
+                final BaseExpressionInfo baseExpressionInfo = expressionHandler.handleExpression(expression);
                 if (baseExpressionInfo != null) {
                     expressionInfos.add(baseExpressionInfo);
                 }
