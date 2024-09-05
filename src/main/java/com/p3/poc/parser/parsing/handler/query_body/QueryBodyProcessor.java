@@ -3,6 +3,7 @@ package com.p3.poc.parser.parsing.handler.query_body;
 import com.p3.poc.parser.bean.query.query_body.BaseQueryBodyInfo;
 import com.p3.poc.parser.bean.query.query_body.QuerySpecificationDetails;
 import com.p3.poc.parser.parsing.handler.query_body.service.QuerySpecificationHandler;
+import com.p3.poc.parser.parsing.handler.query_body.service_impl.QuerySpecificationImpl;
 import io.trino.sql.tree.QueryBody;
 import io.trino.sql.tree.QuerySpecification;
 
@@ -14,8 +15,8 @@ public class QueryBodyProcessor {
     private final Map<Class<? extends QueryBody>, Function<QueryBody, ? extends BaseQueryBodyInfo>> handlers;
 
 
-    public QueryBodyProcessor(QuerySpecificationHandler querySpecificationHandler) {
-        this.querySpecificationHandler = querySpecificationHandler;
+    public QueryBodyProcessor() {
+        this.querySpecificationHandler = new QuerySpecificationImpl();
         this.handlers = Map.of(QuerySpecification.class, this::handleQuerySpecification);
     }
 

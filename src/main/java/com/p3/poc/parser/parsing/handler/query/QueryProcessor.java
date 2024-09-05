@@ -15,18 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class QueryProcessor {
 
-    private final OffsetHandler offsetHandler;
+    private final OtherQueryHandler otherQueryHandler;
     private final WithHandler withHandler;
-    private final QueryBodyHandler queryBodyHandler;
-    private final OrderByHandler orderByHandler;
-    private final LimitHandler limitHandler;
 
     public QueryProcessor() {
-        this.offsetHandler = new OffsetHandlerImpl();
+        this.otherQueryHandler = new OtherQueryHandleImpl();
         this.withHandler = new WithHandlerImpl();
-        this.queryBodyHandler = new QueryBodyHandlerImpl();
-        this.orderByHandler = new OrderByHandlerImpl();
-        this.limitHandler = new LimitHandlerImpl();
     }
 
     public WithInfo handleWith(Node node) {
@@ -36,18 +30,18 @@ public class QueryProcessor {
 
     public BaseQueryBodyInfo handleQueryBody(Node node) {
         final QueryBody queryBody = (QueryBody) node;
-        return queryBodyHandler.handleQueryBody(queryBody);
+        return otherQueryHandler.handleQueryBody(queryBody);
     }
 
     public OffsetInfo handleOffset(Node node) {
-        return offsetHandler.handleOffset(node);
+        return otherQueryHandler.handleOffset(node);
     }
 
     public OrderByInfo handleOrderBy(Node node) {
-        return orderByHandler.handleOrderBy(node);
+        return otherQueryHandler.handleOrderBy(node);
     }
 
     public LimitInfo handleLimit(Node node) {
-        return limitHandler.handleLimit(node);
+        return otherQueryHandler.handleLimit(node);
     }
 }
