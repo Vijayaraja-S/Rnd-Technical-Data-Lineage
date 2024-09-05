@@ -6,10 +6,12 @@ import com.p3.poc.parser.bean.query.query_body.query_specification.others.LimitI
 import com.p3.poc.parser.bean.query.query_body.query_specification.others.OffsetInfo;
 import io.trino.sql.tree.Node;
 import io.trino.sql.tree.QueryBody;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 
 public interface OtherQueryHandler {
-    BaseQueryBodyInfo handleQueryBody(QueryBody queryBody);
-    OrderByInfo handleOrderBy(Node node);
-    OffsetInfo handleOffset(Node node);
-    LimitInfo handleLimit(Node node);
+    BaseQueryBodyInfo handleQueryBody(QueryBody queryBody, DefaultDirectedGraph<Object, DefaultEdge> directedGraph);
+    OrderByInfo handleOrderBy(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph);
+    OffsetInfo handleOffset(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph);
+    LimitInfo handleLimit(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph);
 }

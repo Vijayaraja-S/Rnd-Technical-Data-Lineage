@@ -9,6 +9,8 @@ import com.p3.poc.parser.parsing.handler.query_body.QueryBodyProcessor;
 import com.p3.poc.parser.parsing.handler.query_specification.service.OtherSpecHandler;
 import com.p3.poc.parser.parsing.handler.query_specification.service_impl.OtherQuerySpecImpl;
 import io.trino.sql.tree.*;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 
 public class OtherQueryHandleImpl implements OtherQueryHandler {
     private final QueryBodyProcessor queryBodyProcessor;
@@ -19,24 +21,24 @@ public class OtherQueryHandleImpl implements OtherQueryHandler {
     }
 
     @Override
-    public BaseQueryBodyInfo handleQueryBody(QueryBody queryBody) {
+    public BaseQueryBodyInfo handleQueryBody(QueryBody queryBody, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
         return queryBodyProcessor.handleQueryBody(queryBody);
     }
 
     @Override
-    public OrderByInfo handleOrderBy(Node node) {
+    public OrderByInfo handleOrderBy(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
         final OrderBy orderBy = (OrderBy) node;
         return otherSpecHandler.processOrderByNode(orderBy);
     }
 
     @Override
-    public OffsetInfo handleOffset(Node node) {
+    public OffsetInfo handleOffset(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
         final Offset offset = (Offset) node;
         return otherSpecHandler.processOffsetNode(offset);
     }
 
     @Override
-    public LimitInfo handleLimit(Node node) {
+    public LimitInfo handleLimit(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
         final Limit limit = (Limit) node;
         return otherSpecHandler.processLimitNode(limit);
     }

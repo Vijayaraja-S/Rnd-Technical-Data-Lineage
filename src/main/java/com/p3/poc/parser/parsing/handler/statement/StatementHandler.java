@@ -1,8 +1,9 @@
 package com.p3.poc.parser.parsing.handler.statement;
 
-import com.p3.poc.parser.bean.query.BaseQueryInfo;
 import io.trino.sql.tree.Query;
 import io.trino.sql.tree.Statement;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 
 public class StatementHandler {
     private final StatementProcessor statementProcessor;
@@ -11,8 +12,8 @@ public class StatementHandler {
         this.statementProcessor = new StatementProcessor();
     }
 
-    public BaseQueryInfo handleQuery(Statement statement) {
+    public void handleQuery(Statement statement, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
         final Query query = (Query) statement;
-        return statementProcessor.processQuery(query);
+        statementProcessor.processQuery(query,directedGraph);
     }
 }

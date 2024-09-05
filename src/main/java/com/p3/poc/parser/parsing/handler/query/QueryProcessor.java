@@ -11,6 +11,8 @@ import io.trino.sql.tree.Node;
 import io.trino.sql.tree.QueryBody;
 import io.trino.sql.tree.With;
 import lombok.extern.slf4j.Slf4j;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 
 @Slf4j
 public class QueryProcessor {
@@ -23,25 +25,25 @@ public class QueryProcessor {
         this.withHandler = new WithHandlerImpl();
     }
 
-    public WithInfo handleWith(Node node) {
+    public WithInfo handleWith(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
         final With with = (With) node;
-        return withHandler.handleWith(with);
+        return withHandler.handleWith(with,directedGraph);
     }
 
-    public BaseQueryBodyInfo handleQueryBody(Node node) {
+    public BaseQueryBodyInfo handleQueryBody(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
         final QueryBody queryBody = (QueryBody) node;
-        return otherQueryHandler.handleQueryBody(queryBody);
+        return otherQueryHandler.handleQueryBody(queryBody,directedGraph);
     }
 
-    public OffsetInfo handleOffset(Node node) {
-        return otherQueryHandler.handleOffset(node);
+    public OffsetInfo handleOffset(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+        return otherQueryHandler.handleOffset(node,directedGraph);
     }
 
-    public OrderByInfo handleOrderBy(Node node) {
-        return otherQueryHandler.handleOrderBy(node);
+    public OrderByInfo handleOrderBy(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+        return otherQueryHandler.handleOrderBy(node,directedGraph);
     }
 
-    public LimitInfo handleLimit(Node node) {
-        return otherQueryHandler.handleLimit(node);
+    public LimitInfo handleLimit(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+        return otherQueryHandler.handleLimit(node,directedGraph);
     }
 }
