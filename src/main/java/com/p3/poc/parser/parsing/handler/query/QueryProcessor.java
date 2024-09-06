@@ -19,31 +19,33 @@ public class QueryProcessor {
 
     private final OtherQueryHandler otherQueryHandler;
     private final WithHandler withHandler;
+    private final DefaultDirectedGraph<Object, DefaultEdge> directedGraph;
 
-    public QueryProcessor() {
+    public QueryProcessor(DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+        this.directedGraph = directedGraph;
         this.otherQueryHandler = new OtherQueryHandleImpl();
         this.withHandler = new WithHandlerImpl();
     }
 
-    public WithInfo handleWith(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+    public WithInfo handleWith(Node node) {
         final With with = (With) node;
         return withHandler.handleWith(with,directedGraph);
     }
 
-    public BaseQueryBodyInfo handleQueryBody(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+    public BaseQueryBodyInfo handleQueryBody(Node node) {
         final QueryBody queryBody = (QueryBody) node;
         return otherQueryHandler.handleQueryBody(queryBody,directedGraph);
     }
 
-    public OffsetInfo handleOffset(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+    public OffsetInfo handleOffset(Node node) {
         return otherQueryHandler.handleOffset(node,directedGraph);
     }
 
-    public OrderByInfo handleOrderBy(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+    public OrderByInfo handleOrderBy(Node node) {
         return otherQueryHandler.handleOrderBy(node,directedGraph);
     }
 
-    public LimitInfo handleLimit(Node node, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+    public LimitInfo handleLimit(Node node) {
         return otherQueryHandler.handleLimit(node,directedGraph);
     }
 }

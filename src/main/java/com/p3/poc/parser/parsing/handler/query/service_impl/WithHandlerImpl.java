@@ -1,7 +1,7 @@
 package com.p3.poc.parser.parsing.handler.query.service_impl;
 
 
-import com.p3.poc.parser.bean.CollectorsUtil;
+import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.bean.query.BaseQueryInfo;
 import com.p3.poc.parser.bean.query.with.WithInfo;
 import com.p3.poc.parser.bean.query.with.WithQueryInfo;
@@ -22,18 +22,18 @@ public class WithHandlerImpl implements WithHandler {
     @Override
     public WithInfo handleWith(With with, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
         final WithInfo withInfo = WithInfo.builder()
-                .id("with:" + CollectorsUtil.getWithCount())
                 .isrecursive(with.isRecursive())
                 .build();
-        CollectorsUtil.withInfoMap.put(withInfo.getId(),withInfo);
+        directedGraph.addVertex(withInfo);
 
         final List<WithQuery> queries = with.getQueries();
         final List<WithQueryInfo> withQueryInfos = queries.stream()
                 .map(withQuery -> {
+                    directedGraph.addVertex(withQuery);
+                    directedGraph.addEdge(withInfo,withQuery);
                     final Optional<List<Identifier>> columnNames = withQuery.getColumnNames();
-                    final BaseQueryInfo query = new StatementProcessor().processQuery(withQuery.getQuery(), directedGraph);
+                    final BaseQueryInfo query = new StatementProcessor(directedGraph).processQuery(withQuery.getQuery());
                     return WithQueryInfo.builder()
-                            .beanId("WithQueryInfo:" + CollectorsUtil.getWithQueryInfoCount())
                             .name(String.valueOf(withQuery.getName()))
                             .columnNames(columnNames.orElseGet(ArrayList::new))
                             .query(query)
@@ -41,7 +41,8 @@ public class WithHandlerImpl implements WithHandler {
                             .build();
                 }).toList();
 
-        CollectorsUtil.withQueryInfoMap.put(withInfo.getId(), withQueryInfos);
+
+
         return withInfo;
     }
 }

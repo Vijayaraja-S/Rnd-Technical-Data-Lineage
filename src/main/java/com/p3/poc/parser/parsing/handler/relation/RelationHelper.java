@@ -1,5 +1,7 @@
 package com.p3.poc.parser.parsing.handler.relation;
 
+import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
+import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
 import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
 import com.p3.poc.parser.bean.relation.BaseRelationInfo;
 import com.p3.poc.parser.bean.relation.sub_relation.join_criteria.JoinCriteriaInfo;
@@ -25,11 +27,11 @@ public class RelationHelper {
         }
         return criteriaInfo;
     }
-    public BaseRelationInfo getNestedRelationInfo(Relation relation) {
-        return new RelationHandler().handleRelation(relation);
+    public BaseRelationInfo getNestedRelationInfo(Relation relation, TableDetails tableDetails) {
+        return new RelationHandler().handleRelation(relation, tableDetails);
     }
 
     public BaseExpressionInfo getNestedExpressionInfo(Expression expression) {
-        return new ExpressionHandler().handleExpression(expression);
+        return new ExpressionHandler().handleExpression(expression, ColumnDetails.builder().build());
     }
 }

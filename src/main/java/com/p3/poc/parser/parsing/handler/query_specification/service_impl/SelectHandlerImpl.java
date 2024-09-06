@@ -1,15 +1,12 @@
 package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 
-import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.select.SelectColumnInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.select.SelectQueryInfo;
+import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
+import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
 import com.p3.poc.parser.parsing.handler.query_specification.service.SelectNodeHandler;
 import io.trino.sql.tree.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class SelectHandlerImpl implements SelectNodeHandler {
 
@@ -20,42 +17,31 @@ public class SelectHandlerImpl implements SelectNodeHandler {
     }
 
     @Override
-    public SelectQueryInfo processSelectNode(Select selectNode) {
-        final List<SelectColumnInfo> selectColumnInfoList = selectNode.getSelectItems()
-                .stream().
-                map(selectItem -> {
+    public void processSelectNode(Select selectNode) {
+        selectNode.getSelectItems().
+                forEach(selectItem -> {
                     if (selectItem instanceof SingleColumn singleColumn) {
-                        return processSingleColumn(singleColumn);
+                        processSingleColumn(singleColumn);
                     } else if (selectItem instanceof AllColumns allColumns) {
-                        return processAllColumn(allColumns);
+                        //
                     } else {
                         throw new IllegalArgumentException("Unsupported select item: " + selectItem);
                     }
-                }).filter(Objects::nonNull).toList();
-
-        final SelectQueryInfo bean = SelectQueryInfo.getBean();
-        bean.setDistinct(selectNode.isDistinct());
-        bean.setSelectColumnInfo(selectColumnInfoList);
-        return bean;
+                });
     }
-    SelectColumnInfo processSingleColumn(SingleColumn singleColumn) {
+
+    void processSingleColumn(SingleColumn singleColumn) {
         final Optional<Identifier> alias = singleColumn.getAlias();
-        final Expression expression = singleColumn.getExpression();
 
-        final SelectColumnInfo selectColumnInfoBean = getSelectColumnInfo();
-        selectColumnInfoBean.setWholeColumnName(singleColumn.toString());
-        selectColumnInfoBean.setAlias(alias.isPresent() ? String.valueOf(alias.get()) : "");
-        final BaseExpressionInfo baseExpressionInfo = commonExpressionHandler.handleExpression(expression);
-        selectColumnInfoBean.setQueryExpressionInfo(baseExpressionInfo);
+        final ColumnDetails column = ColumnDetails.builder()
+                .columnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "")
+                .build();
+        commonExpressionHandler.handleExpression(singleColumn.getExpression(), column);
 
-        return selectColumnInfoBean;
-    }
-
-    SelectColumnInfo processAllColumn(AllColumns allColumns) {
-        return null;
-    }
-
-    private SelectColumnInfo getSelectColumnInfo() {
-        return SelectColumnInfo.builder().build();
+        Map<String, List<ColumnDetails>> columnListMap = GlobalCollector.getInstance().getColumnListMap();
+        List<ColumnDetails> columnList = columnListMap.computeIfAbsent(column.getColumnSource(), k -> new ArrayList<>());
+        int index = columnList.size();
+        column.setColumnId(column.getColumnSource() + ":c" + index);
+        columnList.add(column);
     }
 }

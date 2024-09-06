@@ -13,25 +13,25 @@ import java.util.List;
 public class StatementProcessor extends BaseProcessor {
     private final QueryProcessor queryProcessor;
 
-    public StatementProcessor() {
-        queryProcessor = new QueryProcessor();
+    public StatementProcessor(DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+        queryProcessor = new QueryProcessor(directedGraph);
     }
 
-    public BaseQueryInfo processQuery(Query query, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
+    public BaseQueryInfo processQuery(Query query) {
         final BaseQueryInfo queryInfo = BaseQueryInfo.builder().build();
         final List<Node> children = query.getChildren();
         if (!children.isEmpty()) {
             children.forEach(node -> {
-                if (node instanceof QueryBody) {
-                    queryInfo.setBaseQueryBodyInfo(queryProcessor.handleQueryBody(node,directedGraph));
-                } else if (node instanceof With) {
-                    queryInfo.setWithInfo(queryProcessor.handleWith(node,directedGraph));
+                if (node instanceof With) {
+                    queryInfo.setWithInfo(queryProcessor.handleWith(node));
+                }else if (node instanceof QueryBody) {
+                    queryInfo.setBaseQueryBodyInfo(queryProcessor.handleQueryBody(node));
                 } else if (node instanceof Limit) {
-                    queryInfo.setLimitInfo(queryProcessor.handleLimit(node,directedGraph));
+                    queryInfo.setLimitInfo(queryProcessor.handleLimit(node));
                 } else if (node instanceof Offset) {
-                    queryInfo.setOffsetInfo(queryProcessor.handleOffset(node,directedGraph));
+                    queryInfo.setOffsetInfo(queryProcessor.handleOffset(node));
                 } else if (node instanceof OrderBy) {
-                    queryInfo.setOrderByInfo(queryProcessor.handleOrderBy(node,directedGraph));
+                    queryInfo.setOrderByInfo(queryProcessor.handleOrderBy(node));
                 }
             });
         } else {

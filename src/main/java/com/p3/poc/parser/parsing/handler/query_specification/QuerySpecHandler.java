@@ -25,9 +25,9 @@ public class QuerySpecHandler {
         this.otherQuerySpecImpl = new OtherQuerySpecImpl();
     }
 
-    public SelectQueryInfo handleSelect(Node node) {
+    public void handleSelect(Node node) {
         final Select select = (Select) node;
-        return selectNodeHandler.processSelectNode(select);
+        selectNodeHandler.processSelectNode(select);
     }
 
     public BaseRelationInfo handleFrom(Node node) {

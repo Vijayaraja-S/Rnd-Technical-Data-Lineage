@@ -1,5 +1,6 @@
 package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 
+import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
 import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.group.BaseGroupElementInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.group.GroupQueryInfo;
@@ -39,7 +40,7 @@ public class GroupHandlerImpl implements GroupByNodeHandler {
 
         } else {
             for (Expression expression : groupingElement.getExpressions()) {
-                final BaseExpressionInfo baseExpressionInfo = expressionHandler.handleExpression(expression);
+                final BaseExpressionInfo baseExpressionInfo = expressionHandler.handleExpression(expression, ColumnDetails.builder().build());
                 if (baseExpressionInfo != null) {
                     expressionInfos.add(baseExpressionInfo);
                 }

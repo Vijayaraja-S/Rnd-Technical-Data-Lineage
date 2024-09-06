@@ -1,5 +1,6 @@
 package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 
+import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
 import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.order_by.OrderByInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.order_by.SortInfo;
@@ -11,6 +12,7 @@ import com.p3.poc.parser.bean.relation.BaseRelationInfo;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
 import com.p3.poc.parser.parsing.handler.query_specification.service.OtherSpecHandler;
 import com.p3.poc.parser.parsing.handler.relation.RelationHandler;
+import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
 import io.trino.sql.tree.*;
 
 import java.util.ArrayList;
@@ -27,7 +29,8 @@ public class OtherQuerySpecImpl implements OtherSpecHandler {
 
     @Override
     public BaseRelationInfo processFromNode(Relation relation) {
-        return relationHandler.handleRelation(relation);
+        final TableDetails table = TableDetails.builder().build();
+        return relationHandler.handleRelation(relation, table);
     }
 
 
@@ -82,6 +85,6 @@ public class OtherQuerySpecImpl implements OtherSpecHandler {
     }
 
     private BaseExpressionInfo processExpression(Expression havingValue) {
-        return expressionHandler.handleExpression(havingValue);
+        return expressionHandler.handleExpression(havingValue, ColumnDetails.builder().build());
     }
 }

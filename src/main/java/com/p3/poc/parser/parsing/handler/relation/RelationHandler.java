@@ -1,5 +1,6 @@
 package com.p3.poc.parser.parsing.handler.relation;
 
+import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
 import com.p3.poc.parser.bean.relation.BaseRelationInfo;
 import com.p3.poc.parser.bean.relation.sub_relation.AliasedRelationInfo;
 import com.p3.poc.parser.bean.relation.sub_relation.JoinRelationInfo;
@@ -18,13 +19,12 @@ import java.util.function.Function;
 @Slf4j
 @Data
 public class RelationHandler {
-    private final RelationProcessor relationProcessor;
+    private RelationProcessor relationProcessor;
 
     private final Map<Class<? extends Relation>, Function<Relation, ? extends BaseRelationInfo>> handlers;
 
     @SneakyThrows
     public RelationHandler() {
-        this.relationProcessor = new RelationProcessor();
         this.handlers = Map.of(
                 AliasedRelation.class, this::aliasedRelationHandler,
                 Join.class, this::joinRelationHandler,
@@ -33,7 +33,9 @@ public class RelationHandler {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends BaseRelationInfo> T handleRelation(Relation relation) {
+    public <T extends BaseRelationInfo> T handleRelation(Relation relation, TableDetails table) {
+        this.relationProcessor = new RelationProcessor(table);
+
         Function<Relation, ? extends BaseRelationInfo> handler =
                 handlers.getOrDefault(relation.getClass(), this::handleUnknownExpression);
         return (T) handler.apply(relation);

@@ -13,6 +13,6 @@ import java.util.List;
 @Setter
 public class Schema {
     private String name;
-    private List<Table> tables;
+    private List<TableDetails> tables;
     private List<Other> others;
 }

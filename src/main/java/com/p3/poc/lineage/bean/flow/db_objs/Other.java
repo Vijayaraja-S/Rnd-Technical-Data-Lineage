@@ -17,6 +17,6 @@ public class Other{
     private String name;
     private String displayName;
     private String type;
-    private List<Column> columns;
+    private List<ColumnDetails> columns;
     private List<Coordinate> coordinates;
 }

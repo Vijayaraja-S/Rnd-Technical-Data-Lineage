@@ -6,14 +6,9 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 public class StatementHandler {
-    private final StatementProcessor statementProcessor;
-
-    public StatementHandler() {
-        this.statementProcessor = new StatementProcessor();
-    }
 
     public void handleQuery(Statement statement, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) {
         final Query query = (Query) statement;
-        statementProcessor.processQuery(query,directedGraph);
+        new StatementProcessor(directedGraph).processQuery(query);
     }
 }

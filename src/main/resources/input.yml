@@ -25,21 +25,21 @@
 #  OFFSET 10
 #  LIMIT 10
 
-#sqlQuery: SELECT
-#    t1.COLUMN_1 AS alias_C1,
-#    t1.COLUMN_2 AS alias_C2,
-#    t1.COLUMN_4 AS alias_additional_info,
-#    t1.COLUMN_5 AS alias_more_info
-#
-#    FROM
-#    application1_schema1.table_1 AS t1
-#
-#    WHERE
-#    t1.COLUMN_1 = 'some_value'
-#    AND t1.COLUMN_2 > 100
-#
-#    HAVING
-#    t1.COLUMN_5 IS NOT NULL
+sqlQuery: SELECT
+    t1.COLUMN_1 AS alias_C1,
+    t1.COLUMN_2 AS alias_C2,
+    t1.COLUMN_4 AS alias_additional_info,
+    t1.COLUMN_5 AS alias_more_info
+
+    FROM
+    application1_schema1.table_1 AS t1
+
+    WHERE
+    t1.COLUMN_1 = 'some_value'
+    AND t1.COLUMN_2 > 100
+
+    HAVING
+    t1.COLUMN_5 IS NOT NULL
 #
 #
 #
@@ -241,148 +241,148 @@
 
 
 
+##
+#  sqlQuery: WITH EmployeeSales AS (
+#              SELECT e.EmployeeID, e.EmployeeName, SUM(s.SaleAmount) AS TotalSales
+#              FROM employees e
+#              JOIN sales s ON e.EmployeeID = s.EmployeeID
+#              GROUP BY e.EmployeeID, e.EmployeeName
+#              ),
 #
-  sqlQuery: WITH EmployeeSales AS (
-              SELECT e.EmployeeID, e.EmployeeName, SUM(s.SaleAmount) AS TotalSales
-              FROM employees e
-              JOIN sales s ON e.EmployeeID = s.EmployeeID
-              GROUP BY e.EmployeeID, e.EmployeeName
-              ),
-
-              EmployeeAverages AS (
-              SELECT AVG(TotalSales) AS AverageSales
-              FROM EmployeeSales
-              ),
-
-              EmployeeRanks AS (
-              WITH
-              AboveAverageEmployees AS (
-              SELECT es.EmployeeID, es.EmployeeName, es.TotalSales
-              FROM EmployeeSales es
-              WHERE es.TotalSales > (SELECT AverageSales FROM EmployeeAverages)
-              ),
-
-              BelowAverageEmployees AS (
-              SELECT es.EmployeeID, es.EmployeeName, es.TotalSales
-              FROM EmployeeSales es
-              WHERE es.TotalSales <= (SELECT AverageSales FROM EmployeeAverages)
-              )
-              SELECT es.EmployeeID, es.EmployeeName, es.TotalSales,
-              RANK() OVER (ORDER BY es.TotalSales DESC) AS SalesRank,
-              CASE
-              WHEN es.EmployeeID IN (SELECT EmployeeID FROM AboveAverageEmployees)
-              THEN 'Above Average'
-              ELSE 'Below Average'
-              END AS Performance
-              FROM EmployeeSales es
-              ),
-
-              DepartmentSales AS (
-              WITH
-              DepartmentTotals AS (
-              SELECT d.DepartmentID, d.DepartmentName,
-              SUM(er.TotalSales) AS DepartmentTotalSales
-              FROM departments d
-              JOIN employees e ON d.DepartmentID = e.DepartmentID
-              JOIN EmployeeRanks er ON e.EmployeeID = er.EmployeeID
-              GROUP BY d.DepartmentID, d.DepartmentName
-              )
-              SELECT dt.DepartmentID, dt.DepartmentName, dt.DepartmentTotalSales,
-              COUNT(er.EmployeeID) AS EmployeeCount
-              FROM DepartmentTotals dt
-              JOIN employees e ON dt.DepartmentID = e.DepartmentID
-              JOIN EmployeeRanks er ON e.EmployeeID = er.EmployeeID
-              GROUP BY dt.DepartmentID, dt.DepartmentName, dt.DepartmentTotalSales
-              ),
-
-              DepartmentRanks AS (
-              WITH
-              DepartmentAverages AS (
-              SELECT AVG(ds.DepartmentTotalSales) AS AvgDepartmentSales
-              FROM DepartmentSales ds
-              )
-              SELECT ds.DepartmentID, ds.DepartmentName, ds.DepartmentTotalSales,
-              RANK() OVER (ORDER BY ds.DepartmentTotalSales DESC) AS DepartmentRank,
-              CASE
-              WHEN ds.DepartmentTotalSales > (SELECT AvgDepartmentSales FROM DepartmentAverages)
-              THEN 'Above Average'
-              ELSE 'Below Average'
-              END AS DepartmentPerformance
-              FROM DepartmentSales ds
-              ),
-
-              EmployeeDepartmentRanks AS (
-              WITH
-              TopDepartments AS (
-              SELECT DepartmentID, DepartmentName, DepartmentTotalSales
-              FROM DepartmentRanks
-              WHERE DepartmentRank <= 3
-              ),
-
-              TopEmployees AS (
-              SELECT EmployeeID, EmployeeName, TotalSales, SalesRank
-              FROM EmployeeRanks
-              WHERE SalesRank <= 5
-              )
-              SELECT er.EmployeeID, er.EmployeeName, er.TotalSales, er.SalesRank,
-              dr.DepartmentName, dr.DepartmentTotalSales, dr.DepartmentRank
-              FROM TopEmployees er
-              JOIN employees e ON er.EmployeeID = e.EmployeeID
-              JOIN TopDepartments dr ON e.DepartmentID = dr.DepartmentID
-              ),
-
-              TopDepartmentContributions AS (
-              WITH
-              EmployeeContributions AS (
-              SELECT ed.EmployeeID, ed.EmployeeName, ed.DepartmentName,
-              ed.TotalSales, ed.DepartmentTotalSales,
-              (ed.TotalSales / ed.DepartmentTotalSales) * 100 AS ContributionPercentage
-              FROM EmployeeDepartmentRanks ed
-              )
-              SELECT ec.DepartmentName, SUM(ec.ContributionPercentage) AS TotalContribution
-              FROM EmployeeContributions ec
-              GROUP BY ec.DepartmentName
-              ),
-
-              TopContributors AS (
-              WITH
-              HighestContributions AS (
-              SELECT DepartmentName, MAX(TotalContribution) AS MaxContribution
-              FROM TopDepartmentContributions
-              GROUP BY DepartmentName
-              )
-              SELECT ec.EmployeeID, ec.EmployeeName, ec.DepartmentName, ec.ContributionPercentage
-              FROM EmployeeContributions ec
-              JOIN HighestContributions hc ON ec.DepartmentName = hc.DepartmentName
-              WHERE ec.ContributionPercentage = hc.MaxContribution
-              ),
-
-              DepartmentTopContributors AS (
-              WITH
-              TopContributorTotals AS (
-              SELECT tc.DepartmentName, SUM(tc.ContributionPercentage) AS TotalTopContribution
-              FROM TopContributors tc
-              GROUP BY tc.DepartmentName
-              )
-              SELECT tc.DepartmentName, tc.TotalTopContribution
-              FROM TopContributorTotals tc
-              ORDER BY tc.TotalTopContribution DESC
-              ),
-
-              FinalResults AS (
-              WITH
-              HighContributionDepartments AS (
-              SELECT DepartmentName, TotalTopContribution
-              FROM DepartmentTopContributors
-              WHERE TotalTopContribution > 50
-              )
-              SELECT hcd.DepartmentName, hcd.TotalTopContribution
-              FROM HighContributionDepartments hcd
-              ORDER BY hcd.TotalTopContribution DESC
-              )
-
-              SELECT fr.DepartmentName, fr.TotalTopContribution
-              FROM FinalResults fr
+#              EmployeeAverages AS (
+#              SELECT AVG(TotalSales) AS AverageSales
+#              FROM EmployeeSales
+#              ),
+#
+#              EmployeeRanks AS (
+#              WITH
+#              AboveAverageEmployees AS (
+#              SELECT es.EmployeeID, es.EmployeeName, es.TotalSales
+#              FROM EmployeeSales es
+#              WHERE es.TotalSales > (SELECT AverageSales FROM EmployeeAverages)
+#              ),
+#
+#              BelowAverageEmployees AS (
+#              SELECT es.EmployeeID, es.EmployeeName, es.TotalSales
+#              FROM EmployeeSales es
+#              WHERE es.TotalSales <= (SELECT AverageSales FROM EmployeeAverages)
+#              )
+#              SELECT es.EmployeeID, es.EmployeeName, es.TotalSales,
+#              RANK() OVER (ORDER BY es.TotalSales DESC) AS SalesRank,
+#              CASE
+#              WHEN es.EmployeeID IN (SELECT EmployeeID FROM AboveAverageEmployees)
+#              THEN 'Above Average'
+#              ELSE 'Below Average'
+#              END AS Performance
+#              FROM EmployeeSales es
+#              ),
+#
+#              DepartmentSales AS (
+#              WITH
+#              DepartmentTotals AS (
+#              SELECT d.DepartmentID, d.DepartmentName,
+#              SUM(er.TotalSales) AS DepartmentTotalSales
+#              FROM departments d
+#              JOIN employees e ON d.DepartmentID = e.DepartmentID
+#              JOIN EmployeeRanks er ON e.EmployeeID = er.EmployeeID
+#              GROUP BY d.DepartmentID, d.DepartmentName
+#              )
+#              SELECT dt.DepartmentID, dt.DepartmentName, dt.DepartmentTotalSales,
+#              COUNT(er.EmployeeID) AS EmployeeCount
+#              FROM DepartmentTotals dt
+#              JOIN employees e ON dt.DepartmentID = e.DepartmentID
+#              JOIN EmployeeRanks er ON e.EmployeeID = er.EmployeeID
+#              GROUP BY dt.DepartmentID, dt.DepartmentName, dt.DepartmentTotalSales
+#              ),
+#
+#              DepartmentRanks AS (
+#              WITH
+#              DepartmentAverages AS (
+#              SELECT AVG(ds.DepartmentTotalSales) AS AvgDepartmentSales
+#              FROM DepartmentSales ds
+#              )
+#              SELECT ds.DepartmentID, ds.DepartmentName, ds.DepartmentTotalSales,
+#              RANK() OVER (ORDER BY ds.DepartmentTotalSales DESC) AS DepartmentRank,
+#              CASE
+#              WHEN ds.DepartmentTotalSales > (SELECT AvgDepartmentSales FROM DepartmentAverages)
+#              THEN 'Above Average'
+#              ELSE 'Below Average'
+#              END AS DepartmentPerformance
+#              FROM DepartmentSales ds
+#              ),
+#
+#              EmployeeDepartmentRanks AS (
+#              WITH
+#              TopDepartments AS (
+#              SELECT DepartmentID, DepartmentName, DepartmentTotalSales
+#              FROM DepartmentRanks
+#              WHERE DepartmentRank <= 3
+#              ),
+#
+#              TopEmployees AS (
+#              SELECT EmployeeID, EmployeeName, TotalSales, SalesRank
+#              FROM EmployeeRanks
+#              WHERE SalesRank <= 5
+#              )
+#              SELECT er.EmployeeID, er.EmployeeName, er.TotalSales, er.SalesRank,
+#              dr.DepartmentName, dr.DepartmentTotalSales, dr.DepartmentRank
+#              FROM TopEmployees er
+#              JOIN employees e ON er.EmployeeID = e.EmployeeID
+#              JOIN TopDepartments dr ON e.DepartmentID = dr.DepartmentID
+#              ),
+#
+#              TopDepartmentContributions AS (
+#              WITH
+#              EmployeeContributions AS (
+#              SELECT ed.EmployeeID, ed.EmployeeName, ed.DepartmentName,
+#              ed.TotalSales, ed.DepartmentTotalSales,
+#              (ed.TotalSales / ed.DepartmentTotalSales) * 100 AS ContributionPercentage
+#              FROM EmployeeDepartmentRanks ed
+#              )
+#              SELECT ec.DepartmentName, SUM(ec.ContributionPercentage) AS TotalContribution
+#              FROM EmployeeContributions ec
+#              GROUP BY ec.DepartmentName
+#              ),
+#
+#              TopContributors AS (
+#              WITH
+#              HighestContributions AS (
+#              SELECT DepartmentName, MAX(TotalContribution) AS MaxContribution
+#              FROM TopDepartmentContributions
+#              GROUP BY DepartmentName
+#              )
+#              SELECT ec.EmployeeID, ec.EmployeeName, ec.DepartmentName, ec.ContributionPercentage
+#              FROM EmployeeContributions ec
+#              JOIN HighestContributions hc ON ec.DepartmentName = hc.DepartmentName
+#              WHERE ec.ContributionPercentage = hc.MaxContribution
+#              ),
+#
+#              DepartmentTopContributors AS (
+#              WITH
+#              TopContributorTotals AS (
+#              SELECT tc.DepartmentName, SUM(tc.ContributionPercentage) AS TotalTopContribution
+#              FROM TopContributors tc
+#              GROUP BY tc.DepartmentName
+#              )
+#              SELECT tc.DepartmentName, tc.TotalTopContribution
+#              FROM TopContributorTotals tc
+#              ORDER BY tc.TotalTopContribution DESC
+#              ),
+#
+#              FinalResults AS (
+#              WITH
+#              HighContributionDepartments AS (
+#              SELECT DepartmentName, TotalTopContribution
+#              FROM DepartmentTopContributors
+#              WHERE TotalTopContribution > 50
+#              )
+#              SELECT hcd.DepartmentName, hcd.TotalTopContribution
+#              FROM HighContributionDepartments hcd
+#              ORDER BY hcd.TotalTopContribution DESC
+#              )
+#
+#              SELECT fr.DepartmentName, fr.TotalTopContribution
+#              FROM FinalResults fr
 
 #sqlQuery: WITH RECURSIVE factorial(n, fact) AS (
 #          SELECT 1, 1

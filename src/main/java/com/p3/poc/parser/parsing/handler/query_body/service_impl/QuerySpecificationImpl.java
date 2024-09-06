@@ -27,7 +27,7 @@ public class QuerySpecificationImpl implements QuerySpecificationHandler {
             children
                     .forEach(child -> {
                         if (child instanceof Select select) {
-                            querySpec.setSelectQueryInfo(querySpecHandler.handleSelect(select));
+                            querySpecHandler.handleSelect(select);
                         } else if (child instanceof Relation relation) {
                             querySpec.setBaseRelationInfo(querySpecHandler.handleFrom(relation));
                         } else if (child instanceof GroupBy groupBy) {
