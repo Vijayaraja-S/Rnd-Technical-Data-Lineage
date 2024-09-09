@@ -1,6 +1,7 @@
 package com.p3.poc.parser.parsing.handler.expression;
 
 import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
+import com.p3.poc.lineage.bean.flow.db_objs.JoinDetailsInfo;
 import com.p3.poc.parser.bean.GlobalCollector;
 import io.trino.sql.tree.*;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +56,18 @@ public class ExpressionHandler {
         int index = columnList.size();
         column.setColumnId(column.getColumnSource() + ":c" + index);
         columnList.add(column);
+    }
+    public void saveJoinDetailsInfo(ComparisonExpression comparisonExpression, ColumnDetails left, ColumnDetails right) {
+        final Map<String, JoinDetailsInfo> joinDetailsMap = GlobalCollector.getInstance().getJoinDetailsMap();
+
+        final JoinDetailsInfo detailsInfo = JoinDetailsInfo.builder()
+                .id("j:" + joinDetailsMap.size())
+                .joinEquation(comparisonExpression.toString())
+                .leftColumn(left)
+                .rightColumn(right)
+                .operationInfo(comparisonExpression.getOperator().getValue())
+                .build();
+        joinDetailsMap.put(detailsInfo.getId(), detailsInfo);
     }
 
     private ColumnDetails handleUnknownExpression(Expression expression) {
