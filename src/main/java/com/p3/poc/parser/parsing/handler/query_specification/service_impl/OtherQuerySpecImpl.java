@@ -1,18 +1,15 @@
 package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 
-import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
-import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
+import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
 import com.p3.poc.parser.bean.query.query_body.query_specification.order_by.OrderByInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.order_by.SortInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.others.HavingQueryInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.others.LimitInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.others.OffsetInfo;
 import com.p3.poc.parser.bean.query.query_body.query_specification.others.WhereQueryInfo;
-import com.p3.poc.parser.bean.relation.BaseRelationInfo;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
 import com.p3.poc.parser.parsing.handler.query_specification.service.OtherSpecHandler;
 import com.p3.poc.parser.parsing.handler.relation.RelationHandler;
-import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
 import io.trino.sql.tree.*;
 
 import java.util.ArrayList;
@@ -28,63 +25,45 @@ public class OtherQuerySpecImpl implements OtherSpecHandler {
     }
 
     @Override
-    public BaseRelationInfo processFromNode(Relation relation) {
+    public void processFromNode(Relation relation) {
         final TableDetails table = TableDetails.builder().build();
-        return relationHandler.handleRelation(relation, table);
+        relationHandler.handleRelation(relation, table);
     }
 
 
     @Override
-    public OffsetInfo processOffsetNode(Offset offset) {
-        final BaseExpressionInfo expression = processExpression(offset.getRowCount());
-        final OffsetInfo offsetInfo = OffsetInfo.getBean();
-        offsetInfo.setExpression(expression);
-        return offsetInfo;
+    public void processOffsetNode(Offset offset) {
+        processExpression(offset.getRowCount());
     }
 
     @Override
-    public LimitInfo processLimitNode(Limit limit) {
-        final BaseExpressionInfo expression = processExpression(limit.getRowCount());
-        final LimitInfo limitInfo = LimitInfo.getBean();
-        limitInfo.setExpression(expression);
-        return limitInfo;
+    public void processLimitNode(Limit limit) {
+
     }
 
     @Override
-    public HavingQueryInfo processHavingNode(Expression havingValue) {
-        final BaseExpressionInfo baseExpressionInfo = processExpression(havingValue);
-        final HavingQueryInfo havingQueryInfo = HavingQueryInfo.getBean();
-        havingQueryInfo.setQueryExpressionInfo(baseExpressionInfo);
-        return havingQueryInfo;
+    public void processHavingNode(Expression havingValue) {
+
+
     }
 
     @Override
-    public WhereQueryInfo processWhereNode(Expression whereValue) {
-        final BaseExpressionInfo baseExpressionInfo = processExpression(whereValue);
-        final WhereQueryInfo whereQueryInfo = WhereQueryInfo.getBean();
-        whereQueryInfo.setQueryExpressionInfo(baseExpressionInfo);
-        return whereQueryInfo;
+    public void processWhereNode(Expression whereValue) {
     }
 
     @Override
-    public OrderByInfo processOrderByNode(OrderBy orderBy) {
+    public void processOrderByNode(OrderBy orderBy) {
         final OrderByInfo orderByInfo = OrderByInfo.getBean();
         final List<SortInfo> sortInfos = new ArrayList<>();
         orderBy.getSortItems().forEach(sortItem ->
                 {
-                    final SortInfo build = SortInfo.builder()
-                            .normalOrder(sortItem.getOrdering())
-                            .nullOrder(sortItem.getNullOrdering())
-                            .expressionInfo(processExpression(sortItem.getSortKey()))
-                            .build();
-                    sortInfos.add(build);
+
                 }
         );
         orderByInfo.setSortInfos(sortInfos);
-        return orderByInfo;
     }
 
-    private BaseExpressionInfo processExpression(Expression havingValue) {
-        return expressionHandler.handleExpression(havingValue, ColumnDetails.builder().build());
+    private void processExpression(Expression havingValue) {
+         expressionHandler.handleExpression(havingValue,false);
     }
 }

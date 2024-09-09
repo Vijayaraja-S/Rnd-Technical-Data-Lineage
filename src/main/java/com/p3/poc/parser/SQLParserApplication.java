@@ -7,8 +7,6 @@ import io.trino.sql.parser.SqlParser;
 import io.trino.sql.tree.Query;
 import io.trino.sql.tree.Statement;
 import lombok.extern.slf4j.Slf4j;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
 
 @Slf4j
 public class SQLParserApplication {
@@ -18,11 +16,11 @@ public class SQLParserApplication {
         this.statementHandler = new StatementHandler();
     }
 
-    public void parse(String sqlQuery, DefaultDirectedGraph<Object, DefaultEdge> directedGraph) throws InvalidStatement {
+    public void parse(String sqlQuery) throws InvalidStatement {
         SqlParser parser = new SqlParser();
         Statement statement = parser.createStatement(sqlQuery, new ParsingOptions());
         if (statement instanceof Query query) {
-            statementHandler.handleQuery(query,directedGraph);
+            statementHandler.handleQuery(query);
         } else {
             throw new InvalidStatement("Invalid statement object");
         }

@@ -1,13 +1,5 @@
 package com.p3.poc.parser.parsing.handler.query_specification;
 
-import com.p3.poc.parser.bean.relation.BaseRelationInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.group.GroupQueryInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.order_by.OrderByInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.others.HavingQueryInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.others.LimitInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.others.OffsetInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.others.WhereQueryInfo;
-import com.p3.poc.parser.bean.query.query_body.query_specification.select.SelectQueryInfo;
 import com.p3.poc.parser.parsing.handler.query_specification.service.*;
 import com.p3.poc.parser.parsing.handler.query_specification.service_impl.GroupHandlerImpl;
 import com.p3.poc.parser.parsing.handler.query_specification.service_impl.OtherQuerySpecImpl;
@@ -30,36 +22,36 @@ public class QuerySpecHandler {
         selectNodeHandler.processSelectNode(select);
     }
 
-    public BaseRelationInfo handleFrom(Node node) {
+    public void handleFrom(Node node) {
         final Relation relation = (Relation) node;
-        return otherQuerySpecImpl.processFromNode(relation);
+        otherQuerySpecImpl.processFromNode(relation);
     }
 
-    public GroupQueryInfo handleGroupBy(Node node) {
+    public void handleGroupBy(Node node) {
         final GroupBy groupBy = (GroupBy) node;
-        return groupByNodeHandler.processGroupNode(groupBy);
+        groupByNodeHandler.processGroupNode(groupBy);
     }
 
-    public OrderByInfo handleOrderBY(Node node) {
+    public void handleOrderBY(Node node) {
         final OrderBy orderBy = (OrderBy) node;
-        return otherQuerySpecImpl.processOrderByNode(orderBy);
+        otherQuerySpecImpl.processOrderByNode(orderBy);
     }
 
-    public OffsetInfo handleOffset(Node node) {
+    public void handleOffset(Node node) {
         final Offset offset = (Offset) node;
-        return otherQuerySpecImpl.processOffsetNode(offset);
+        otherQuerySpecImpl.processOffsetNode(offset);
     }
 
-    public LimitInfo handleLimit(Node node) {
+    public void handleLimit(Node node) {
         final Limit limit = (Limit) node;
-        return otherQuerySpecImpl.processLimitNode(limit);
+        otherQuerySpecImpl.processLimitNode(limit);
     }
 
-    public HavingQueryInfo handleHaving(Expression expression) {
-        return otherQuerySpecImpl.processHavingNode(expression);
+    public void handleHaving(Expression expression) {
+        otherQuerySpecImpl.processHavingNode(expression);
     }
 
-    public WhereQueryInfo handleWhere(Expression expression) {
-        return otherQuerySpecImpl.processWhereNode(expression);
+    public void handleWhere(Expression expression) {
+        otherQuerySpecImpl.processWhereNode(expression);
     }
 }

@@ -1,6 +1,7 @@
 package com.p3.poc.parser.bean;
 
 import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
+import com.p3.poc.lineage.bean.flow.db_objs.JoinDetailsInfo;
 import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
 import lombok.Getter;
 
@@ -10,6 +11,11 @@ import java.util.Map;
 
 @Getter
 public class GlobalCollector {
+
+    private final Map<String, List<ColumnDetails>> columnListMap = new LinkedHashMap<>();
+    private final Map<String, TableDetails> tableMap = new LinkedHashMap<>();
+    private final Map<String, JoinDetailsInfo> joinDetailsMap = new LinkedHashMap<>();
+
 
     private GlobalCollector() {
     }
@@ -21,9 +27,6 @@ public class GlobalCollector {
     public static GlobalCollector getInstance() {
         return SingletonHelper.INSTANCE;
     }
-
-    private final Map<String, List<ColumnDetails>> columnListMap = new LinkedHashMap<>();
-    private final Map<String, TableDetails> tableMap = new LinkedHashMap<>();
 
 
 }

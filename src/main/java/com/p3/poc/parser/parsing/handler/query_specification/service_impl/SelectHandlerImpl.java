@@ -1,12 +1,14 @@
 package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 
 import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
-import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
 import com.p3.poc.parser.parsing.handler.query_specification.service.SelectNodeHandler;
-import io.trino.sql.tree.*;
+import io.trino.sql.tree.AllColumns;
+import io.trino.sql.tree.Identifier;
+import io.trino.sql.tree.Select;
+import io.trino.sql.tree.SingleColumn;
 
-import java.util.*;
+import java.util.Optional;
 
 public class SelectHandlerImpl implements SelectNodeHandler {
 
@@ -32,16 +34,8 @@ public class SelectHandlerImpl implements SelectNodeHandler {
 
     void processSingleColumn(SingleColumn singleColumn) {
         final Optional<Identifier> alias = singleColumn.getAlias();
-
-        final ColumnDetails column = ColumnDetails.builder()
-                .columnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "")
-                .build();
-        commonExpressionHandler.handleExpression(singleColumn.getExpression(), column);
-
-        Map<String, List<ColumnDetails>> columnListMap = GlobalCollector.getInstance().getColumnListMap();
-        List<ColumnDetails> columnList = columnListMap.computeIfAbsent(column.getColumnSource(), k -> new ArrayList<>());
-        int index = columnList.size();
-        column.setColumnId(column.getColumnSource() + ":c" + index);
-        columnList.add(column);
+        final ColumnDetails column = commonExpressionHandler.handleExpression(singleColumn.getExpression(), false);
+        column.setColumnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "");
+        commonExpressionHandler.saveColumDetails(column);
     }
 }

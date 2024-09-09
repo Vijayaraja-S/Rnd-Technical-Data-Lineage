@@ -11,4 +11,8 @@ import lombok.*;
 public class JoinDetailsInfo {
     private String id;
     private String joinType;
+    private String joinEquation;
+    private ColumnDetails leftColumn;
+    private ColumnDetails rightColumn;
+    private String operationInfo;
 }

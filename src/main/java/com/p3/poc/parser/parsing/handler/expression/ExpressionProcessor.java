@@ -1,53 +1,61 @@
 package com.p3.poc.parser.parsing.handler.expression;
 
 import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
-import com.p3.poc.parser.bean.expression.BaseExpressionInfo;
-import com.p3.poc.parser.bean.expression.sub_expression.ComparisonExpInfo;
-import com.p3.poc.parser.bean.expression.sub_expression.DeReferenceExpInfo;
-import com.p3.poc.parser.bean.expression.sub_expression.FunctionCallExpInfo;
+import com.p3.poc.lineage.bean.flow.db_objs.JoinDetailsInfo;
+import com.p3.poc.parser.bean.GlobalCollector;
 import io.trino.sql.tree.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class ExpressionProcessor {
-    private final ColumnDetails column;
-    public ExpressionProcessor(ColumnDetails column) {
-        this.column = column;
+    private final ExpressionHandler expressionHandler;
+    private final boolean isJoin;
+    public ExpressionProcessor(boolean isJoin) {
+        this.isJoin = isJoin;
+        this.expressionHandler = new ExpressionHandler();
+
     }
 
-    public DeReferenceExpInfo processExpression(DeReferenceExpInfo deReferenceExpInfo, DereferenceExpression expression) {
+    public ColumnDetails processExpression(DereferenceExpression expression) {
+        final ColumnDetails columnDetails = ColumnDetails.builder().build();
         final Optional<Identifier> field = expression.getField();
         final Expression base = expression.getBase();
-
-        // need to change fo identifier
         if (base instanceof Identifier identifier) {
-            deReferenceExpInfo.setBaseReference(identifier.getValue());
-            column.setColumnSource(identifier.getValue());
+            columnDetails.setColumnSource(identifier.getValue());
         }
-        deReferenceExpInfo.setColumnName(field.isPresent() ? field.get().toString() : "");
-        column.setColumnName(field.isPresent() ? field.get().toString() : "");
-
-        return deReferenceExpInfo;
+        columnDetails.setColumnName(field.isPresent() ? field.get().toString() : "");
+        return columnDetails;
     }
 
 
-    public FunctionCallExpInfo processExpression(FunctionCallExpInfo functionCallExpInfo, FunctionCall expression) {
+
+    public ColumnDetails processExpression(ComparisonExpression comparisonExpression) {
+        if (isJoin) {
+            final ColumnDetails right= getColumnDetails(comparisonExpression.getRight());
+            final ColumnDetails left = getColumnDetails(comparisonExpression.getLeft());
+            expressionHandler.saveColumDetails(right);
+            expressionHandler.saveColumDetails(left);
+            final Map<String, JoinDetailsInfo> joinDetailsMap = GlobalCollector.getInstance().getJoinDetailsMap();
+
+            final JoinDetailsInfo detailsInfo = JoinDetailsInfo.builder()
+                    .id("j:" + joinDetailsMap.size() + 1)
+                    .joinEquation(comparisonExpression.toString())
+                    .leftColumn(left)
+                    .rightColumn(right)
+                    .operationInfo(comparisonExpression.getOperator().getValue())
+                    .build();
+            joinDetailsMap.put(detailsInfo.getId(), detailsInfo);
+        }
         return null;
     }
 
 
-    public ComparisonExpInfo processExpression(ComparisonExpInfo comparisonExpInfo, ComparisonExpression comparisonExpression) {
-        final BaseExpressionInfo left = getBaseExpressionInfo(comparisonExpression.getLeft());
-        final BaseExpressionInfo right = getBaseExpressionInfo(comparisonExpression.getRight());
-
-        comparisonExpInfo.setOperator(comparisonExpression.getOperator());
-        comparisonExpInfo.setLeft(left);
-        comparisonExpInfo.setRight(right);
-
-        return comparisonExpInfo;
+    public ColumnDetails processExpression(LogicalExpression logicalExp) {
+        return null;
     }
 
-    private  BaseExpressionInfo getBaseExpressionInfo(Expression expression) {
-        return new ExpressionHandler().handleExpression(expression, ColumnDetails.builder().build());
+    private ColumnDetails getColumnDetails(Expression expression) {
+        return expressionHandler.handleExpression(expression, isJoin);
     }
 }

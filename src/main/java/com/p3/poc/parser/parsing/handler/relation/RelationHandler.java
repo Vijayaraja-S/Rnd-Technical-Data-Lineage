@@ -1,10 +1,6 @@
 package com.p3.poc.parser.parsing.handler.relation;
 
 import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
-import com.p3.poc.parser.bean.relation.BaseRelationInfo;
-import com.p3.poc.parser.bean.relation.sub_relation.AliasedRelationInfo;
-import com.p3.poc.parser.bean.relation.sub_relation.JoinRelationInfo;
-import com.p3.poc.parser.bean.relation.sub_relation.TableRelationInfo;
 import io.trino.sql.tree.AliasedRelation;
 import io.trino.sql.tree.Join;
 import io.trino.sql.tree.Relation;
@@ -13,53 +9,52 @@ import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 @Slf4j
 @Data
 public class RelationHandler {
     private RelationProcessor relationProcessor;
 
-    private final Map<Class<? extends Relation>, Function<Relation, ? extends BaseRelationInfo>> handlers;
+    private final Map<Class<? extends Relation>, Consumer<Relation>> handlers;
 
     @SneakyThrows
     public RelationHandler() {
-        this.handlers = Map.of(
-                AliasedRelation.class, this::aliasedRelationHandler,
-                Join.class, this::joinRelationHandler,
-                Table.class, this::tableRelationHandler
-        );
+        this.handlers = new HashMap<>();
+        handlers.put(AliasedRelation.class, this::aliasedRelationHandler);
+        handlers.put(Join.class, this::joinRelationHandler);
+        handlers.put(Table.class, this::tableRelationHandler);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends BaseRelationInfo> T handleRelation(Relation relation, TableDetails table) {
+    public void handleRelation(Relation relation, TableDetails table) {
         this.relationProcessor = new RelationProcessor(table);
+        final Consumer<Relation> handler = handlers.getOrDefault(relation.getClass(),this::processUnknownRelation);
 
-        Function<Relation, ? extends BaseRelationInfo> handler =
-                handlers.getOrDefault(relation.getClass(), this::handleUnknownExpression);
-        return (T) handler.apply(relation);
+        if (handler != null) {
+            handler.accept(relation);
+        } else {
+            processUnknownRelation(relation);
+        }
     }
 
-    private JoinRelationInfo joinRelationHandler(Relation relation) {
+     private void joinRelationHandler(Relation relation) {
         final Join joinRelation = (Join) relation;
-        return relationProcessor.processJoin(joinRelation);
+        relationProcessor.processJoin(joinRelation);
     }
 
-    private AliasedRelationInfo aliasedRelationHandler(Relation relation) {
+    private void aliasedRelationHandler(Relation relation) {
         final AliasedRelation aliasedRelation = (AliasedRelation) relation;
-        return relationProcessor.processAlias(aliasedRelation);
+        relationProcessor.processAlias(aliasedRelation);
     }
 
-    private TableRelationInfo tableRelationHandler(Relation relation) {
+    private void tableRelationHandler(Relation relation) {
         final Table table = (Table) relation;
-        return relationProcessor.processTable(table);
+        relationProcessor.processTable(table);
     }
 
-    private BaseRelationInfo handleUnknownExpression(Relation relation) {
-        return null;
+    private void processUnknownRelation(Relation relation) {
+        log.warn("Unknown relation type: {}", relation.getClass().getSimpleName());
     }
-
-
 }
-
