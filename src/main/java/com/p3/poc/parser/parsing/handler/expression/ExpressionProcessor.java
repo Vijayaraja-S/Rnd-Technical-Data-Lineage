@@ -4,17 +4,20 @@ import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
 import com.p3.poc.lineage.bean.flow.db_objs.JoinDetailsInfo;
 import com.p3.poc.parser.bean.GlobalCollector;
 import io.trino.sql.tree.*;
+import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
+@Builder
 public class ExpressionProcessor {
     private final ExpressionHandler expressionHandler;
-    private final boolean isJoin;
+    @Builder.Default private boolean isJoin=false;
     public ExpressionProcessor(boolean isJoin) {
         this.isJoin = isJoin;
         this.expressionHandler = new ExpressionHandler();
-
     }
 
     public ColumnDetails processExpression(DereferenceExpression expression) {
@@ -27,8 +30,6 @@ public class ExpressionProcessor {
         columnDetails.setColumnName(field.isPresent() ? field.get().toString() : "");
         return columnDetails;
     }
-
-
 
     public ColumnDetails processExpression(ComparisonExpression comparisonExpression) {
         if (isJoin) {
@@ -52,6 +53,7 @@ public class ExpressionProcessor {
 
 
     public ColumnDetails processExpression(LogicalExpression logicalExp) {
+        log.warn("logical expression not supported yet {}",logicalExp.toString());
         return null;
     }
 

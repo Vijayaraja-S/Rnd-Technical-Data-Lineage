@@ -1,6 +1,5 @@
 package com.p3.poc.parser.parsing.handler.statement;
 
-import com.p3.poc.parser.bean.query.BaseQueryInfo;
 import com.p3.poc.parser.parsing.handler.query.QueryProcessor;
 import io.trino.sql.tree.*;
 import lombok.extern.slf4j.Slf4j;

@@ -10,7 +10,7 @@ public class WithHandlerImpl implements WithHandler {
 
     @Override
     public void handleWith(With with) {
-
+        // TODO document why this method is empty
     }
 }
 
