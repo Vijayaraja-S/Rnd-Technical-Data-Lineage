@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Optional;
 
 @Slf4j
-public class ExpressionProcessor {
+public class ExpressionProcessor extends ExpressionHelper {
     private final ExpressionHandler expressionHandler;
-    private boolean isJoin=false;
+    private boolean isJoin = false;
 
     public ExpressionProcessor(boolean isJoin) {
         this.isJoin = isJoin;
@@ -30,17 +30,17 @@ public class ExpressionProcessor {
 
     public ColumnDetails processExpression(ComparisonExpression comparisonExpression) {
         if (isJoin) {
-            final ColumnDetails right= getColumnDetails(comparisonExpression.getRight());
+            final ColumnDetails right = getColumnDetails(comparisonExpression.getRight());
             final ColumnDetails left = getColumnDetails(comparisonExpression.getLeft());
-            expressionHandler.saveColumDetails(right);
-            expressionHandler.saveColumDetails(left);
-            expressionHandler.saveJoinDetailsInfo(comparisonExpression, left, right);
+            saveColumDetails(right);
+            saveColumDetails(left);
+            saveJoinDetailsInfo(comparisonExpression, left, right);
         }
         return null;
     }
 
     public ColumnDetails processExpression(LogicalExpression logicalExp) {
-        log.warn("logical expression not supported yet {}",logicalExp.toString());
+        log.warn("logical expression not supported yet {}", logicalExp.toString());
         return null;
     }
 

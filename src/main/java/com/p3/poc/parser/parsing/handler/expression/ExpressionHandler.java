@@ -50,26 +50,6 @@ public class ExpressionHandler {
         return expressionProcessor.processExpression(dereferenceExpression);
     }
 
-    public void saveColumDetails(ColumnDetails column) {
-        Map<String, List<ColumnDetails>> columnListMap = GlobalCollector.getInstance().getColumnListMap();
-        List<ColumnDetails> columnList = columnListMap.computeIfAbsent(column.getColumnSource(), k -> new ArrayList<>());
-        int index = columnList.size();
-        column.setColumnId(column.getColumnSource() + ":c" + index);
-        columnList.add(column);
-    }
-    public void saveJoinDetailsInfo(ComparisonExpression comparisonExpression, ColumnDetails left, ColumnDetails right) {
-        final Map<String, JoinDetailsInfo> joinDetailsMap = GlobalCollector.getInstance().getJoinDetailsMap();
-
-        final JoinDetailsInfo detailsInfo = JoinDetailsInfo.builder()
-                .id("j:" + joinDetailsMap.size())
-                .joinEquation(comparisonExpression.toString())
-                .leftColumn(left)
-                .rightColumn(right)
-                .operationInfo(comparisonExpression.getOperator().getValue())
-                .build();
-        joinDetailsMap.put(detailsInfo.getId(), detailsInfo);
-    }
-
     private ColumnDetails handleUnknownExpression(Expression expression) {
         log.error("Unknown expression: {}", expression);
         return ColumnDetails.builder().build();

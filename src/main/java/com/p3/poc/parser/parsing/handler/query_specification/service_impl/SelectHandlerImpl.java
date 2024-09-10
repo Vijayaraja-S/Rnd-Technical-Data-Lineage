@@ -2,6 +2,7 @@ package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 
 import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
+import com.p3.poc.parser.parsing.handler.expression.ExpressionHelper;
 import com.p3.poc.parser.parsing.handler.query_specification.service.SelectNodeHandler;
 import io.trino.sql.tree.AllColumns;
 import io.trino.sql.tree.Identifier;
@@ -36,6 +37,6 @@ public class SelectHandlerImpl implements SelectNodeHandler {
         final Optional<Identifier> alias = singleColumn.getAlias();
         final ColumnDetails column = commonExpressionHandler.handleExpression(singleColumn.getExpression(), false);
         column.setColumnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "");
-        commonExpressionHandler.saveColumDetails(column);
+        new ExpressionHelper().saveColumDetails(column);
     }
 }
