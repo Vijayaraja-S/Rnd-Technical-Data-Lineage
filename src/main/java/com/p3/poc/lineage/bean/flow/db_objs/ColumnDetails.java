@@ -9,15 +9,15 @@ import lombok.*;
 @Getter
 @Setter
 public class ColumnDetails {
-    private String columnId;
-    private String columnName;
-    private String columnAliasName;
-    private String columnSource;
-    @Builder.Default
-    private boolean isColumnHaveFunction = false;
+    @Builder.Default private String columnId="";
+    @Builder.Default private String columnName="";
+    @Builder.Default private String columnAliasName="";
+    @Builder.Default private String columnSource = "Table";
+    @Builder.Default private boolean isColumnHaveFunction = false;
     private FunctionDetails columnFunctionDetails;
 
-
-//    private List<Coordinate> coordinates;
-//    private Label label;
+    //column join details
+    @Builder.Default private boolean isJoin=false;
+    @Builder.Default private String joinId="";
+    @Builder.Default private String joinDetailsId="";
 }

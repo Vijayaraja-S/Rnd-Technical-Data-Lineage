@@ -9,10 +9,9 @@ import lombok.*;
 @Getter
 @Setter
 public class JoinDetailsInfo {
-    private String id;
-    private String joinType;
-    private String joinEquation;
-    private ColumnDetails leftColumn;
-    private ColumnDetails rightColumn;
-    private String operationInfo;
+    @Builder.Default private String detailsId="";
+    @Builder.Default private String joinId="";
+    @Builder.Default private String joinType = "";
+    @Builder.Default private String joinEquation="";
+    @Builder.Default private String joinCondition="";
 }

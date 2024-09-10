@@ -3,9 +3,7 @@ package com.p3.poc;
 
 import com.p3.poc.bean.BeanBuilder;
 import com.p3.poc.bean.InputBean;
-import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
-import com.p3.poc.lineage.bean.flow.db_objs.JoinDetailsInfo;
-import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
+import com.p3.poc.lineage.bean.flow.db_objs.*;
 import com.p3.poc.parser.SQLParserApplication;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.exception.InvalidStatement;
@@ -21,9 +19,11 @@ public class Main {
         final SQLParserApplication app = new SQLParserApplication();
         app.parse(inputBean.getSqlQuery());
         final GlobalCollector instance = GlobalCollector.getInstance();
-        final Map<String, List<ColumnDetails>> columnListMap = instance.getColumnListMap();
+        final Map<String, List<ColumnDetails>> columnListMap = instance.getOverallColumnMap();
         final Map<String, TableDetails> tableMap = instance.getTableMap();
         final Map<String, JoinDetailsInfo> joinDetailsMap = instance.getJoinDetailsMap();
+        final Map<String, List<GroupInfo>> groupInfoMap = instance.getGroupInfoMap();
+        final Map<String, List<WhereExpressionInfo>> whereInfoMap = instance.getWhereInfoMap();
         System.out.println("sdfdsf");
     }
 }

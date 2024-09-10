@@ -2,6 +2,7 @@ package com.p3.poc.lineage.bean.flow.db_objs;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -11,12 +12,14 @@ import java.util.List;
 @Getter
 @Setter
 public class TableDetails {
-    private String id;
-    private String name;
-    private String fullName;
-    private String schemaName;
-    private String aliasName;
-    private List<ColumnDetails> columns;
-
-    // may be plan to fix the table join details
+    @Builder.Default
+    private String id = "";
+    @Builder.Default
+    private String name = "";
+    @Builder.Default
+    private String fullName = "";
+    @Builder.Default
+    private String schemaName = "";
+    @Builder.Default
+    private String aliasName = "";
 }

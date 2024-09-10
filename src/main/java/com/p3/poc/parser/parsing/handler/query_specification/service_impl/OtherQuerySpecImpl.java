@@ -1,7 +1,9 @@
 package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 
+import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
 import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
+import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
 import com.p3.poc.parser.parsing.handler.query_specification.service.OtherSpecHandler;
 import com.p3.poc.parser.parsing.handler.relation.RelationHandler;
 import io.trino.sql.tree.*;
@@ -23,23 +25,12 @@ public class OtherQuerySpecImpl implements OtherSpecHandler {
 
 
     @Override
-    public void processOffsetNode(Offset offset) {
-        processExpression(offset.getRowCount());
-    }
-
-    @Override
-    public void processLimitNode(Limit limit) {
-
+    public void processWhereNode(Expression whereValue) {
+        expressionHandler.handleExpression(whereValue,ExpressionType.WHERE,null);
     }
 
     @Override
     public void processHavingNode(Expression havingValue) {
-
-
-    }
-
-    @Override
-    public void processWhereNode(Expression whereValue) {
     }
 
     @Override
@@ -47,7 +38,14 @@ public class OtherQuerySpecImpl implements OtherSpecHandler {
 
     }
 
-    private void processExpression(Expression havingValue) {
-         expressionHandler.handleExpression(havingValue,false);
+    @Override
+    public void processOffsetNode(Offset offset) {
+
     }
+
+    @Override
+    public void processLimitNode(Limit limit) {
+    }
+
+
 }

@@ -1,8 +1,9 @@
 package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 
 import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
+import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
-import com.p3.poc.parser.parsing.handler.expression.ExpressionHelper;
+import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
 import com.p3.poc.parser.parsing.handler.query_specification.service.SelectNodeHandler;
 import io.trino.sql.tree.AllColumns;
 import io.trino.sql.tree.Identifier;
@@ -10,6 +11,7 @@ import io.trino.sql.tree.Select;
 import io.trino.sql.tree.SingleColumn;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class SelectHandlerImpl implements SelectNodeHandler {
 
@@ -21,6 +23,7 @@ public class SelectHandlerImpl implements SelectNodeHandler {
 
     @Override
     public void processSelectNode(Select selectNode) {
+        GlobalCollector.getInstance().setSelectId(String.valueOf(UUID.randomUUID()));
         selectNode.getSelectItems().
                 forEach(selectItem -> {
                     if (selectItem instanceof SingleColumn singleColumn) {
@@ -35,8 +38,10 @@ public class SelectHandlerImpl implements SelectNodeHandler {
 
     void processSingleColumn(SingleColumn singleColumn) {
         final Optional<Identifier> alias = singleColumn.getAlias();
-        final ColumnDetails column = commonExpressionHandler.handleExpression(singleColumn.getExpression(), false);
-        column.setColumnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "");
-        new ExpressionHelper().saveColumDetails(column);
+        final Object obj = commonExpressionHandler.handleExpression(singleColumn.getExpression(), ExpressionType.SELECT, null);
+        if(obj instanceof  ColumnDetails column){
+            column.setColumnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "");
+            commonExpressionHandler.saveColumDetails(column,ExpressionType.SELECT);
+        }
     }
 }
