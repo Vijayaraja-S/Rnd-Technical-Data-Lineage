@@ -1,5 +1,6 @@
-package com.p3.poc.lineage.bean.flow.db_objs;
+package com.p3.poc.parser.parsing.handler.expression.bean;
 
+import com.p3.poc.parser.parsing.handler.expression.bean.indentifier.OperationType;
 import lombok.*;
 
 @Data
@@ -10,7 +11,7 @@ import lombok.*;
 @Setter
 public class HavingExpressionInfo {
     private String expressionContent;
-    private ConditionType conditionType;
+    private OperationType conditionType;
     private String operator;
     private String columnId;
     private String columnName;

@@ -1,559 +1,168 @@
-#sqlQuery: SELECT
-#  t1.department_id,
-#  COUNT(t1.id) AS employee_count,
-#  SUM(t1.salary) AS total_salary,
-#  AVG(t1.salary * 2) AS avg_increased_salary,
-#  CASE
-#  WHEN AVG(t1.age) > 35 THEN 'Senior Department'
-#  ELSE 'Junior Department'
-#  END AS department_category,
-#  MAX(t1.hire_date) AS latest_hire_date,
-#  (SELECT AVG(sub.salary) FROM employees sub WHERE sub.department_id = t1.department_id) AS avg_department_salary
-#  FROM
-#  employees t1
-#  WHERE
-#  (t1.status = 'active' AND t1.salary > 50000)
-#  OR
-#  (t1.age < 25 AND t1.experience_years > 2)
-#  GROUP BY
-#  t1.department_id
-#  HAVING
-#  COUNT(t1.id) > 5
-#  ORDER BY
-#  total_salary DESC,
-#  latest_hire_date ASC
-#  OFFSET 10
-#  LIMIT 10
+sqlQuery:
+  WITH
+  cte1 AS (
+  SELECT
+  t1.COLUMN_1,
+  t1.COLUMN_2,
+  t1.COLUMN_3
+  FROM application1.schema1_table_1 t1
+  WHERE t1.COLUMN_1 = 10
+  ),
 
-#sqlQuery: SELECT
-#    t1.COLUMN_1 AS alias_C1,
-#    t1.COLUMN_2 AS alias_C2,
-#    t1.COLUMN_4 AS alias_additional_info,
-#    t1.COLUMN_5 AS alias_more_info
-#
-#    FROM
-#    application1_schema1.table_1 AS t1
-#
-#    WHERE
-#    t1.COLUMN_1 = 'some_value'
-#    AND t1.COLUMN_2 > 100
-#
-#    HAVING
-#    t1.COLUMN_5 IS NOT NULL
-#
-#
-#
+  cte2 AS (
+  WITH
+  cte2_sub AS (
+  SELECT
+  t2.COLUMN_1,
+  UPPER(TRIM(t2.COLUMN_4)) AS transformed_column_4,
+  COALESCE(t2.COLUMN_5, 0) AS coalesced_column_5
+  FROM application1.schema1_table_2 t2
+  WHERE t2.COLUMN_7 BETWEEN '2023-01-01' AND '2023-12-31'
+  AND t2.COLUMN_6 IS NOT NULL
+  )
+  SELECT
+  t1.COLUMN_1,
+  t1.COLUMN_2,
+  t2_sub.transformed_column_4,
+  t2_sub.coalesced_column_5
+  FROM cte1 t1
+  JOIN cte2_sub t2_sub
+  ON t1.COLUMN_3 = t2_sub.COLUMN_1
+  ),
 
+  cte3 AS (
+  WITH
+  cte3_sub AS (
+  SELECT
+  t3.COLUMN_4,
+  COUNT(t3.COLUMN_5) AS count_column_5,
+  SUM(COALESCE(t3.COLUMN_6, 0)) AS sum_column_6
+  FROM application1.schema1_table_3 t3
+  GROUP BY t3.COLUMN_4
+  HAVING COUNT(t3.COLUMN_5) > 2
+  )
+  SELECT
+  t2.COLUMN_1,
+  t2.COLUMN_2,
+  t2.transformed_column_4,
+  t3_sub.count_column_5,
+  t3_sub.sum_column_6,
+  CASE
+  WHEN t3_sub.sum_column_6 > 100 THEN 'High'
+  WHEN t3_sub.sum_column_6 BETWEEN 50 AND 100 THEN 'Medium'
+  ELSE 'Low'
+  END AS sum_category
+  FROM cte2 t2
+  LEFT JOIN cte3_sub t3_sub
+  ON t2.transformed_column_4 = t3_sub.COLUMN_4
+  ),
 
-sqlQuery: SELECT
-  t1.COLUMN_1 AS C1,
-  t1.COLUMN_2 AS C2,
-  t2.COLUMN_4 AS additional_info,
-  t3.COLUMN_5 AS more_info
+  cte4 AS (
+  WITH
+  cte4_sub AS (
+  SELECT
+  t4.COLUMN_1,
+  AVG(t4.COLUMN_5) AS avg_column_5,
+  MAX(t4.COLUMN_6) AS max_column_6,
+  LOWER(TRIM(t4.COLUMN_7)) AS cleaned_column_7
+  FROM application1.schema1_table_4 t4
+  GROUP BY t4.COLUMN_1
+  )
+  SELECT
+  t3.COLUMN_1,
+  t3.COLUMN_2,
+  t3.transformed_column_4,
+  t3.count_column_5,
+  t3.sum_column_6,
+  t3.sum_category,
+  t4_sub.avg_column_5,
+  t4_sub.max_column_6,
+  CASE
+  WHEN LENGTH(t4_sub.cleaned_column_7) > 10 THEN 'Long'
+  ELSE 'Short'
+  END AS column_length_category
+  FROM cte3 t3
+  LEFT JOIN cte4_sub t4_sub
+  ON t3.COLUMN_1 = t4_sub.COLUMN_1
+  ),
 
-  FROM
-  application1.schema1_table_1 t1
+  cte5 AS (
+  WITH
+  cte5_sub AS (
+  SELECT
+  t5.COLUMN_1,
+  t5.COLUMN_2,
+  SUM(t5.COLUMN_8) AS total_sum_column_8
+  FROM application1.schema1_table_5 t5
+  WHERE t5.COLUMN_8 IS NOT NULL
+  GROUP BY t5.COLUMN_1, t5.COLUMN_2
+  )
+  SELECT
+  t4.COLUMN_1,
+  t4.COLUMN_2,
+  t4.transformed_column_4,
+  t4.count_column_5,
+  t4.sum_column_6,
+  t4.sum_category,
+  t4.avg_column_5,
+  t4.max_column_6,
+  t4.column_length_category,
+  t5_sub.total_sum_column_8
+  FROM cte4 t4
+  LEFT JOIN cte5_sub t5_sub
+  ON t4.COLUMN_1 = t5_sub.COLUMN_1
+  AND t4.COLUMN_2 = t5_sub.COLUMN_2
+  ),
 
-  JOIN
-  application1.schema1_table_2 t2
-  ON t1.COLUMN_3 = t2.COLUMN_3
+  cte6 AS (
+  WITH
+  cte6_sub AS (
+  SELECT
+  t6.COLUMN_1,
+  t6.COLUMN_2,
+  SUM(t6.COLUMN_9) AS total_sum_column_9
+  FROM application1.schema1_table_6 t6
+  WHERE t6.COLUMN_9 > 0
+  GROUP BY t6.COLUMN_1, t6.COLUMN_2
+  )
+  SELECT
+  t5.COLUMN_1,
+  t5.COLUMN_2,
+  t5.transformed_column_4,
+  t5.count_column_5,
+  t5.sum_column_6,
+  t5.sum_category,
+  t5.avg_column_5,
+  t5.max_column_6,
+  t5.column_length_category,
+  t5.total_sum_column_8,
+  t6_sub.total_sum_column_9,
+  ROUND(t5.total_sum_column_8 / NULLIF(t6_sub.total_sum_column_9, 0), 2) AS ratio
+  FROM cte5 t5
+  LEFT JOIN cte6_sub t6_sub
+  ON t5.COLUMN_1 = t6_sub.COLUMN_1
+  AND t5.COLUMN_2 = t6_sub.COLUMN_2
+  )
 
-  LEFT JOIN
-  application1.schema1_table_3 t3
-  ON t1.COLUMN_4 = t3.COLUMN_4
-
-  INNER JOIN
-  application1_schema1_table_4 t4
-  ON t2.COLUMN_5 = t4.COLUMN_5
-
-  WHERE
-  t1.column_1 = 10
-  AND t4.column_6 IS NOT NULL
-  AND t2.column_7 BETWEEN '2023-01-01' AND '2023-12-31'
-
-  GROUP BY
-  t1.COLUMN_1, t1.COLUMN_2, t2.COLUMN_4, t3.COLUMN_5
-
-  HAVING
-  COUNT(*) > 2
-
-  ORDER BY
-  t1.COLUMN_1 ASC, t2.COLUMN_4 DESC
-
+  SELECT
+  t6.COLUMN_1,
+  t6.COLUMN_2,
+  t6.transformed_column_4,
+  t6.count_column_5,
+  t6.sum_column_6,
+  t6.sum_category,
+  t6.avg_column_5,
+  t6.max_column_6,
+  t6.column_length_category,
+  t6.total_sum_column_8,
+  t6.total_sum_column_9,
+  t6.ratio
+  FROM cte6 t6
+  JOIN application1.schema1_table_7 t7
+  ON t6.COLUMN_1 = t7.COLUMN_1
+  AND t6.COLUMN_2 = t7.COLUMN_2
+  WHERE t7.COLUMN_10 IS NOT NULL
+  ORDER BY t6.COLUMN_1 ASC, t6.ratio DESC
   OFFSET 10
   LIMIT 20
 
-
-#sqlQuery: WITH RankedResults AS (
-#  SELECT
-#  TRIM(t1.COLUMN_1) AS C1,
-#  COALESCE(t1.COLUMN_2, 'Unknown') AS C2,
-#  CASE
-#  WHEN t2.COLUMN_4 IS NOT NULL THEN t2.COLUMN_4
-#  ELSE 'No Info'
-#  END AS additional_info,
-#  t3.COLUMN_5 AS more_info,
-#  COUNT(*) AS count,
-#  ROW_NUMBER() OVER (PARTITION BY TRIM(t1.COLUMN_1) ORDER BY t2.COLUMN_4 DESC) AS row_num,
-#  RANK() OVER (ORDER BY TRIM(t1.COLUMN_1) ASC) AS rank,
-#  NTILE(4) OVER (ORDER BY TRIM(t1.COLUMN_1)) AS quartile,
-#  LEAD(t2.COLUMN_4, 1, 'No Next Info') OVER (ORDER BY TRIM(t1.COLUMN_1)) AS next_info,
-#  LAG(t3.COLUMN_5, 1, 'No Previous Info') OVER (ORDER BY TRIM(t1.COLUMN_1)) AS previous_info
-#
-#  FROM
-#  application1_schema1.table_1 t1
-#
-#  JOIN
-#  application1.schema1_table_2 t2
-#  ON TRIM(t1.COLUMN_3) = TRIM(t2.COLUMN_3)
-#
-#  LEFT JOIN
-#  application1.schema1_table_3 t3
-#  ON TRIM(t1.COLUMN_4) = TRIM(t3.COLUMN_4)
-#
-#  INNER JOIN
-#  application1_schema1_table_4 t4
-#  ON TRIM(t2.COLUMN_5) = TRIM(t4.COLUMN_5)
-#
-#  FULL OUTER JOIN
-#  application2.schema2_table_1 t5
-#  ON TRIM(t4.COLUMN_8) = TRIM(t5.COLUMN_8)
-#
-#  CROSS JOIN
-#  application3_schema2.table_6 t6
-#
-#  WHERE
-#  TRIM(t1.COLUMN_1) = '10'
-#  AND t4.COLUMN_6 IS NOT NULL
-#  AND t2.COLUMN_7 BETWEEN '2023-01-01' AND '2023-12-31'
-#  AND t5.COLUMN_9 LIKE '%example%'
-#  AND t6.COLUMN_10 IN ('A', 'B', 'C')
-#
-#  GROUP BY
-#  TRIM(t1.COLUMN_1),
-#  COALESCE(t1.COLUMN_2, 'Unknown'),
-#  CASE
-#  WHEN t2.COLUMN_4 IS NOT NULL THEN t2.COLUMN_4
-#  ELSE 'No Info'
-#  END,
-#  t3.COLUMN_5
-#
-#  HAVING
-#  COUNT(*) > 2
-#  AND SUM(CASE WHEN t4.COLUMN_6 IS NOT NULL THEN 1 ELSE 0 END) > 1
-#  AND AVG(CASE WHEN t6.COLUMN_10 = 'A' THEN t2.COLUMN_7 ELSE NULL END) > '2023-06-01'
-#  )
-#
-#  SELECT
-#  C1,
-#  C2,
-#  additional_info,
-#  more_info,
-#  count,
-#  row_num,
-#  rank,
-#  quartile,
-#  next_info,
-#  previous_info,
-#  SUM(count) OVER (PARTITION BY C1 ORDER BY rank) AS running_total_count
-#
-#  FROM
-#  RankedResults
-#
-#  GROUP BY
-#  C1,
-#  C2,
-#  additional_info,
-#  more_info,
-#  count,
-#  row_num,
-#  rank,
-#  quartile,
-#  next_info,
-#  previous_info
-#
-#  HAVING
-#  SUM(count) > 5
-#  AND MAX(rank) <= 10
-#
-#  ORDER BY
-#  rank ASC,
-#  quartile DESC
-#
-#  OFFSET 10
-#  LIMIT 20
-
-
-
-#sqlQuery: WITH RankedSales AS (
-#  SELECT
-#  SalesOrderID,
-#  CustomerID,
-#  ProductID,
-#  OrderDate,
-#  Quantity,
-#  Price,
-#  ROW_NUMBER() OVER(PARTITION BY CustomerID ORDER BY OrderDate DESC) AS RowNum,
-#  RANK() OVER(PARTITION BY ProductID ORDER BY Price DESC) AS PriceRank,
-#  LAG(Price, 1, 0) OVER(PARTITION BY ProductID ORDER BY OrderDate) AS PreviousPrice,
-#  LEAD(Price, 1, 0) OVER(PARTITION BY ProductID ORDER BY OrderDate) AS NextPrice
-#  FROM
-#  SalesOrders
-#  WHERE
-#  OrderDate >= startDate
-#  AND OrderDate <= endDate
-#  ),
-#  FilteredSales AS (
-#  SELECT
-#  *,
-#  CASE
-#  WHEN Price > PreviousPrice THEN 'Price Increased'
-#  WHEN Price < PreviousPrice THEN 'Price Decreased'
-#  ELSE 'Price Stable'
-#  END AS PriceChange,
-#  CASE
-#  WHEN Quantity > 10 THEN 'Large Order'
-#  WHEN Quantity BETWEEN 5 AND 10 THEN 'Medium Order'
-#  ELSE 'Small Order'
-#  END AS OrderSize
-#  FROM
-#  RankedSales
-#  WHERE
-#  RowNum = 1
-#  )
-#  SELECT
-#  SalesOrderID,
-#  CustomerID,
-#  ProductID,
-#  OrderDate,
-#  Quantity,
-#  Price,
-#  PriceRank,
-#  PreviousPrice,
-#  NextPrice,
-#  PriceChange,
-#  OrderSize
-#  FROM
-#  FilteredSales
-#  ORDER BY
-#  OrderDate DESC
-
-
-
-##
-#  sqlQuery: WITH EmployeeSales AS (
-#              SELECT e.EmployeeID, e.EmployeeName, SUM(s.SaleAmount) AS TotalSales
-#              FROM employees e
-#              JOIN sales s ON e.EmployeeID = s.EmployeeID
-#              GROUP BY e.EmployeeID, e.EmployeeName
-#              ),
-#
-#              EmployeeAverages AS (
-#              SELECT AVG(TotalSales) AS AverageSales
-#              FROM EmployeeSales
-#              ),
-#
-#              EmployeeRanks AS (
-#              WITH
-#              AboveAverageEmployees AS (
-#              SELECT es.EmployeeID, es.EmployeeName, es.TotalSales
-#              FROM EmployeeSales es
-#              WHERE es.TotalSales > (SELECT AverageSales FROM EmployeeAverages)
-#              ),
-#
-#              BelowAverageEmployees AS (
-#              SELECT es.EmployeeID, es.EmployeeName, es.TotalSales
-#              FROM EmployeeSales es
-#              WHERE es.TotalSales <= (SELECT AverageSales FROM EmployeeAverages)
-#              )
-#              SELECT es.EmployeeID, es.EmployeeName, es.TotalSales,
-#              RANK() OVER (ORDER BY es.TotalSales DESC) AS SalesRank,
-#              CASE
-#              WHEN es.EmployeeID IN (SELECT EmployeeID FROM AboveAverageEmployees)
-#              THEN 'Above Average'
-#              ELSE 'Below Average'
-#              END AS Performance
-#              FROM EmployeeSales es
-#              ),
-#
-#              DepartmentSales AS (
-#              WITH
-#              DepartmentTotals AS (
-#              SELECT d.DepartmentID, d.DepartmentName,
-#              SUM(er.TotalSales) AS DepartmentTotalSales
-#              FROM departments d
-#              JOIN employees e ON d.DepartmentID = e.DepartmentID
-#              JOIN EmployeeRanks er ON e.EmployeeID = er.EmployeeID
-#              GROUP BY d.DepartmentID, d.DepartmentName
-#              )
-#              SELECT dt.DepartmentID, dt.DepartmentName, dt.DepartmentTotalSales,
-#              COUNT(er.EmployeeID) AS EmployeeCount
-#              FROM DepartmentTotals dt
-#              JOIN employees e ON dt.DepartmentID = e.DepartmentID
-#              JOIN EmployeeRanks er ON e.EmployeeID = er.EmployeeID
-#              GROUP BY dt.DepartmentID, dt.DepartmentName, dt.DepartmentTotalSales
-#              ),
-#
-#              DepartmentRanks AS (
-#              WITH
-#              DepartmentAverages AS (
-#              SELECT AVG(ds.DepartmentTotalSales) AS AvgDepartmentSales
-#              FROM DepartmentSales ds
-#              )
-#              SELECT ds.DepartmentID, ds.DepartmentName, ds.DepartmentTotalSales,
-#              RANK() OVER (ORDER BY ds.DepartmentTotalSales DESC) AS DepartmentRank,
-#              CASE
-#              WHEN ds.DepartmentTotalSales > (SELECT AvgDepartmentSales FROM DepartmentAverages)
-#              THEN 'Above Average'
-#              ELSE 'Below Average'
-#              END AS DepartmentPerformance
-#              FROM DepartmentSales ds
-#              ),
-#
-#              EmployeeDepartmentRanks AS (
-#              WITH
-#              TopDepartments AS (
-#              SELECT DepartmentID, DepartmentName, DepartmentTotalSales
-#              FROM DepartmentRanks
-#              WHERE DepartmentRank <= 3
-#              ),
-#
-#              TopEmployees AS (
-#              SELECT EmployeeID, EmployeeName, TotalSales, SalesRank
-#              FROM EmployeeRanks
-#              WHERE SalesRank <= 5
-#              )
-#              SELECT er.EmployeeID, er.EmployeeName, er.TotalSales, er.SalesRank,
-#              dr.DepartmentName, dr.DepartmentTotalSales, dr.DepartmentRank
-#              FROM TopEmployees er
-#              JOIN employees e ON er.EmployeeID = e.EmployeeID
-#              JOIN TopDepartments dr ON e.DepartmentID = dr.DepartmentID
-#              ),
-#
-#              TopDepartmentContributions AS (
-#              WITH
-#              EmployeeContributions AS (
-#              SELECT ed.EmployeeID, ed.EmployeeName, ed.DepartmentName,
-#              ed.TotalSales, ed.DepartmentTotalSales,
-#              (ed.TotalSales / ed.DepartmentTotalSales) * 100 AS ContributionPercentage
-#              FROM EmployeeDepartmentRanks ed
-#              )
-#              SELECT ec.DepartmentName, SUM(ec.ContributionPercentage) AS TotalContribution
-#              FROM EmployeeContributions ec
-#              GROUP BY ec.DepartmentName
-#              ),
-#
-#              TopContributors AS (
-#              WITH
-#              HighestContributions AS (
-#              SELECT DepartmentName, MAX(TotalContribution) AS MaxContribution
-#              FROM TopDepartmentContributions
-#              GROUP BY DepartmentName
-#              )
-#              SELECT ec.EmployeeID, ec.EmployeeName, ec.DepartmentName, ec.ContributionPercentage
-#              FROM EmployeeContributions ec
-#              JOIN HighestContributions hc ON ec.DepartmentName = hc.DepartmentName
-#              WHERE ec.ContributionPercentage = hc.MaxContribution
-#              ),
-#
-#              DepartmentTopContributors AS (
-#              WITH
-#              TopContributorTotals AS (
-#              SELECT tc.DepartmentName, SUM(tc.ContributionPercentage) AS TotalTopContribution
-#              FROM TopContributors tc
-#              GROUP BY tc.DepartmentName
-#              )
-#              SELECT tc.DepartmentName, tc.TotalTopContribution
-#              FROM TopContributorTotals tc
-#              ORDER BY tc.TotalTopContribution DESC
-#              ),
-#
-#              FinalResults AS (
-#              WITH
-#              HighContributionDepartments AS (
-#              SELECT DepartmentName, TotalTopContribution
-#              FROM DepartmentTopContributors
-#              WHERE TotalTopContribution > 50
-#              )
-#              SELECT hcd.DepartmentName, hcd.TotalTopContribution
-#              FROM HighContributionDepartments hcd
-#              ORDER BY hcd.TotalTopContribution DESC
-#              )
-#
-#              SELECT fr.DepartmentName, fr.TotalTopContribution
-#              FROM FinalResults fr
-
-#sqlQuery: WITH RECURSIVE factorial(n, fact) AS (
-#          SELECT 1, 1
-#          UNION ALL
-#          SELECT n + 1, (n + 1) * fact
-#          FROM factorial
-#          WHERE n < 5
-#          )
-#          SELECT * FROM factorial
-#
-
-#sqlQuery: WITH
-#  Level1 AS (
-#  WITH
-#  Level2 AS (
-#  WITH
-#  Level3 AS (
-#  WITH
-#  Level4 AS (
-#  WITH
-#  Level5 AS (
-#  WITH
-#  Level6 AS (
-#  WITH
-#  Level7 AS (
-#  WITH
-#  Level8 AS (
-#  WITH
-#  Level9 AS (
-#  WITH
-#
-#  Level10 AS (
-#  SELECT 'Level 10 Result' AS Result
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
-#  )
-#  SELECT 'Level 9 Result' AS Result, l10.Result AS NestedResult
-#  FROM Level10 l10
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
-#  )
-#  SELECT 'Level 8 Result' AS Result, l9.Result AS NestedResult
-#  FROM Level9 l9
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
-#  )
-#  SELECT 'Level 7 Result' AS Result, l8.Result AS NestedResult
-#  FROM Level8 l8
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
-#  )
-#  SELECT 'Level 6 Result' AS Result, l7.Result AS NestedResult
-#  FROM Level7 l7
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
-#  )
-#  SELECT 'Level 5 Result' AS Result, l6.Result AS NestedResult
-#  FROM Level6 l6
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
-#  )
-#  SELECT 'Level 4 Result' AS Result, l5.Result AS NestedResult
-#  FROM Level5 l5
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
-#  )
-#  SELECT 'Level 3 Result' AS Result, l4.Result AS NestedResult
-#  FROM Level4 l4
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
-#  )
-#  SELECT 'Level 2 Result' AS Result, l3.Result AS NestedResult
-#  FROM Level3 l3
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
-#  )
-#  SELECT 'Level 1 Result' AS Result, l2.Result AS NestedResult
-#  FROM Level2 l2
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY
-#  )
-#  SELECT Result, NestedResult
-#  FROM Level1
-#  ORDER BY Result
-#  OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY
-
-
-#sqlQuery:  SELECT CASE WHEN t2.TRAN_POSTDATE IS NULL THEN t1.ORIGINAL_TRANID
-#  WHEN t2.ORIGINAL_TRANID IS NULL THEN NULL
-#  ELSE t2.ORIGINAL_TRANID END AS INV_TRAN_ID,
-#  t2.APP_TRANID AS APPLICATION,
-#  CASE WHEN t2.TRAN_POSTDATE IS NULL THEN t1.REFNO
-#  ELSE t2.REFNO END AS REFNO,
-#  CASE WHEN t2.TRAN_POSTDATE IS NULL THEN CAST(t1.TRAN_POSTDATE AS VARCHAR)
-#  ELSE CAST(t2.TRAN_POSTDATE AS VARCHAR) END AS TRAN_POSTDATE,
-#  CASE WHEN t2.TRAN_POSTDATE IS NULL THEN CAST(t1.TRANAMT AS DECIMAL(10,2))
-#  WHEN t2.ORIGINAL_TRANID IS NULL THEN CAST(t2.PMTAMT AS DECIMAL(10,2))
-#  ELSE CAST(t2.TRANAMT AS DECIMAL(10,2)) END AS TRANAMT,
-#  CASE WHEN t2.TRAN_POSTDATE IS NOT NULL THEN CAST(COALESCE(t2.BALANCE, 0) AS DECIMAL(10,2))
-#  ELSE CAST(COALESCE(t1.BALANCE, 0) AS DECIMAL(10,2)) END AS BALANCE_1,
-#  CASE WHEN t2.BALANCE IS NOT NULL THEN CAST(t2.BALANCE AS DECIMAL(10,1))
-#  ELSE NULL END AS BALANCE_2
-#  FROM (
-#  SELECT DISTINCT TI.TRANID AS JOIN_TRANID,
-#  TI.TRANID AS ORIGINAL_TRANID,
-#  TI.POSTDATE AS TRAN_POSTDATE,
-#  TI.TRANAMT AS TRANAMT,
-#  NULL AS REFNO,
-#  NULL AS BALANCE
-#  FROM MAS500_REF_DBO.TARINVOICE TI
-#  LEFT OUTER JOIN MAS500_REF_DBO.TARCUSTOMER TC ON TC.CUSTKEY = TI.CUSTKEY
-#  WHERE UPPER(TRIM(TC.CUSTID)) = UPPER(TRIM('123'))
-#  AND any_match(regexp_split('123', ','), x -> x = TC.COMPANYID) = true
-#
-#  UNION ALL
-#
-#  SELECT TCP.TRANID AS JOIN_TRANID,
-#  TCP.TRANID AS ORIGINAL_TRANID,
-#  TCP.POSTDATE AS TRAN_POSTDATE,
-#  -(TCP.TRANAMT) AS TRANAMT,
-#  TCRD.REFNO AS REFNO,
-#  CASE WHEN TCP.RevrsCustPmtKey IS NULL THEN -(TCP.TRANAMT)
-#  ELSE NULL END AS BALANCE
-#  FROM MAS500_REF_DBO.TARCUSTOMER TC
-#  INNER JOIN MAS500_REF_DBO.TARCUSTPMT TCP ON TC.CUSTKEY = TCP.CUSTKEY
-#  INNER JOIN MAS500_REF_DBO.tcmCashRcptDetl TCRD ON TCP.CUSTPMTKEY = TCRD.CUSTPMTKEY
-#  LEFT JOIN MAS500_REF_DBO.TARCUSTPMTAPPL TCPA ON TCP.CUSTPMTKEY = TCPA.CUSTPMTKEY
-#  WHERE TCPA.CUSTPMTKEY IS NULL
-#  AND TCP.RevrsCustPmtKey IS NOT NULL
-#  AND TCP.TRANAMT != 0
-#  AND UPPER(TRIM(TC.CUSTID)) = UPPER(TRIM('123'))
-#  AND any_match(regexp_split('123', ','), x -> x = TC.COMPANYID) = true
-#  ) t1
-#  LEFT JOIN (
-#  SELECT DISTINCT TI.TRANTYPE,
-#  TI.TRANID AS ORIGINAL_TRANID,
-#  NULL AS APP_TRANID,
-#  TI.TRANAMT AS TRANAMT,
-#  TI.POSTDATE AS TRAN_POSTDATE,
-#  TI.BALANCE AS BALANCE,
-#  NULL AS PMTAMT,
-#  NULL AS REFNO,
-#  TI.TRANID AS ORIGINAL_TRANID_TOSORT
-#  FROM MAS500_REF_DBO.TARINVOICE TI
-#  LEFT OUTER JOIN MAS500_REF_DBO.TARINVOICEAPPL TA ON TI.INVCKEY = TA.APPLYTOINVCKEY
-#  LEFT OUTER JOIN MAS500_REF_DBO.TARCUSTOMER TC ON TC.CUSTKEY = TI.CUSTKEY
-#  LEFT OUTER JOIN MAS500_REF_DBO.TARCUSTPMT TCP ON TCP.CUSTPMTKEY = TA.APPLYFROMPMTKEY
-#  LEFT OUTER JOIN MAS500_REF_DBO.TCMCASHRCPTDETL TCRD ON TCRD.CUSTPMTKEY = TCP.CUSTPMTKEY
-#  WHERE UPPER(TRIM(TC.CUSTID)) = UPPER(TRIM('123'))
-#  AND any_match(regexp_split('123', ','), x -> x = TC.COMPANYID) = true
-#
-#  UNION ALL
-#
-#  SELECT TI.TRANTYPE AS TRANTYPE,
-#  NULL AS ORIGINAL_TRANID,
-#  TA.APPLYFROMTRANID AS APP_TRANID,
-#  NULL AS TRANAMT,
-#  TA.APPLYFROMTRANDATE AS TRAN_POSTDATE,
-#  TI.POSTDATE AS TRAN_POSTDATE_2,
-#  NULL AS BALANCE,
-#  -(TA.PMTAMT) AS PMTAMT,
-#  TCRD.REFNO AS REFNO,
-#  TI.TRANID AS ORIGINAL_TRANID_TOSORT
-#  FROM MAS500_REF_DBO.TARINVOICE TI
-#  LEFT OUTER JOIN MAS500_REF_DBO.TARINVOICEAPPL TA ON TI.INVCKEY = TA.APPLYTOINVCKEY
-#  LEFT OUTER JOIN MAS500_REF_DBO.TARCUSTOMER TC ON TC.CUSTKEY = TI.CUSTKEY
-#  LEFT OUTER JOIN MAS500_REF_DBO.TARCUSTPMT TCP ON TCP.CUSTPMTKEY = TA.APPLYFROMPMTKEY
-#  LEFT OUTER JOIN MAS500_REF_DBO.TCMCASHRCPTDETL TCRD ON TCRD.CUSTPMTKEY = TCP.CUSTPMTKEY
-#  WHERE UPPER(TRIM(TC.CUSTID)) = UPPER(TRIM('123'))
-#  AND any_match(regexp_split('123', ','), x -> x = TC.COMPANYID) = true
-#  AND (TA.APPLYFROMTRANID IS NOT NULL AND TA.APPLYFROMTRANDATE IS NOT NULL)
-#  ) t2 ON t1.JOIN_TRANID = t2.ORIGINAL_TRANID_TOSORT
-#  ORDER BY t1.TRAN_POSTDATE, t1.TRANAMT DESC, t1.JOIN_TRANID,
-#  CASE WHEN t2.ORIGINAL_TRANID IS NULL THEN 0 ELSE 1 END DESC,
-#  t2.ORIGINAL_TRANID DESC, t2.APP_TRANID DESC

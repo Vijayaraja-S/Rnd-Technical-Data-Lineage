@@ -1,7 +1,8 @@
-package com.p3.poc.parser.parsing.handler.expression;
+package com.p3.poc.parser.parsing.handler.expression.utils;
 
 import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
 import com.p3.poc.parser.bean.GlobalCollector;
+import com.p3.poc.parser.parsing.handler.expression.bean.indentifier.NodeType;
 import io.trino.sql.tree.DereferenceExpression;
 import io.trino.sql.tree.Expression;
 import io.trino.sql.tree.Identifier;
@@ -11,9 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ExpressionHelper {
-
-
+public class ExpressionUtils {
     public ColumnDetails saveColumnDetails(ColumnDetails column, NodeType type) {
         Map<String, List<ColumnDetails>> overallColumnMap = GlobalCollector.getInstance().getColumnMap();
 
@@ -59,5 +58,4 @@ public class ExpressionHelper {
         columnDetails.setColumnName(field.isPresent() ? field.get().toString() : "");
         return columnDetails;
     }
-
 }

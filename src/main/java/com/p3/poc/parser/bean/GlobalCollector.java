@@ -1,6 +1,8 @@
 package com.p3.poc.parser.bean;
 
 import com.p3.poc.lineage.bean.flow.db_objs.*;
+import com.p3.poc.parser.parsing.handler.expression.bean.HavingExpressionInfo;
+import com.p3.poc.parser.parsing.handler.expression.bean.WhereExpressionInfo;
 import lombok.Getter;
 import lombok.Setter;
 
