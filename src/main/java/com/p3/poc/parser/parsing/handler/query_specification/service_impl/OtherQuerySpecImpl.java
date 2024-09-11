@@ -1,12 +1,15 @@
 package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 
-import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
-import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
+import com.p3.poc.lineage.bean.flow.db_objs.*;
+import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
 import com.p3.poc.parser.parsing.handler.query_specification.service.OtherSpecHandler;
 import com.p3.poc.parser.parsing.handler.relation.RelationHandler;
 import io.trino.sql.tree.*;
+
+import java.util.List;
+import java.util.Map;
 
 public class OtherQuerySpecImpl implements OtherSpecHandler {
     private final RelationHandler relationHandler;
@@ -31,20 +34,38 @@ public class OtherQuerySpecImpl implements OtherSpecHandler {
 
     @Override
     public void processHavingNode(Expression havingValue) {
+        expressionHandler.handleExpression(havingValue,ExpressionType.HAVING,null);
     }
 
     @Override
     public void processOrderByNode(OrderBy orderBy) {
-
+        final List<SortItem> sortItems = orderBy.getSortItems();
+        sortItems.forEach(sortItem -> {
+            final OrderByInfo orderByInfo = OrderByInfo.builder()
+                    .orderType(sortItem.getOrdering().toString())
+                    .build();
+            final Expression sortKey = sortItem.getSortKey();
+            expressionHandler.handleExpression(sortKey,ExpressionType.ORDER,orderByInfo);
+        });
     }
 
     @Override
     public void processOffsetNode(Offset offset) {
+        final OffsetInfo offsetInfo = OffsetInfo.builder().build();
+        expressionHandler.handleExpression(offset.getRowCount(),ExpressionType.OFFSET, offsetInfo);
+        final GlobalCollector instance = GlobalCollector.getInstance();
+        final Map<String, OffsetInfo> offsetInfoMap = instance.getOffsetInfoMap();
+        offsetInfoMap.put(instance.getDynamicSelectId(), offsetInfo);
 
     }
 
     @Override
     public void processLimitNode(Limit limit) {
+        final LimitInfo limitInfo = LimitInfo.builder().build();
+        expressionHandler.handleExpression(limit.getRowCount(),ExpressionType.LIMIT,limitInfo );
+        final GlobalCollector instance = GlobalCollector.getInstance();
+        final Map<String, LimitInfo> limitInfoMap = instance.getLimitInfoMap();
+        limitInfoMap.put(instance.getDynamicSelectId(), limitInfo);
     }
 
 

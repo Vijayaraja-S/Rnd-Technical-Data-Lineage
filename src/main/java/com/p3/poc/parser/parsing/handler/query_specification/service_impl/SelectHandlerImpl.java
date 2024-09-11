@@ -23,7 +23,7 @@ public class SelectHandlerImpl implements SelectNodeHandler {
 
     @Override
     public void processSelectNode(Select selectNode) {
-        GlobalCollector.getInstance().setSelectId(String.valueOf(UUID.randomUUID()));
+        GlobalCollector.getInstance().setDynamicSelectId("select:" + UUID.randomUUID());
         selectNode.getSelectItems().
                 forEach(selectItem -> {
                     if (selectItem instanceof SingleColumn singleColumn) {
@@ -41,7 +41,7 @@ public class SelectHandlerImpl implements SelectNodeHandler {
         final Object obj = commonExpressionHandler.handleExpression(singleColumn.getExpression(), ExpressionType.SELECT, null);
         if(obj instanceof  ColumnDetails column){
             column.setColumnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "");
-            commonExpressionHandler.saveColumDetails(column,ExpressionType.SELECT);
+            commonExpressionHandler.saveColumnDetails(column,ExpressionType.SELECT);
         }
     }
 }

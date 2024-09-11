@@ -8,15 +8,13 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class WhereExpressionInfo {
+public class HavingExpressionInfo {
     private String expressionContent;
     private ConditionType conditionType;
     private String operator;
     private String columnId;
     private String columnName;
+    private String left;
     private String rightValue;
-
-    //BETWEEN
-    private String min;
-    private String max;
+    private boolean isMultiRowFunction;
 }

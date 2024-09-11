@@ -20,16 +20,20 @@ public class ExpressionHandler {
                 LongLiteral.class,this::handleLongLiteralExp,
                 LogicalExpression.class,this::handleLogicalExp,
                 IsNotNullPredicate.class,this::handleNotNullPrediction,
-                BetweenPredicate.class,this::handleBetweenPrediction
+                BetweenPredicate.class,this::handleBetweenPrediction,
+                FunctionCall.class,this::handleFunctionCallExp
         );
     }
-
-
 
     public Object handleExpression(Expression expression, ExpressionType expressionType,Object commonBean) {
         this.expressionProcessor = new ExpressionProcessor(expressionType,commonBean);
         final Function<Expression, Object> handler = handlers.getOrDefault(expression.getClass(), this::handleUnknownExpression);
         return handler.apply(expression);
+    }
+
+    private Object handleFunctionCallExp(Expression expression) {
+        final FunctionCall functionCall = (FunctionCall) expression;
+        return expressionProcessor.processExpression(functionCall);
     }
 
     private Object handleBetweenPrediction(Expression expression) {
@@ -67,7 +71,7 @@ public class ExpressionHandler {
         return expressionProcessor.processExpression(dereferenceExpression);
     }
 
-    public void saveColumDetails(ColumnDetails columnDetails,ExpressionType type) {
+    public void saveColumnDetails(ColumnDetails columnDetails, ExpressionType type) {
         expressionProcessor.saveColumnDetails(columnDetails,type);
     }
 

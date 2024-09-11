@@ -52,7 +52,7 @@ sqlQuery: SELECT
   t3.COLUMN_5 AS more_info
 
   FROM
-  application1_schema1.table_1 t1
+  application1.schema1_table_1 t1
 
   JOIN
   application1.schema1_table_2 t2

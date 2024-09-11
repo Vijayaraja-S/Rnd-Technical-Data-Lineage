@@ -20,8 +20,8 @@ public class JoinProcessor implements Comparison {
         final Object obj1 = expressionHandler.handleExpression(comparisonExpression.getRight(), ExpressionType.JOIN, null);
         final Object obj2 = expressionHandler.handleExpression(comparisonExpression.getLeft(), ExpressionType.JOIN, null);
         if (obj1 instanceof ColumnDetails left && obj2 instanceof ColumnDetails right){
-            expressionHandler.saveColumDetails(left,ExpressionType.JOIN);
-            expressionHandler.saveColumDetails(right,ExpressionType.JOIN);
+            expressionHandler.saveColumnDetails(left,ExpressionType.JOIN);
+            expressionHandler.saveColumnDetails(right,ExpressionType.JOIN);
             final String joinId = right.getColumnId() + "::" + left.getColumnId();
             final JoinDetailsInfo joinDetailsInfo = saveJoinDetailsInfo(comparisonExpression,joinId);
             setJoinProperties(left, joinId ,joinDetailsInfo);

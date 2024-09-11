@@ -4,6 +4,7 @@ public enum ConditionType {
     BETWEEN,
     AND ,
     OR,
-    NOT_NULL, COMPARISON
+    NOT_NULL,
+    COMPARISON,
 
 }

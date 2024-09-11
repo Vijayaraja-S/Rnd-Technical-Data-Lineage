@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class GroupHandlerImpl implements GroupByNodeHandler {
     private static final Logger log = LoggerFactory.getLogger(GroupHandlerImpl.class);
@@ -25,6 +26,7 @@ public class GroupHandlerImpl implements GroupByNodeHandler {
     @Override
     public void processGroupNode(GroupBy groupBy) {
         final GlobalCollector instance = GlobalCollector.getInstance();
+        instance.setDynamicGroupId("Grp: "+ UUID.randomUUID());
         final List<? extends Node> children = groupBy.getChildren();
         final List<GroupInfo> groupInfos = new ArrayList<>();
         children.forEach(child -> {
@@ -35,7 +37,7 @@ public class GroupHandlerImpl implements GroupByNodeHandler {
             }
         });
         final Map<String, List<GroupInfo>> groupInfoMap = instance.getGroupInfoMap();
-        groupInfoMap.put("G" + groupInfoMap.size(), groupInfos);
+        groupInfoMap.put(instance.getDynamicSelectId(), groupInfos);
     }
 
     public void handlerGroupElements(GroupingElement groupingElement, List<GroupInfo> groupInfos) {
@@ -47,7 +49,7 @@ public class GroupHandlerImpl implements GroupByNodeHandler {
             if (child instanceof Expression expression) {
                 final Object obj = expressionHandler.handleExpression(expression, ExpressionType.GROUP_BY, null);
                 if (obj instanceof  ColumnDetails columnDetails){
-                    expressionHandler.saveColumDetails(columnDetails,ExpressionType.GROUP_BY);
+                    expressionHandler.saveColumnDetails(columnDetails,ExpressionType.GROUP_BY);
                     groupInfos.add(GroupInfo.builder()
                             .tableDetails(columnDetails.getColumnSource())
                             .columnDetails(columnDetails.getColumnName())

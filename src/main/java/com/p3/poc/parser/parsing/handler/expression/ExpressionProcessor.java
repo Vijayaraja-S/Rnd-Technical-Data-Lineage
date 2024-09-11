@@ -1,9 +1,10 @@
 package com.p3.poc.parser.parsing.handler.expression;
 
-import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
-import com.p3.poc.lineage.bean.flow.db_objs.WhereExpressionInfo;
+import com.p3.poc.lineage.bean.flow.db_objs.*;
 import com.p3.poc.parser.parsing.handler.expression.service.*;
+import com.p3.poc.parser.parsing.handler.expression.service_impl.HavingProcessor;
 import com.p3.poc.parser.parsing.handler.expression.service_impl.JoinProcessor;
+import com.p3.poc.parser.parsing.handler.expression.service_impl.OrderByProcessor;
 import com.p3.poc.parser.parsing.handler.expression.service_impl.WhereProcessor;
 import io.trino.sql.tree.*;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,9 @@ public class ExpressionProcessor extends ExpressionHelper {
         if (type.equals(ExpressionType.WHERE)) {
             final Dereference whereProcessor = new WhereProcessor(commonBean);
             whereProcessor.processDereferenceExpression(expression);
+        } else if (type.equals(ExpressionType.ORDER)) {
+            final Dereference orderByProcessor = new OrderByProcessor(commonBean);
+            orderByProcessor.processDereferenceExpression(expression);
         } else {
             return getColumnDetails(expression);
         }
@@ -42,6 +46,9 @@ public class ExpressionProcessor extends ExpressionHelper {
         } else if (type.equals(ExpressionType.WHERE)) {
             final Comparison whereProcessor = new WhereProcessor(commonBean);
             return whereProcessor.processComparisonExpression(comparisonExpression);
+        }else if (type.equals(ExpressionType.HAVING)) {
+            final Comparison havingProcessor = new HavingProcessor(commonBean);
+            return havingProcessor.processComparisonExpression(comparisonExpression);
         }
         return null;
     }
@@ -55,8 +62,14 @@ public class ExpressionProcessor extends ExpressionHelper {
     }
 
     public Object processExpression(LongLiteral longLiteral) {
-        if (type.equals(ExpressionType.WHERE) && commonBean instanceof WhereExpressionInfo expressionInfo) {
-            expressionInfo.setRightValue(String.valueOf(longLiteral.getValue()));
+        if (type.equals(ExpressionType.WHERE) && commonBean instanceof WhereExpressionInfo whereExpressionInfo) {
+            whereExpressionInfo.setRightValue(String.valueOf(longLiteral.getValue()));
+        } else if (type.equals(ExpressionType.HAVING) && commonBean instanceof HavingExpressionInfo havingExpressionInfo) {
+            havingExpressionInfo.setRightValue(String.valueOf(longLiteral.getValue()));
+        } else if (type.equals(ExpressionType.OFFSET)&&commonBean instanceof OffsetInfo offsetInfo) {
+            offsetInfo.setOffset(String.valueOf(longLiteral.getValue()));
+        } else if (type.equals(ExpressionType.LIMIT)&&commonBean instanceof LimitInfo limitInfo) {
+            limitInfo.setLimit(String.valueOf(longLiteral.getValue()));
         }
         return null;
     }
@@ -73,6 +86,14 @@ public class ExpressionProcessor extends ExpressionHelper {
         if (type.equals(ExpressionType.WHERE)) {
             final Between whereProcessor = new WhereProcessor(commonBean);
             whereProcessor.processBetweenExpression(betweenPredicate);
+        }
+        return null;
+    }
+
+    public Object processExpression(FunctionCall functionCall) {
+        if (type.equals(ExpressionType.HAVING)) {
+            final FunctionCallExpression havingProcessor = new HavingProcessor(commonBean);
+            havingProcessor.processFunctionExpression(functionCall);
         }
         return null;
     }

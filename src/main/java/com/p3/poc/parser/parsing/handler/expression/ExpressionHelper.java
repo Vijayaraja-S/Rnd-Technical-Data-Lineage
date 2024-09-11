@@ -23,13 +23,22 @@ public class ExpressionHelper {
                     .noneMatch(col -> col.getColumnName().equalsIgnoreCase(column.getColumnName()))) {
                 List<ColumnDetails> columnList = overallColumnMap.computeIfAbsent(column.getColumnSource(), k -> new ArrayList<>());
                 setColumId(column, columnList);
+                return column;
+            }else{
+                final Optional<ColumnDetails> first = columnDetails.stream()
+                        .filter(col -> col.getColumnName().equalsIgnoreCase(column.getColumnName()))
+                        .findFirst();
+                if (first.isPresent()) {
+                    return first.get();
+                }
             }
         }else {
             final List<ColumnDetails> value = new ArrayList<>();
             setColumId(column, value);
             overallColumnMap.put(column.getColumnSource(), value);
+            return column;
         }
-        return column;
+        return null;
     }
 
     private void setColumId(ColumnDetails column, List<ColumnDetails> columnList) {

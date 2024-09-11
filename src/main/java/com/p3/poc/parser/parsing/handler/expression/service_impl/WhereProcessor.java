@@ -41,9 +41,9 @@ public class WhereProcessor extends ExpressionHelper implements Logical,
     public void processDereferenceExpression(DereferenceExpression dereferenceExpression) {
         if (commonBean instanceof WhereExpressionInfo expressionInfo) {
             final ColumnDetails columnDetails = getColumnDetails(dereferenceExpression);
-            saveColumnDetails(columnDetails, ExpressionType.WHERE);
-            expressionInfo.setColumnId(columnDetails.getColumnId());
-            expressionInfo.setColumnName(columnDetails.getColumnName());
+            final ColumnDetails col = saveColumnDetails(columnDetails, ExpressionType.WHERE);
+            expressionInfo.setColumnId(col.getColumnId());
+            expressionInfo.setColumnName(col.getColumnName());
         }
     }
 
@@ -51,6 +51,7 @@ public class WhereProcessor extends ExpressionHelper implements Logical,
     public Object processComparisonExpression(ComparisonExpression comparisonExpression) {
         WhereExpressionInfo whereExpression = extractWhereExpressionInfo(commonBean);
         whereExpression.setConditionType(ConditionType.COMPARISON);
+        whereExpression.setOperator(comparisonExpression.getOperator().toString());
         whereExpression.setExpressionContent(comparisonExpression.toString());
         processChildExpressions(comparisonExpression, whereExpression);
 
@@ -99,7 +100,7 @@ public class WhereProcessor extends ExpressionHelper implements Logical,
 
     private void addWhereDetails(WhereExpressionInfo whereExpression) {
         final GlobalCollector instance = GlobalCollector.getInstance();
-        final String selectId = instance.getSelectId();
+        final String selectId = instance.getDynamicSelectId();
         final Map<String, List<WhereExpressionInfo>> whereInfoMap = instance.getWhereInfoMap();
         if (whereInfoMap.containsKey(selectId)) {
             whereInfoMap.get(selectId).add(whereExpression);
