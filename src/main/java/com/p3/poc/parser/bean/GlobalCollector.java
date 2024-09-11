@@ -12,7 +12,7 @@ import java.util.Map;
 @Setter
 public class GlobalCollector {
 
-    private final Map<String, List<ColumnDetails>> overallColumnMap = new LinkedHashMap<>();
+    private final Map<String, List<ColumnDetails>> columnMap = new LinkedHashMap<>();
     private final Map<String, TableDetails> tableMap = new LinkedHashMap<>();
     private final Map<String, JoinDetailsInfo> joinDetailsMap = new LinkedHashMap<>();
     private final Map<String, List<GroupInfo>> groupInfoMap = new LinkedHashMap<>();
@@ -21,6 +21,9 @@ public class GlobalCollector {
     private final Map<String, LimitInfo> limitInfoMap = new LinkedHashMap<>();
     private final Map<String, OffsetInfo> offsetInfoMap = new LinkedHashMap<>();
     private final Map<String, List<OrderByInfo>> orderByInfoMap = new LinkedHashMap<>();
+
+    // need to implement(select Result map)
+
 
     private String dynamicSelectId;
     private String dynamicGroupId;

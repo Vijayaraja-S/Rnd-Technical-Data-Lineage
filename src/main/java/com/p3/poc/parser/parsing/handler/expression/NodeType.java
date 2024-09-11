@@ -1,5 +1,5 @@
 package com.p3.poc.parser.parsing.handler.expression;
 
-public enum ExpressionType {
+public enum NodeType {
     SELECT,JOIN,GROUP_BY,TABLE,HAVING,ORDER,LIMIT,OFFSET,WHERE
 }

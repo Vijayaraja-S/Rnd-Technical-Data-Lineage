@@ -14,8 +14,8 @@ import java.util.Optional;
 public class ExpressionHelper {
 
 
-    public ColumnDetails saveColumnDetails(ColumnDetails column, ExpressionType type) {
-        Map<String, List<ColumnDetails>> overallColumnMap = GlobalCollector.getInstance().getOverallColumnMap();
+    public ColumnDetails saveColumnDetails(ColumnDetails column, NodeType type) {
+        Map<String, List<ColumnDetails>> overallColumnMap = GlobalCollector.getInstance().getColumnMap();
 
         if (overallColumnMap.containsKey(column.getColumnSource())) {
             final List<ColumnDetails> columnDetails = overallColumnMap.get(column.getColumnSource());

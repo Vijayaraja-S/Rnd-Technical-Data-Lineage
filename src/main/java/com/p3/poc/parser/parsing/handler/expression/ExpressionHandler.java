@@ -25,7 +25,7 @@ public class ExpressionHandler {
         );
     }
 
-    public Object handleExpression(Expression expression, ExpressionType expressionType,Object commonBean) {
+    public Object handleExpression(Expression expression, NodeType expressionType, Object commonBean) {
         this.expressionProcessor = new ExpressionProcessor(expressionType,commonBean);
         final Function<Expression, Object> handler = handlers.getOrDefault(expression.getClass(), this::handleUnknownExpression);
         return handler.apply(expression);
@@ -71,7 +71,7 @@ public class ExpressionHandler {
         return expressionProcessor.processExpression(dereferenceExpression);
     }
 
-    public void saveColumnDetails(ColumnDetails columnDetails, ExpressionType type) {
+    public void saveColumnDetails(ColumnDetails columnDetails, NodeType type) {
         expressionProcessor.saveColumnDetails(columnDetails,type);
     }
 

@@ -3,7 +3,7 @@ package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
-import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
+import com.p3.poc.parser.parsing.handler.expression.NodeType;
 import com.p3.poc.parser.parsing.handler.query_specification.service.SelectNodeHandler;
 import io.trino.sql.tree.AllColumns;
 import io.trino.sql.tree.Identifier;
@@ -38,10 +38,10 @@ public class SelectHandlerImpl implements SelectNodeHandler {
 
     void processSingleColumn(SingleColumn singleColumn) {
         final Optional<Identifier> alias = singleColumn.getAlias();
-        final Object obj = commonExpressionHandler.handleExpression(singleColumn.getExpression(), ExpressionType.SELECT, null);
+        final Object obj = commonExpressionHandler.handleExpression(singleColumn.getExpression(), NodeType.SELECT, null);
         if(obj instanceof  ColumnDetails column){
             column.setColumnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "");
-            commonExpressionHandler.saveColumnDetails(column,ExpressionType.SELECT);
+            commonExpressionHandler.saveColumnDetails(column, NodeType.SELECT);
         }
     }
 }

@@ -4,7 +4,7 @@ import com.p3.poc.lineage.bean.flow.db_objs.ConditionType;
 import com.p3.poc.lineage.bean.flow.db_objs.HavingExpressionInfo;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
-import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
+import com.p3.poc.parser.parsing.handler.expression.NodeType;
 import com.p3.poc.parser.parsing.handler.expression.service.Comparison;
 import com.p3.poc.parser.parsing.handler.expression.service.FunctionCallExpression;
 import io.trino.sql.tree.ComparisonExpression;
@@ -43,7 +43,7 @@ public class HavingProcessor implements FunctionCallExpression, Comparison {
         children.forEach(
                 child -> {
                     if (child instanceof Expression expression) {
-                        expressionHandler.handleExpression(expression, ExpressionType.HAVING,havingExpressionInfo);
+                        expressionHandler.handleExpression(expression, NodeType.HAVING,havingExpressionInfo);
                     }
                 }
         );

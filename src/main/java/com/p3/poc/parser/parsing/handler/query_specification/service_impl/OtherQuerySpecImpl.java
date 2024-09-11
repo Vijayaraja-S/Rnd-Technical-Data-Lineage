@@ -3,7 +3,7 @@ package com.p3.poc.parser.parsing.handler.query_specification.service_impl;
 import com.p3.poc.lineage.bean.flow.db_objs.*;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
-import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
+import com.p3.poc.parser.parsing.handler.expression.NodeType;
 import com.p3.poc.parser.parsing.handler.query_specification.service.OtherSpecHandler;
 import com.p3.poc.parser.parsing.handler.relation.RelationHandler;
 import io.trino.sql.tree.*;
@@ -29,12 +29,12 @@ public class OtherQuerySpecImpl implements OtherSpecHandler {
 
     @Override
     public void processWhereNode(Expression whereValue) {
-        expressionHandler.handleExpression(whereValue,ExpressionType.WHERE,null);
+        expressionHandler.handleExpression(whereValue, NodeType.WHERE,null);
     }
 
     @Override
     public void processHavingNode(Expression havingValue) {
-        expressionHandler.handleExpression(havingValue,ExpressionType.HAVING,null);
+        expressionHandler.handleExpression(havingValue, NodeType.HAVING,null);
     }
 
     @Override
@@ -45,14 +45,14 @@ public class OtherQuerySpecImpl implements OtherSpecHandler {
                     .orderType(sortItem.getOrdering().toString())
                     .build();
             final Expression sortKey = sortItem.getSortKey();
-            expressionHandler.handleExpression(sortKey,ExpressionType.ORDER,orderByInfo);
+            expressionHandler.handleExpression(sortKey, NodeType.ORDER,orderByInfo);
         });
     }
 
     @Override
     public void processOffsetNode(Offset offset) {
         final OffsetInfo offsetInfo = OffsetInfo.builder().build();
-        expressionHandler.handleExpression(offset.getRowCount(),ExpressionType.OFFSET, offsetInfo);
+        expressionHandler.handleExpression(offset.getRowCount(), NodeType.OFFSET, offsetInfo);
         final GlobalCollector instance = GlobalCollector.getInstance();
         final Map<String, OffsetInfo> offsetInfoMap = instance.getOffsetInfoMap();
         offsetInfoMap.put(instance.getDynamicSelectId(), offsetInfo);
@@ -62,7 +62,7 @@ public class OtherQuerySpecImpl implements OtherSpecHandler {
     @Override
     public void processLimitNode(Limit limit) {
         final LimitInfo limitInfo = LimitInfo.builder().build();
-        expressionHandler.handleExpression(limit.getRowCount(),ExpressionType.LIMIT,limitInfo );
+        expressionHandler.handleExpression(limit.getRowCount(), NodeType.LIMIT,limitInfo );
         final GlobalCollector instance = GlobalCollector.getInstance();
         final Map<String, LimitInfo> limitInfoMap = instance.getLimitInfoMap();
         limitInfoMap.put(instance.getDynamicSelectId(), limitInfo);

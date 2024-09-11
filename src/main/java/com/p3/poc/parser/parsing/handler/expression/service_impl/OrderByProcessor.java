@@ -5,7 +5,7 @@ import com.p3.poc.lineage.bean.flow.db_objs.OrderByInfo;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHelper;
-import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
+import com.p3.poc.parser.parsing.handler.expression.NodeType;
 import com.p3.poc.parser.parsing.handler.expression.service.Dereference;
 import io.trino.sql.tree.*;
 
@@ -27,7 +27,7 @@ public class OrderByProcessor extends ExpressionHelper implements Dereference {
     public void processDereferenceExpression(DereferenceExpression dereferenceExpression) {
         if (commonBean instanceof OrderByInfo orderByInfo) {
             final ColumnDetails columnDetails = getColumnDetails(dereferenceExpression);
-            final ColumnDetails col = saveColumnDetails(columnDetails, ExpressionType.ORDER);
+            final ColumnDetails col = saveColumnDetails(columnDetails, NodeType.ORDER);
             orderByInfo.setColumnId(col.getColumnId());
             orderByInfo.setColumnName(col.getColumnName());
             addOrderByDetails(orderByInfo);

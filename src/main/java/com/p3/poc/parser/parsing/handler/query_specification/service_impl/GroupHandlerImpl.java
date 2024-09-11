@@ -4,7 +4,7 @@ import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
 import com.p3.poc.lineage.bean.flow.db_objs.GroupInfo;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
-import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
+import com.p3.poc.parser.parsing.handler.expression.NodeType;
 import com.p3.poc.parser.parsing.handler.query_specification.service.GroupByNodeHandler;
 import io.trino.sql.tree.*;
 import org.slf4j.Logger;
@@ -47,9 +47,9 @@ public class GroupHandlerImpl implements GroupByNodeHandler {
 
         children.forEach(child -> {
             if (child instanceof Expression expression) {
-                final Object obj = expressionHandler.handleExpression(expression, ExpressionType.GROUP_BY, null);
+                final Object obj = expressionHandler.handleExpression(expression, NodeType.GROUP_BY, null);
                 if (obj instanceof  ColumnDetails columnDetails){
-                    expressionHandler.saveColumnDetails(columnDetails,ExpressionType.GROUP_BY);
+                    expressionHandler.saveColumnDetails(columnDetails, NodeType.GROUP_BY);
                     groupInfos.add(GroupInfo.builder()
                             .tableDetails(columnDetails.getColumnSource())
                             .columnDetails(columnDetails.getColumnName())

@@ -5,7 +5,7 @@ import com.p3.poc.lineage.bean.flow.db_objs.JoinDetailsInfo;
 import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
-import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
+import com.p3.poc.parser.parsing.handler.expression.NodeType;
 import io.trino.sql.tree.*;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class RelationProcessor extends RelationHelper {
             }else if (child instanceof Relation relation ) {
                 processNestedRelation(relation,TableDetails.builder().build());
             } else if (child instanceof Expression expression) {
-                final Object obj = new ExpressionHandler().handleExpression(expression, ExpressionType.JOIN, null);
+                final Object obj = new ExpressionHandler().handleExpression(expression, NodeType.JOIN, null);
                 if (obj instanceof ColumnDetails columnDetails){
                     final Map<String, JoinDetailsInfo> joinDetailsMap = GlobalCollector.getInstance().getJoinDetailsMap();
                     final JoinDetailsInfo joinDetailsInfo = joinDetailsMap.get(columnDetails.getJoinDetailsId());

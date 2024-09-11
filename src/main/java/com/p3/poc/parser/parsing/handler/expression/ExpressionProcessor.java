@@ -11,19 +11,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ExpressionProcessor extends ExpressionHelper {
-    private final ExpressionType type;
+    private final NodeType type;
     private final Object commonBean;
 
-    public ExpressionProcessor(ExpressionType type, Object commonBean) {
+    public ExpressionProcessor(NodeType type, Object commonBean) {
         this.type = type;
         this.commonBean = commonBean;
     }
 
     public Object processExpression(DereferenceExpression expression) {
-        if (type.equals(ExpressionType.WHERE)) {
+        if (type.equals(NodeType.WHERE)) {
             final Dereference whereProcessor = new WhereProcessor(commonBean);
             whereProcessor.processDereferenceExpression(expression);
-        } else if (type.equals(ExpressionType.ORDER)) {
+        } else if (type.equals(NodeType.ORDER)) {
             final Dereference orderByProcessor = new OrderByProcessor(commonBean);
             orderByProcessor.processDereferenceExpression(expression);
         } else {
@@ -40,13 +40,13 @@ public class ExpressionProcessor extends ExpressionHelper {
     }
 
     public Object processExpression(ComparisonExpression comparisonExpression) {
-        if (type.equals(ExpressionType.JOIN)) {
+        if (type.equals(NodeType.JOIN)) {
             final Comparison joinProcessor = new JoinProcessor();
             return joinProcessor.processComparisonExpression(comparisonExpression);
-        } else if (type.equals(ExpressionType.WHERE)) {
+        } else if (type.equals(NodeType.WHERE)) {
             final Comparison whereProcessor = new WhereProcessor(commonBean);
             return whereProcessor.processComparisonExpression(comparisonExpression);
-        }else if (type.equals(ExpressionType.HAVING)) {
+        }else if (type.equals(NodeType.HAVING)) {
             final Comparison havingProcessor = new HavingProcessor(commonBean);
             return havingProcessor.processComparisonExpression(comparisonExpression);
         }
@@ -54,7 +54,7 @@ public class ExpressionProcessor extends ExpressionHelper {
     }
 
     public Object processExpression(LogicalExpression logicalExp) {
-        if (type.equals(ExpressionType.WHERE)) {
+        if (type.equals(NodeType.WHERE)) {
             final Logical whereProcessor = new WhereProcessor(commonBean);
             whereProcessor.processLogicalExpression(logicalExp);
         }
@@ -62,20 +62,20 @@ public class ExpressionProcessor extends ExpressionHelper {
     }
 
     public Object processExpression(LongLiteral longLiteral) {
-        if (type.equals(ExpressionType.WHERE) && commonBean instanceof WhereExpressionInfo whereExpressionInfo) {
+        if (type.equals(NodeType.WHERE) && commonBean instanceof WhereExpressionInfo whereExpressionInfo) {
             whereExpressionInfo.setRightValue(String.valueOf(longLiteral.getValue()));
-        } else if (type.equals(ExpressionType.HAVING) && commonBean instanceof HavingExpressionInfo havingExpressionInfo) {
+        } else if (type.equals(NodeType.HAVING) && commonBean instanceof HavingExpressionInfo havingExpressionInfo) {
             havingExpressionInfo.setRightValue(String.valueOf(longLiteral.getValue()));
-        } else if (type.equals(ExpressionType.OFFSET)&&commonBean instanceof OffsetInfo offsetInfo) {
+        } else if (type.equals(NodeType.OFFSET)&&commonBean instanceof OffsetInfo offsetInfo) {
             offsetInfo.setOffset(String.valueOf(longLiteral.getValue()));
-        } else if (type.equals(ExpressionType.LIMIT)&&commonBean instanceof LimitInfo limitInfo) {
+        } else if (type.equals(NodeType.LIMIT)&&commonBean instanceof LimitInfo limitInfo) {
             limitInfo.setLimit(String.valueOf(longLiteral.getValue()));
         }
         return null;
     }
 
     public Object processExpression(IsNotNullPredicate isNotNullPredicate) {
-        if (type.equals(ExpressionType.WHERE)) {
+        if (type.equals(NodeType.WHERE)) {
             final IsNotNull whereProcessor = new WhereProcessor(commonBean);
             whereProcessor.processIsNotNullExpression(isNotNullPredicate);
         }
@@ -83,7 +83,7 @@ public class ExpressionProcessor extends ExpressionHelper {
     }
 
     public Object processExpression(BetweenPredicate betweenPredicate) {
-        if (type.equals(ExpressionType.WHERE)) {
+        if (type.equals(NodeType.WHERE)) {
             final Between whereProcessor = new WhereProcessor(commonBean);
             whereProcessor.processBetweenExpression(betweenPredicate);
         }
@@ -91,7 +91,7 @@ public class ExpressionProcessor extends ExpressionHelper {
     }
 
     public Object processExpression(FunctionCall functionCall) {
-        if (type.equals(ExpressionType.HAVING)) {
+        if (type.equals(NodeType.HAVING)) {
             final FunctionCallExpression havingProcessor = new HavingProcessor(commonBean);
             havingProcessor.processFunctionExpression(functionCall);
         }

@@ -6,7 +6,7 @@ import com.p3.poc.lineage.bean.flow.db_objs.WhereExpressionInfo;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHelper;
-import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
+import com.p3.poc.parser.parsing.handler.expression.NodeType;
 import com.p3.poc.parser.parsing.handler.expression.service.*;
 import io.trino.sql.tree.*;
 
@@ -41,7 +41,7 @@ public class WhereProcessor extends ExpressionHelper implements Logical,
     public void processDereferenceExpression(DereferenceExpression dereferenceExpression) {
         if (commonBean instanceof WhereExpressionInfo expressionInfo) {
             final ColumnDetails columnDetails = getColumnDetails(dereferenceExpression);
-            final ColumnDetails col = saveColumnDetails(columnDetails, ExpressionType.WHERE);
+            final ColumnDetails col = saveColumnDetails(columnDetails, NodeType.WHERE);
             expressionInfo.setColumnId(col.getColumnId());
             expressionInfo.setColumnName(col.getColumnName());
         }
@@ -88,7 +88,7 @@ public class WhereProcessor extends ExpressionHelper implements Logical,
     }
 
     private void processNestedExpression(WhereExpressionInfo whereExpression, Expression exp) {
-        expressionHandler.handleExpression(exp, ExpressionType.WHERE, whereExpression);
+        expressionHandler.handleExpression(exp, NodeType.WHERE, whereExpression);
     }
 
     private WhereExpressionInfo extractWhereExpressionInfo(Object bean) {

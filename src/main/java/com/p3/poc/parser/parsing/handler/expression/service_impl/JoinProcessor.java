@@ -4,7 +4,7 @@ import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
 import com.p3.poc.lineage.bean.flow.db_objs.JoinDetailsInfo;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.ExpressionHandler;
-import com.p3.poc.parser.parsing.handler.expression.ExpressionType;
+import com.p3.poc.parser.parsing.handler.expression.NodeType;
 import com.p3.poc.parser.parsing.handler.expression.service.Comparison;
 import io.trino.sql.tree.ComparisonExpression;
 import java.util.Map;
@@ -17,11 +17,11 @@ public class JoinProcessor implements Comparison {
 
     @Override
     public ColumnDetails processComparisonExpression(ComparisonExpression comparisonExpression) {
-        final Object obj1 = expressionHandler.handleExpression(comparisonExpression.getRight(), ExpressionType.JOIN, null);
-        final Object obj2 = expressionHandler.handleExpression(comparisonExpression.getLeft(), ExpressionType.JOIN, null);
+        final Object obj1 = expressionHandler.handleExpression(comparisonExpression.getRight(), NodeType.JOIN, null);
+        final Object obj2 = expressionHandler.handleExpression(comparisonExpression.getLeft(), NodeType.JOIN, null);
         if (obj1 instanceof ColumnDetails left && obj2 instanceof ColumnDetails right){
-            expressionHandler.saveColumnDetails(left,ExpressionType.JOIN);
-            expressionHandler.saveColumnDetails(right,ExpressionType.JOIN);
+            expressionHandler.saveColumnDetails(left, NodeType.JOIN);
+            expressionHandler.saveColumnDetails(right, NodeType.JOIN);
             final String joinId = right.getColumnId() + "::" + left.getColumnId();
             final JoinDetailsInfo joinDetailsInfo = saveJoinDetailsInfo(comparisonExpression,joinId);
             setJoinProperties(left, joinId ,joinDetailsInfo);
