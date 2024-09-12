@@ -21,6 +21,8 @@ public class QuerySpecificationChecker {
             return new LimitHandler(limit);
         } else if (node instanceof Offset offset) {
             return new OffsetHandler(offset);
+        } else if (node instanceof WindowDefinition windowsDefinition) {
+            return new WindowDefinitionHandler(windowsDefinition);
         }
         return null;
     }

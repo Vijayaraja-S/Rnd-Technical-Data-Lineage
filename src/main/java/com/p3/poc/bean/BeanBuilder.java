@@ -1,4 +1,4 @@
-package com.p3.poc.result_bean;
+package com.p3.poc.bean;
 
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;

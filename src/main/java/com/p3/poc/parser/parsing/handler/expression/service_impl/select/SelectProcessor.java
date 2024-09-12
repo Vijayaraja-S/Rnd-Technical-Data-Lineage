@@ -2,7 +2,11 @@ package com.p3.poc.parser.parsing.handler.expression.service_impl.select;
 
 import com.p3.poc.parser.bean.parsing_details.ColumnDetails;
 import com.p3.poc.parser.parsing.handler.expression.service.AbstractExpressionProcessor;
+import com.p3.poc.parser.parsing.handler.query_specification.service.AbstractQuerySpecHandler;
+import com.p3.poc.parser.parsing.handler.utils.QuerySpecificationChecker;
 import io.trino.sql.tree.*;
+
+import java.util.List;
 
 public class SelectProcessor extends AbstractExpressionProcessor {
 
@@ -41,7 +45,13 @@ public class SelectProcessor extends AbstractExpressionProcessor {
 
     @Override
     public void processFunctionCall(FunctionCall functionCall) {
-        //
+        List<Node> children = functionCall.getChildren();
+        children.forEach(child -> {
+            AbstractQuerySpecHandler check = QuerySpecificationChecker.check(child);
+            if (check != null) {
+                check.process();
+            }
+        });
     }
 
     @Override

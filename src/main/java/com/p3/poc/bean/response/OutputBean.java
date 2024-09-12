@@ -1,4 +1,4 @@
-package com.p3.poc.result_bean.response;
+package com.p3.poc.bean.response;
 
 import lombok.Builder;
 import lombok.Data;
