@@ -1,8 +1,8 @@
 package com.p3.poc.parser.parsing.handler.relation;
 
-import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
-import com.p3.poc.lineage.bean.flow.db_objs.JoinDetailsInfo;
-import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
+import com.p3.poc.parser.bean.parsing_details.ColumnDetails;
+import com.p3.poc.parser.bean.parsing_details.JoinDetailsInfo;
+import com.p3.poc.parser.bean.parsing_details.TableDetails;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.service.ExpressionHandler;
 import com.p3.poc.parser.parsing.handler.expression.bean.indentifier.NodeType;

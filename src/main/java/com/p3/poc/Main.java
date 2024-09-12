@@ -1,8 +1,8 @@
 package com.p3.poc;
 
 
-import com.p3.poc.bean.BeanBuilder;
-import com.p3.poc.bean.InputBean;
+import com.p3.poc.result_bean.BeanBuilder;
+import com.p3.poc.result_bean.InputBean;
 import com.p3.poc.parser.SQLParserApplication;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.exception.InvalidStatement;

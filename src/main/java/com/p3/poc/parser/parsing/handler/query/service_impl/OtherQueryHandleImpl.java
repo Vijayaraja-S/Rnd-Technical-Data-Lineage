@@ -2,16 +2,15 @@ package com.p3.poc.parser.parsing.handler.query.service_impl;
 
 import com.p3.poc.parser.parsing.handler.query.service.OtherQueryHandler;
 import com.p3.poc.parser.parsing.handler.query_body.QueryBodyProcessor;
-import com.p3.poc.parser.parsing.handler.query_specification.service.OtherSpecHandler;
-import com.p3.poc.parser.parsing.handler.query_specification.service_impl.OtherQuerySpecImpl;
+import com.p3.poc.parser.parsing.handler.query_specification.service.AbstractQuerySpecHandler;
+import com.p3.poc.parser.parsing.handler.utils.QuerySpecificationChecker;
 import io.trino.sql.tree.*;
 
 public class OtherQueryHandleImpl implements OtherQueryHandler {
     private final QueryBodyProcessor queryBodyProcessor;
-    private final OtherSpecHandler otherSpecHandler;
+
     public OtherQueryHandleImpl() {
         this.queryBodyProcessor=new QueryBodyProcessor();
-        this.otherSpecHandler=new OtherQuerySpecImpl();
     }
 
     @Override
@@ -21,19 +20,27 @@ public class OtherQueryHandleImpl implements OtherQueryHandler {
 
     @Override
     public void handleOrderBy(Node node) {
-        final OrderBy orderBy = (OrderBy) node;
-        otherSpecHandler.processOrderByNode(orderBy);
+        final AbstractQuerySpecHandler handler = QuerySpecificationChecker.check(node);
+        if (handler != null) {
+            handler.process();
+        }
     }
 
     @Override
     public void handleOffset(Node node) {
-        final Offset offset = (Offset) node;
-        otherSpecHandler.processOffsetNode(offset);
+        final AbstractQuerySpecHandler handler = QuerySpecificationChecker.check(node);
+        if (handler != null) {
+            handler.process();
+        }
+
     }
 
     @Override
     public void handleLimit(Node node) {
-        final Limit limit = (Limit) node;
-        otherSpecHandler.processLimitNode(limit);
+        final AbstractQuerySpecHandler handler = QuerySpecificationChecker.check(node);
+        if (handler != null) {
+            handler.process();
+        }
+
     }
 }

@@ -1,6 +1,6 @@
 package com.p3.poc.parser.parsing.handler.expression.service_impl.where;
 
-import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
+import com.p3.poc.parser.bean.parsing_details.ColumnDetails;
 import com.p3.poc.parser.parsing.handler.expression.bean.indentifier.OperationType;
 import com.p3.poc.parser.parsing.handler.expression.bean.WhereExpressionInfo;
 import com.p3.poc.parser.parsing.handler.expression.service.AbstractExpressionProcessor;

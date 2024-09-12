@@ -1,6 +1,6 @@
 package com.p3.poc.parser.parsing.handler.relation;
 
-import com.p3.poc.lineage.bean.flow.db_objs.TableDetails;
+import com.p3.poc.parser.bean.parsing_details.TableDetails;
 import io.trino.sql.tree.AliasedRelation;
 import io.trino.sql.tree.Join;
 import io.trino.sql.tree.Relation;

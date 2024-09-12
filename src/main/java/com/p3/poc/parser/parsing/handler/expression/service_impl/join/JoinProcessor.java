@@ -1,20 +1,19 @@
 package com.p3.poc.parser.parsing.handler.expression.service_impl.join;
 
-import com.p3.poc.lineage.bean.flow.db_objs.ColumnDetails;
-import com.p3.poc.lineage.bean.flow.db_objs.JoinDetailsInfo;
-import com.p3.poc.parser.bean.GlobalCollector;
+import com.p3.poc.parser.bean.parsing_details.ColumnDetails;
+import com.p3.poc.parser.bean.parsing_details.JoinDetailsInfo;
 import com.p3.poc.parser.parsing.handler.expression.service.AbstractExpressionProcessor;
 import com.p3.poc.parser.parsing.handler.expression.service.ExpressionHandler;
 import com.p3.poc.parser.parsing.handler.expression.bean.indentifier.NodeType;
 import io.trino.sql.tree.*;
 
-import java.util.Map;
-
 public class JoinProcessor extends AbstractExpressionProcessor {
     private final ExpressionHandler expressionHandler;
     private final JoinHelper joinHelper;
+    private final JoinDetailsInfo joinDetailsInfo;
 
-    public JoinProcessor() {
+    public JoinProcessor(JoinDetailsInfo joinDetailsInfo) {
+        this.joinDetailsInfo = joinDetailsInfo;
         this.expressionHandler = new ExpressionHandler();
         this.joinHelper = new JoinHelper();
     }
@@ -33,7 +32,7 @@ public class JoinProcessor extends AbstractExpressionProcessor {
             expressionHandler.saveColumnDetails(left, NodeType.JOIN);
             expressionHandler.saveColumnDetails(right, NodeType.JOIN);
             final String joinId = right.getColumnId() + "::" + left.getColumnId();
-            final JoinDetailsInfo joinDetailsInfo = joinHelper.saveJoinDetailsInfo(comparisonExpression, joinId);
+            joinHelper.saveJoinDetailsInfo(comparisonExpression, joinId);
             joinHelper.setJoinProperties(left, joinId, joinDetailsInfo);
             joinHelper.setJoinProperties(right, joinId, joinDetailsInfo);
             return left;
