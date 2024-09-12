@@ -1,152 +1,132 @@
-sqlQuery: WITH
-  recursive_cte AS (
-  SELECT
-  t1.id AS root_id,
-  t1.parent_id,
-  t1.value AS root_value,
-  1 AS depth
-  FROM schema1.table1 t1
-  WHERE t1.parent_id IS NULL
-  
-  UNION ALL
-  
-  SELECT
-  t2.id AS root_id,
-  t2.parent_id,
-  t2.value AS root_value,
-  rcte.depth + 1
-  FROM schema1.table1 t2
-  JOIN recursive_cte rcte
-  ON t2.parent_id = rcte.root_id
-  ),
-  cte1 AS (
-  SELECT
-  t2.column1,
-  t2.column2,
-  t2.column3,
-  CASE
-  WHEN t2.column4 > 100 THEN 'High'
-  ELSE 'Low'
-  END AS value_status,
-  SUM(t2.column5) OVER (PARTITION BY t2.column2 ORDER BY t2.column3 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_sum,
-  ROW_NUMBER() OVER (PARTITION BY t2.column1 ORDER BY t2.column5 DESC) AS row_num
-  FROM schema2.table2 t2
-  WHERE t2.column1 IN (
-  SELECT DISTINCT t8.column1
-  FROM schema8.table8 t8
-  WHERE t8.column6 BETWEEN '2023-01-01' AND '2024-01-01'
-  )
-  AND t2.column4 IS NOT NULL
-  ),
-  cte2 AS (
+sqlQuery:  WITH
+  cte_level1 AS (
+  WITH
+  nested_cte1 AS (
   SELECT
   t1.column1,
   t1.column2,
-  COALESCE(t1.column3, 0) AS coalesced_value,
-  ABS(t1.column4) AS abs_value,
+  ROW_NUMBER() OVER (PARTITION BY t1.column1 ORDER BY t1.column2) AS row_num
+  FROM schema1.table1 t1
+  WHERE t1.column3 IS NOT NULL
+  )
+  SELECT
+  n1.column1,
+  n1.column2,
+  n1.row_num,
+  SUM(n1.column2) OVER (PARTITION BY n1.column1) AS sum_column2
+  FROM nested_cte1 n1
+  WHERE n1.row_num <= 5
+  ),
+  cte_level2 AS (
+  WITH
+  recursive_cte2 AS (
+  SELECT
+  t2.id,
+  t2.parent_id,
+  t2.value AS base_value,
+  1 AS depth
+  FROM schema2.table2 t2
+  WHERE t2.parent_id IS NULL
+  
+  UNION ALL
+  
+  SELECT
+  t3.id,
+  t3.parent_id,
+  t3.value,
+  rc.depth + 1
+  FROM schema2.table2 t3
+  JOIN recursive_cte2 rc ON t3.parent_id = rc.id
+  )
+  SELECT
+  rc2.id,
+  rc2.base_value,
+  rc2.depth
+  FROM recursive_cte2 rc2
+  WHERE rc2.depth <= 5
+  ),
+  cte_level3 AS (
+  WITH
+  nested_cte3 AS (
+  SELECT
+  t4.column1,
+  (SELECT MAX(t5.column2) FROM schema5.table5 t5 WHERE t5.column1 = t4.column1) AS max_column2,
+  ROW_NUMBER() OVER (PARTITION BY t4.column1 ORDER BY t4.column2) AS row_num3
+  FROM schema4.table4 t4
+  WHERE t4.column3 = (SELECT MAX(t6.column3) FROM schema6.table6 t6 WHERE t6.column4 = t4.column4)
+  )
+  SELECT
+  nc3.column1,
+  nc3.max_column2,
+  nc3.row_num3,
   CASE
-  WHEN MOD(t1.column3, 2) = 0 THEN 'Even'
-  ELSE 'Odd'
-  END AS number_parity,
-  PERCENT_RANK() OVER (PARTITION BY t1.column2 ORDER BY t1.column4) AS percent_rank
-  FROM schema3.table3 t1
+  WHEN nc3.max_column2 > 100 THEN 'High'
+  ELSE 'Low'
+  END AS status
+  FROM nested_cte3 nc3
   ),
-  cte3 AS (
-  SELECT
-  t3.column1,
-  t3.column2,
-  t3.column3,
-  GROUPING(t3.column1) AS grp_col1,
-  GROUPING(t3.column2) AS grp_col2,
-  GROUPING(t3.column3) AS grp_col3,
-  SUM(t3.column4) AS total_value
-  FROM schema4.table4 t3
-  GROUP BY ROLLUP(t3.column1, t3.column2, t3.column3)
-  HAVING SUM(t3.column4) > 100
-  ),
-  cte4 AS (
-  SELECT
-  cte2.column1,
-  cte2.column2,
-  cte2.coalesced_value,
-  ROUND(cte2.abs_value / NULLIF(cte2.coalesced_value, 0), 2) AS ratio,
-  LEAD(cte2.coalesced_value, 1, 0) OVER (PARTITION BY cte2.column2 ORDER BY cte2.abs_value) AS next_val,
-  LAG(cte2.coalesced_value, 1, 0) OVER (PARTITION BY cte2.column2 ORDER BY cte2.abs_value) AS prev_val
-  FROM cte2
-  ),
-  cte5 AS (
-  SELECT
-  cte1.column1,
-  cte1.column2,
-  cte1.value_status,
-  NTILE(5) OVER (PARTITION BY cte1.column2 ORDER BY cte1.cumulative_sum) AS ntile_rank,
-  DENSE_RANK() OVER (PARTITION BY cte1.column1 ORDER BY cte1.cumulative_sum DESC) AS dense_rank_value
-  FROM cte1
-  ),
-  cte6 AS (
-  SELECT
-  cte5.column1,
-  cte5.column2,
-  cte5.ntile_rank,
-  cte5.dense_rank_value,
-  cte4.coalesced_value,
-  cte4.ratio,
-  cte4.prev_val,
-  SUM(cte5.dense_rank_value * cte4.ratio) AS weighted_sum,
-  COUNT(cte4.coalesced_value) OVER (PARTITION BY cte5.column2) AS total_count
-  FROM cte5
-  LEFT JOIN cte4 ON cte5.column1 = cte4.column1
-  ),
-  cte7 AS (
+  cte_level4 AS (
+  WITH
+  nested_cte4 AS (
   SELECT
   t7.column1,
   t7.column2,
-  cte6.ntile_rank,
-  cte6.weighted_sum,
-  MAX(cte6.ratio) AS max_ratio,
-  MIN(cte6.ratio) AS min_ratio,
-  SUM(t7.column5 * cte6.ratio) AS sum_with_ratio,
-  STDDEV(cte6.ratio) AS stddev_ratio
+  SUM(t7.column3) AS sum_column3,
+  GROUPING(t7.column1) AS group_col1,
+  GROUPING(t7.column2) AS group_col2
   FROM schema7.table7 t7
-  CROSS JOIN cte6
-  WHERE t7.column2 = cte6.column2
-  GROUP BY t7.column1, t7.column2, cte6.ntile_rank
+  GROUP BY CUBE(t7.column1, t7.column2)
+  HAVING SUM(t7.column3) > 100
+  )
+  SELECT
+  n4.column1,
+  n4.column2,
+  n4.sum_column3,
+  (SELECT AVG(t8.column4) FROM schema8.table8 t8 WHERE t8.column1 = n4.column1) AS avg_column4
+  FROM nested_cte4 n4
   ),
-  cte8 AS (
+  cte_level5 AS (
+  WITH
+  recursive_cte5 AS (
   SELECT
   t9.column1,
   t9.column2,
-  COUNT(*) AS recursion_depth
+  1 AS depth
   FROM schema9.table9 t9
-  WHERE t9.column3 IN (
-  SELECT column3
-  FROM schema8.table8
-  WHERE column3 > 100
-  )
+  WHERE t9.column2 IS NOT NULL
+  
   UNION ALL
+  
   SELECT
-  cte8.column1,
-  cte8.column2,
-  cte8.recursion_depth + 1
-  FROM cte8
-  JOIN schema9.table9 t9 ON cte8.column1 = t9.column1
+  t10.column1,
+  t10.column2,
+  rc5.depth + 1
+  FROM schema10.table10 t10
+  JOIN recursive_cte5 rc5 ON t10.column1 = rc5.column1
   )
   SELECT
-  cte7.column1,
-  cte7.column2,
-  cte7.ntile_rank,
-  cte7.weighted_sum,
-  cte7.max_ratio,
-  cte7.min_ratio,
-  cte7.sum_with_ratio,
-  cte8.recursion_depth,
+  rc5.column1,
+  rc5.column2,
+  rc5.depth,
+  (SELECT COUNT(*) FROM schema11.table11 t11 WHERE t11.column1 = rc5.column1) AS related_count
+  FROM recursive_cte5 rc5
+  )
+  SELECT
+  cte1.column1 AS first_level,
+  cte2.base_value AS second_level,
+  cte3.status AS third_level,
+  cte4.sum_column3 AS fourth_level,
+  cte5.related_count AS fifth_level,
   CASE
-  WHEN cte7.sum_with_ratio > 1000 THEN 'Very High'
-  WHEN cte7.sum_with_ratio BETWEEN 500 AND 1000 THEN 'High'
-  ELSE 'Low'
-  END AS risk_category,
-  COUNT(cte8.column1) OVER (PARTITION BY cte7.column2) AS recursion_counts
-  FROM cte7
-  JOIN cte8 ON cte7.column1 = cte8.column1
-  ORDER BY cte7.weighted_sum DESC
+  WHEN cte5.depth > 5 THEN 'Deep'
+  ELSE 'Shallow'
+  END AS depth_level
+  FROM cte_level1 cte1
+  JOIN cte_level2 cte2 ON cte1.column1 = cte2.id
+  JOIN cte_level3 cte3 ON cte2.id = cte3.column1
+  JOIN cte_level4 cte4 ON cte3.column1 = cte4.column1
+  JOIN cte_level5 cte5 ON cte4.column1 = cte5.column1
+  ORDER BY cte5.depth DESC, cte4.sum_column3 DESC
   LIMIT 50
+
+sunburst: true

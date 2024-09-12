@@ -9,5 +9,5 @@ import lombok.*;
 @Getter
 @Setter
 public class LimitInfo {
-    private String limit;
+    @Builder.Default private String limit="";
 }

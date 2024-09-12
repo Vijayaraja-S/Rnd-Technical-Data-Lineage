@@ -27,7 +27,7 @@ public class RelationHelper {
         tableDetails.setName(String.valueOf(name.getSuffix()));
         tableDetails.setSchemaName(schemaName.isPresent() ? String.valueOf(schemaName.get()) : "");
 
-        final Map<String, TableDetails> tableMap = instance.getTableMap();
+        final Map<String, TableDetails> tableMap = instance.getOverAllTableMap();
         final String aliasName = tableDetails.getAliasName();
         final String key = aliasName.isEmpty() ? tableDetails.getName() : tableDetails.getAliasName();
         tableMap.put(key, tableDetails);

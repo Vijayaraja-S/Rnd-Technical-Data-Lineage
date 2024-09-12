@@ -39,10 +39,10 @@ public class SelectHandler extends AbstractQuerySpecHandler {
 
     void processSingleColumn(SingleColumn singleColumn) {
         final Optional<Identifier> alias = singleColumn.getAlias();
-        final Object obj = commonExpressionHandler.handleExpression(singleColumn.getExpression(), NodeType.SELECT, null);
-        if (obj instanceof ColumnDetails column) {
-            column.setColumnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "");
-            commonExpressionHandler.saveColumnDetails(column, NodeType.SELECT);
-        }
+        final ColumnDetails column = ColumnDetails.builder().build();
+        column.setColumnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "");
+        commonExpressionHandler.handleExpression(singleColumn.getExpression(), NodeType.SELECT, column);
+        commonExpressionHandler.saveColumnDetails(column, NodeType.SELECT);
+
     }
 }

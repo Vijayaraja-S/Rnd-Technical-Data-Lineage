@@ -20,53 +20,51 @@ public class JoinProcessor extends AbstractExpressionProcessor {
 
 
     @Override
-    public Object processDereference(DereferenceExpression dereferenceExpression) {
-        return null;
+    public void processDereference(DereferenceExpression dereferenceExpression) {
+        //
     }
 
     @Override
-    public Object processComparison(ComparisonExpression comparisonExpression) {
-        final Object obj1 = expressionHandler.handleExpression(comparisonExpression.getRight(), NodeType.JOIN, null);
-        final Object obj2 = expressionHandler.handleExpression(comparisonExpression.getLeft(), NodeType.JOIN, null);
-        if (obj1 instanceof ColumnDetails left && obj2 instanceof ColumnDetails right) {
-            expressionHandler.saveColumnDetails(left, NodeType.JOIN);
-            expressionHandler.saveColumnDetails(right, NodeType.JOIN);
-            final String joinId = right.getColumnId() + "::" + left.getColumnId();
-            joinHelper.saveJoinDetailsInfo(comparisonExpression, joinId);
-            joinHelper.setJoinProperties(left, joinId, joinDetailsInfo);
-            joinHelper.setJoinProperties(right, joinId, joinDetailsInfo);
-            return left;
-        }
-        return null;
+    public void processComparison(ComparisonExpression comparisonExpression) {
+        final ColumnDetails left = ColumnDetails.builder().build();
+        final ColumnDetails right = ColumnDetails.builder().build();
+        expressionHandler.handleExpression(comparisonExpression.getRight(), NodeType.JOIN, left);
+        expressionHandler.handleExpression(comparisonExpression.getLeft(), NodeType.JOIN, right);
+        expressionHandler.saveColumnDetails(left, NodeType.JOIN);
+        expressionHandler.saveColumnDetails(right, NodeType.JOIN);
+        final String joinId = right.getId() + "::" + left.getId();
+        joinHelper.saveJoinDetailsInfo(comparisonExpression, joinId);
+        joinHelper.setJoinProperties(left, joinId, joinDetailsInfo);
+        joinHelper.setJoinProperties(right, joinId, joinDetailsInfo);
     }
 
     @Override
-    public Object processLongLiteral(LongLiteral longLiteral) {
-        return null;
+    public void processLongLiteral(LongLiteral longLiteral) {
+        //
     }
 
     @Override
-    public Object processLogical(LogicalExpression logicalExp) {
-        return null;
+    public void processLogical(LogicalExpression logicalExp){
+        //
     }
 
     @Override
-    public Object processIdentifier(Identifier identifier) {
-        return null;
+    public void processIdentifier(Identifier identifier) {
+        //
     }
 
     @Override
-    public Object processFunctionCall(FunctionCall functionCall) {
-        return null;
+    public void processFunctionCall(FunctionCall functionCall){
+        //
     }
 
     @Override
-    public Object processBetween(BetweenPredicate betweenPredicate) {
-        return null;
+    public void processBetween(BetweenPredicate betweenPredicate) {
+        //
     }
 
     @Override
-    public Object processIsNotNull(IsNotNullPredicate isNotNullPredicate) {
-        return null;
+    public void processIsNotNull(IsNotNullPredicate isNotNullPredicate) {
+        //
     }
 }

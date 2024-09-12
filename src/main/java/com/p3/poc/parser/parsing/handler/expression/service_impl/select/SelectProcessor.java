@@ -1,53 +1,56 @@
 package com.p3.poc.parser.parsing.handler.expression.service_impl.select;
 
+import com.p3.poc.parser.bean.parsing_details.ColumnDetails;
 import com.p3.poc.parser.parsing.handler.expression.service.AbstractExpressionProcessor;
 import io.trino.sql.tree.*;
 
 public class SelectProcessor extends AbstractExpressionProcessor {
 
     private final SelectHelper selectHelper;
+    private final ColumnDetails columnDetails;
 
-    public SelectProcessor() {
+    public SelectProcessor(ColumnDetails columnDetails) {
+        this.columnDetails = columnDetails;
         this.selectHelper = new SelectHelper();
     }
 
     @Override
-    public Object processDereference(DereferenceExpression dereferenceExpression) {
-        return null;
+    public void processDereference(DereferenceExpression dereferenceExpression) {
+        //
     }
 
     @Override
-    public Object processComparison(ComparisonExpression comparisonExpression) {
-        return null;
+    public void processComparison(ComparisonExpression comparisonExpression) {
+        //
     }
 
     @Override
-    public Object processFunctionCall(FunctionCall functionCall) {
-        return null;
+    public void processLongLiteral(LongLiteral longLiteral) {
+        //
     }
 
     @Override
-    public Object processLongLiteral(LongLiteral longLiteral) {
-        return null;
+    public void processLogical(LogicalExpression logicalExp) {
+        //
     }
 
     @Override
-    public Object processLogical(LogicalExpression logicalExp) {
-        return null;
+    public void processIdentifier(Identifier identifier) {
+        //
     }
 
     @Override
-    public Object processIdentifier(Identifier identifier) {
-        return null;
+    public void processFunctionCall(FunctionCall functionCall) {
+        //
     }
 
     @Override
-    public Object processBetween(BetweenPredicate betweenPredicate) {
-        return null;
+    public void processBetween(BetweenPredicate betweenPredicate) {
+        //
     }
 
     @Override
-    public Object processIsNotNull(IsNotNullPredicate isNotNullPredicate) {
-        return null;
+    public void processIsNotNull(IsNotNullPredicate isNotNullPredicate) {
+        //
     }
 }

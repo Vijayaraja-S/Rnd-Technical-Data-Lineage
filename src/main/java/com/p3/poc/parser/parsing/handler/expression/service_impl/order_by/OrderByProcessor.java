@@ -19,49 +19,55 @@ public class OrderByProcessor extends AbstractExpressionProcessor {
     }
 
     @Override
-    public Object processDereference(DereferenceExpression dereferenceExpression) {
+    public void processDereference(DereferenceExpression dereferenceExpression) {
         final ColumnDetails columnDetails = expressionUtils.getColumnDetails(dereferenceExpression);
         final ColumnDetails col = expressionUtils.saveColumnDetails(columnDetails, NodeType.ORDER);
-        orderByInfo.setColumnId(col.getColumnId());
+        orderByInfo.setId(col.getId());
         orderByInfo.setColumnName(col.getColumnName());
         orderByHelper.addOrderByDetails(orderByInfo);
 
-        return null;
     }
 
     @Override
-    public Object processComparison(ComparisonExpression comparisonExpression) {
-        return null;
+    public void processComparison(ComparisonExpression comparisonExpression) {
+        //
+
     }
 
     @Override
-    public Object processLongLiteral(LongLiteral longLiteral) {
-        return null;
+    public void processLongLiteral(LongLiteral longLiteral) {
+        //
+
     }
 
     @Override
-    public Object processLogical(LogicalExpression logicalExp) {
-        return null;
+    public void processLogical(LogicalExpression logicalExp) {
+        //
+
     }
 
     @Override
-    public Object processIdentifier(Identifier identifier) {
-        return null;
+    public void processIdentifier(Identifier identifier) {
+        //
+
     }
 
     @Override
-    public Object processFunctionCall(FunctionCall functionCall) {
-        return null;
+    public void processFunctionCall(FunctionCall functionCall) {
+        //
+
     }
 
     @Override
-    public Object processBetween(BetweenPredicate betweenPredicate) {
-        return null;
+    public void processBetween(BetweenPredicate betweenPredicate) {
+        //
+
     }
 
     @Override
-    public Object processIsNotNull(IsNotNullPredicate isNotNullPredicate) {
-        return null;
+    public void processIsNotNull(IsNotNullPredicate isNotNullPredicate) {
+        //
     }
+
 
 }

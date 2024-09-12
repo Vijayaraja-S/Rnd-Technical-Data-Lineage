@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class InputBean {
     private String sqlQuery;
+    private boolean sunburst;
 }

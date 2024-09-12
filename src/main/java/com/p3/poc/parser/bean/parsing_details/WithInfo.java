@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class OffsetInfo {
-    @Builder.Default private String offset = "";
+public class WithInfo {
+    private String id;
+    private String withName;
 }

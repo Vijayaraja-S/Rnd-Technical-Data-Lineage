@@ -9,7 +9,10 @@ import lombok.*;
 @Getter
 @Setter
 public class OrderByInfo {
-    private String columnId;
-    private String columnName;
-    private String orderType;
+    @Builder.Default
+    private String id = "";
+    @Builder.Default
+    private String columnName = "";
+    @Builder.Default
+    private String orderType = "";
 }

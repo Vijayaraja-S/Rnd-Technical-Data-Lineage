@@ -3,19 +3,20 @@ package com.p3.poc.parser.bean;
 import com.p3.poc.parser.bean.parsing_details.*;
 import com.p3.poc.parser.parsing.handler.expression.bean.HavingExpressionInfo;
 import com.p3.poc.parser.parsing.handler.expression.bean.WhereExpressionInfo;
+import io.trino.sql.tree.With;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Setter
 public class GlobalCollector {
 
-    private final Map<String, List<ColumnDetails>> columnMap = new LinkedHashMap<>();
-    private final Map<String, TableDetails> tableMap = new LinkedHashMap<>();
+    private final Map<String, List<ColumnDetails>> overAllColumMap = new LinkedHashMap<>();
+    private final Map<String, TableDetails> overAllTableMap = new LinkedHashMap<>();
+
+    //
     private final Map<String, JoinDetailsInfo> joinDetailsMap = new LinkedHashMap<>();
     private final Map<String, List<GroupInfo>> groupInfoMap = new LinkedHashMap<>();
     private final Map<String, List<WhereExpressionInfo>> whereInfoMap = new LinkedHashMap<>();
@@ -24,8 +25,17 @@ public class GlobalCollector {
     private final Map<String, OffsetInfo> offsetInfoMap = new LinkedHashMap<>();
     private final Map<String, List<OrderByInfo>> orderByInfoMap = new LinkedHashMap<>();
 
-    // need to implement(select Result map)
+    //
+    private final List<WithInfo> parentWithInfos = new LinkedList<>();
+    private final Map<String, LinkedList<WithInfo>> childWithInfoMap = new LinkedHashMap<>();
+    private final Map<String, String> withSelectMapping = new LinkedHashMap<>();
 
+    //
+    private final Map<String, LinkedList<ColumnDetails>> individualSelectResultMap = new LinkedHashMap<>();
+
+
+    private boolean isParentWith;
+    private String dynamicParentWithName;
 
     private String dynamicSelectId;
     private String dynamicGroupId;

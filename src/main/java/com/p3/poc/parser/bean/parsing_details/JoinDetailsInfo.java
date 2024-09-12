@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 public class JoinDetailsInfo {
-    @Builder.Default private String detailsId="";
+    @Builder.Default private String id ="";
     @Builder.Default private String joinId="";
     @Builder.Default private String joinType = "";
     @Builder.Default private String joinEquation="";

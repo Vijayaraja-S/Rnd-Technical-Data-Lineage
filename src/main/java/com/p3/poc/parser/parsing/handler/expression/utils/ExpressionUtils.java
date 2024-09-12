@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class ExpressionUtils {
     public ColumnDetails saveColumnDetails(ColumnDetails column, NodeType type) {
-        Map<String, List<ColumnDetails>> overallColumnMap = GlobalCollector.getInstance().getColumnMap();
+        Map<String, List<ColumnDetails>> overallColumnMap = GlobalCollector.getInstance().getOverAllColumMap();
 
         if (overallColumnMap.containsKey(column.getColumnSource())) {
             final List<ColumnDetails> columnDetails = overallColumnMap.get(column.getColumnSource());
@@ -42,7 +42,7 @@ public class ExpressionUtils {
 
     private void setColumId(ColumnDetails column, List<ColumnDetails> columnList) {
         int index = columnList.size();
-        column.setColumnId(column.getColumnSource() + ":c" + index);
+        column.setId(column.getColumnSource() + ":c" + index);
         columnList.add(column);
     }
 

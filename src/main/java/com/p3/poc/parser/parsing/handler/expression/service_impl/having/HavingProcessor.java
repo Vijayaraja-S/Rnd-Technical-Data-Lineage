@@ -13,7 +13,7 @@ public class HavingProcessor extends AbstractExpressionProcessor {
     private final HavingExpressionInfo havingExpressionInfo;
 
     private final ExpressionHandler expressionHandler;
-    private final HavingHelper havingHelper ;
+    private final HavingHelper havingHelper;
 
     public HavingProcessor(HavingExpressionInfo havingExpressionInfo) {
         this.havingExpressionInfo = havingExpressionInfo;
@@ -21,15 +21,13 @@ public class HavingProcessor extends AbstractExpressionProcessor {
         this.expressionHandler = new ExpressionHandler();
     }
 
-
-
     @Override
-    public Object processDereference(DereferenceExpression dereferenceExpression) {
-        return null;
+    public void processDereference(DereferenceExpression dereferenceExpression) {
+        //
     }
 
     @Override
-    public Object processComparison(ComparisonExpression comparisonExpression) {
+    public void processComparison(ComparisonExpression comparisonExpression) {
         final List<Node> children = comparisonExpression.getChildren();
         final ComparisonExpression.Operator operator = comparisonExpression.getOperator();
         havingExpressionInfo.setExpressionContent(comparisonExpression.toString());
@@ -39,43 +37,42 @@ public class HavingProcessor extends AbstractExpressionProcessor {
                 child -> {
                     if (child instanceof Expression expression) {
                         HavingExpressionInfo havingExpression = new HavingExpressionInfo();
-                        expressionHandler.handleExpression(expression, NodeType.HAVING,havingExpression);
+                        expressionHandler.handleExpression(expression, NodeType.HAVING, havingExpression);
                     }
                 }
         );
         havingHelper.addHavingDetails(havingExpressionInfo);
-        return null;
     }
 
     @Override
-    public Object processFunctionCall(FunctionCall functionCall) {
+    public void processFunctionCall(FunctionCall functionCall) {
         havingExpressionInfo.setMultiRowFunction(true);
         havingExpressionInfo.setLeft(String.valueOf(functionCall.getName()));
-        return null;
+
     }
 
     @Override
-    public Object processLongLiteral(LongLiteral longLiteral) {
-        return null;
+    public void processLongLiteral(LongLiteral longLiteral) {
+        //
     }
 
     @Override
-    public Object processLogical(LogicalExpression logicalExp) {
-        return null;
+    public void processLogical(LogicalExpression logicalExp) {
+        //
     }
 
     @Override
-    public Object processIdentifier(Identifier identifier) {
-        return null;
+    public void processIdentifier(Identifier identifier) {
+        //
     }
 
     @Override
-    public Object processBetween(BetweenPredicate betweenPredicate) {
-        return null;
+    public void processBetween(BetweenPredicate betweenPredicate) {
+        //
     }
 
     @Override
-    public Object processIsNotNull(IsNotNullPredicate isNotNullPredicate) {
-        return null;
+    public void processIsNotNull(IsNotNullPredicate isNotNullPredicate) {
+        //
     }
 }

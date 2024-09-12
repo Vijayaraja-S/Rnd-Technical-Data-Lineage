@@ -33,16 +33,17 @@ public class RelationProcessor extends RelationHelper {
         children.forEach(child -> {
             if (child instanceof Join joinChild) {
                 new RelationHandler().handleRelation(joinChild, TableDetails.builder().build());
-            }else if (child instanceof Relation relation ) {
-                processNestedRelation(relation,TableDetails.builder().build());
+            } else if (child instanceof Relation relation) {
+                processNestedRelation(relation, TableDetails.builder().build());
             } else if (child instanceof Expression expression) {
-                final Object obj = new ExpressionHandler().handleExpression(expression, NodeType.JOIN, null);
-                if (obj instanceof ColumnDetails columnDetails){
-                    final Map<String, JoinDetailsInfo> joinDetailsMap = GlobalCollector.getInstance().getJoinDetailsMap();
-                    final JoinDetailsInfo joinDetailsInfo = joinDetailsMap.get(columnDetails.getJoinDetailsId());
-                    if (joinDetailsInfo != null) {
-                        joinDetailsInfo.setJoinType(String.valueOf(join.getType()));
-                    }
+                final ColumnDetails columnDetails = ColumnDetails.builder().build();
+                new ExpressionHandler().handleExpression(expression, NodeType.JOIN, columnDetails);
+
+                final Map<String, JoinDetailsInfo> joinDetailsMap = GlobalCollector.getInstance().getJoinDetailsMap();
+
+                final JoinDetailsInfo joinDetailsInfo = joinDetailsMap.get(columnDetails.getJoinDetailsId());
+                if (joinDetailsInfo != null) {
+                    joinDetailsInfo.setJoinType(String.valueOf(join.getType()));
                 }
             }
         });
@@ -50,7 +51,7 @@ public class RelationProcessor extends RelationHelper {
     }
 
     public void processTable(Table tableRelation) {
-        processTableDetails(tableRelation,tableDetails);
+        processTableDetails(tableRelation, tableDetails);
     }
 
 }

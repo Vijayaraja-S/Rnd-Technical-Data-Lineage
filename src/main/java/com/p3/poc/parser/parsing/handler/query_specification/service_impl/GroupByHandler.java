@@ -27,6 +27,7 @@ public class GroupByHandler extends AbstractQuerySpecHandler {
     @Override
     public void process() {
         final GlobalCollector instance = GlobalCollector.getInstance();
+
         instance.setDynamicGroupId("Grp: " + UUID.randomUUID());
         final List<? extends Node> children = groupBy.getChildren();
         final List<GroupInfo> groupInfos = new ArrayList<>();
@@ -46,14 +47,13 @@ public class GroupByHandler extends AbstractQuerySpecHandler {
 
         children.forEach(child -> {
             if (child instanceof Expression expression) {
-                final Object obj = expressionHandler.handleExpression(expression, NodeType.GROUP_BY, null);
-                if (obj instanceof ColumnDetails columnDetails) {
-                    expressionHandler.saveColumnDetails(columnDetails, NodeType.GROUP_BY);
-                    groupInfos.add(GroupInfo.builder()
-                            .tableDetails(columnDetails.getColumnSource())
-                            .columnDetails(columnDetails.getColumnName())
-                            .build());
-                }
+                final ColumnDetails columnDetails = ColumnDetails.builder().build();
+                expressionHandler.handleExpression(expression, NodeType.GROUP_BY, null);
+                expressionHandler.saveColumnDetails(columnDetails, NodeType.GROUP_BY);
+                groupInfos.add(GroupInfo.builder()
+                        .tableDetails(columnDetails.getColumnSource())
+                        .columnDetails(columnDetails.getColumnName())
+                        .build());
             }
         });
     }

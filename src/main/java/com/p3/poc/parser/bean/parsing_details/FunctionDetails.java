@@ -9,6 +9,6 @@ import lombok.*;
 @Getter
 @Setter
 public class FunctionDetails {
-    private String functionName;
-    private String functionDescription;
+    @Builder.Default private String functionName="";
+    @Builder.Default private String functionDescription="";
 }

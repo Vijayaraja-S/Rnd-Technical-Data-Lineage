@@ -5,6 +5,6 @@ import lombok.Data;
 @Builder
 @Data
 public class GroupInfo {
-    private String tableDetails;
-    private String columnDetails;
+    @Builder.Default  private String tableDetails="";
+    @Builder.Default private String columnDetails="";
 }
