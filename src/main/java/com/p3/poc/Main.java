@@ -22,6 +22,6 @@ public class Main {
         app.parse(inputBean.getSqlQuery());
         final SunburstChartHelper sunburstChartHelper = new SunburstChartHelper();
         final JSONArray objects = sunburstChartHelper.generateSunburst();
-        System.out.println(objects);
+        System.err.println(objects);
     }
 }

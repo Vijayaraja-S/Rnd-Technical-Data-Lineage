@@ -10,6 +10,8 @@ import lombok.*;
 @Getter
 @Setter
 public class WhereExpressionInfo {
+
+    // list of where need to handle
     private String expressionContent;
     private OperationType conditionType;
     private String operator;
