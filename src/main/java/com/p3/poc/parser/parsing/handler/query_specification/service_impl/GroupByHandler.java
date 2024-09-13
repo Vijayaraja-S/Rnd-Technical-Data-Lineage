@@ -5,6 +5,7 @@ import com.p3.poc.parser.bean.parsing_details.GroupInfo;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.handler.expression.bean.indentifier.NodeType;
 import com.p3.poc.parser.parsing.handler.expression.service.ExpressionHandler;
+import com.p3.poc.parser.parsing.handler.expression.utils.ExpressionUtils;
 import com.p3.poc.parser.parsing.handler.query_specification.service.AbstractQuerySpecHandler;
 import io.trino.sql.tree.*;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +17,14 @@ import java.util.UUID;
 
 @Slf4j
 public class GroupByHandler extends AbstractQuerySpecHandler {
+    private final ExpressionUtils expressionUtils;
     private final ExpressionHandler expressionHandler;
     private final GroupBy groupBy;
 
     public GroupByHandler(GroupBy node) {
         this.groupBy = node;
         this.expressionHandler = new ExpressionHandler();
+        this.expressionUtils = new ExpressionUtils(NodeType.GROUP_BY);
     }
 
     @Override
@@ -48,8 +51,7 @@ public class GroupByHandler extends AbstractQuerySpecHandler {
         children.forEach(child -> {
             if (child instanceof Expression expression) {
                 final ColumnDetails columnDetails = ColumnDetails.builder().build();
-                expressionHandler.handleExpression(expression, NodeType.GROUP_BY, null);
-                expressionHandler.saveColumnDetails(columnDetails, NodeType.GROUP_BY);
+                expressionHandler.handleExpression(expression, NodeType.GROUP_BY, GroupInfo.builder().build());
                 groupInfos.add(GroupInfo.builder()
                         .tableDetails(columnDetails.getColumnSource())
                         .columnDetails(columnDetails.getColumnName())

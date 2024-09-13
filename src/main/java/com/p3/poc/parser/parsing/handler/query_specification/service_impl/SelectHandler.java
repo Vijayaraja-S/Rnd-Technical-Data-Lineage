@@ -42,7 +42,5 @@ public class SelectHandler extends AbstractQuerySpecHandler {
         final ColumnDetails column = ColumnDetails.builder().build();
         column.setColumnAliasName(alias.isPresent() ? String.valueOf(alias.get()) : "");
         commonExpressionHandler.handleExpression(singleColumn.getExpression(), NodeType.SELECT, column);
-        commonExpressionHandler.saveColumnDetails(column, NodeType.SELECT);
-
     }
 }

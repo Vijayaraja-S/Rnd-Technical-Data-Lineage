@@ -16,7 +16,8 @@ public class TableDetails {
     @Builder.Default
     private String fullName = "";
     @Builder.Default
-    private String schemaName = "";
-    @Builder.Default
     private String aliasName = "";
+    @Builder.Default
+    private String schemaName = "";
+
 }

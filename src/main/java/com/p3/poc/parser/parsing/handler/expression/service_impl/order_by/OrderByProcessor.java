@@ -14,59 +14,59 @@ public class OrderByProcessor extends AbstractExpressionProcessor {
 
     public OrderByProcessor(OrderByInfo commonBean) {
         this.orderByInfo = commonBean;
-        this.expressionUtils = new ExpressionUtils();
+        this.expressionUtils = new ExpressionUtils(NodeType.ORDER);
         this.orderByHelper = new OrderByHelper();
     }
 
     @Override
     public void processDereference(DereferenceExpression dereferenceExpression) {
-        final ColumnDetails columnDetails = expressionUtils.getColumnDetails(dereferenceExpression);
-        final ColumnDetails col = expressionUtils.saveColumnDetails(columnDetails, NodeType.ORDER);
-        orderByInfo.setId(col.getId());
-        orderByInfo.setColumnName(col.getColumnName());
+        final ColumnDetails columnDetails = ColumnDetails.builder().build();
+        expressionUtils.processColumnDetails(dereferenceExpression,columnDetails);
+        expressionUtils.saveColumnDetails(columnDetails);
+        orderByInfo.setId(columnDetails.getId());
+        orderByInfo.setColumnName(columnDetails.getColumnName());
         orderByHelper.addOrderByDetails(orderByInfo);
 
     }
 
     @Override
     public void processComparison(ComparisonExpression comparisonExpression) {
-        //
+        System.out.println("vfsdg");
 
     }
 
     @Override
     public void processLongLiteral(LongLiteral longLiteral) {
-        //
+        System.out.println("vfsdg");
 
     }
 
     @Override
     public void processLogical(LogicalExpression logicalExp) {
-        //
-
+        System.out.println("vfsdg");
     }
 
     @Override
     public void processIdentifier(Identifier identifier) {
-        //
+        System.out.println("vfsdg");
 
     }
 
     @Override
     public void processFunctionCall(FunctionCall functionCall) {
-        //
+        System.out.println("vfsdg");
 
     }
 
     @Override
     public void processBetween(BetweenPredicate betweenPredicate) {
-        //
+        System.out.println("vfsdg");
 
     }
 
     @Override
     public void processIsNotNull(IsNotNullPredicate isNotNullPredicate) {
-        //
+        System.out.println("vfsdg");
     }
 
 

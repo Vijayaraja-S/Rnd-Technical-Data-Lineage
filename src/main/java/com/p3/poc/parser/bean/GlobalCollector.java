@@ -3,7 +3,6 @@ package com.p3.poc.parser.bean;
 import com.p3.poc.parser.bean.parsing_details.*;
 import com.p3.poc.parser.parsing.handler.expression.bean.HavingExpressionInfo;
 import com.p3.poc.parser.parsing.handler.expression.bean.WhereExpressionInfo;
-import io.trino.sql.tree.With;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +13,9 @@ import java.util.*;
 public class GlobalCollector {
 
     private final Map<String, List<ColumnDetails>> overAllColumMap = new LinkedHashMap<>();
-    private final Map<String, TableDetails> overAllTableMap = new LinkedHashMap<>();
+    private final Map<String, List<TableDetails>> overAllTableMap = new LinkedHashMap<>();
+    private final Map<String, List<SchemaDetails>> overAllschemaMap = new LinkedHashMap<>();
+    private final Map<String, List<ApplicationDetails>> overAllApplicationMap = new LinkedHashMap<>();
 
     //
     private final Map<String, JoinDetailsInfo> joinDetailsMap = new LinkedHashMap<>();
@@ -39,6 +40,9 @@ public class GlobalCollector {
 
     private String dynamicSelectId;
     private String dynamicGroupId;
+
+    private String searchName;
+    private String searchId;
 
     private GlobalCollector() {
     }

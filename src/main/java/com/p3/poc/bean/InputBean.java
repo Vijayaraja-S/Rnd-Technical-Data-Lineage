@@ -6,4 +6,6 @@ import lombok.Data;
 public class InputBean {
     private String sqlQuery;
     private boolean sunburst;
+    private String searchName;
+    private String searchId;
 }

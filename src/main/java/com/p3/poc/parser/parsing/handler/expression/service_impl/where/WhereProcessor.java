@@ -17,17 +17,18 @@ public class WhereProcessor extends AbstractExpressionProcessor {
 
     public WhereProcessor(WhereExpressionInfo whereExpressionInfo) {
         this.whereExpressionInfo = whereExpressionInfo;
-        this.expressionUtils = new ExpressionUtils();
+        this.expressionUtils = new ExpressionUtils(NodeType.WHERE);
         this.whereHelper = new WhereHelper();
     }
 
 
     @Override
     public void processDereference(DereferenceExpression dereferenceExpression) {
-        final ColumnDetails columnDetails = expressionUtils.getColumnDetails(dereferenceExpression);
-        final ColumnDetails col = expressionUtils.saveColumnDetails(columnDetails, NodeType.WHERE);
-        whereExpressionInfo.setColumnId(col.getId());
-        whereExpressionInfo.setColumnName(col.getColumnName());
+        final ColumnDetails columnDetails = ColumnDetails.builder().build();
+        expressionUtils.processColumnDetails(dereferenceExpression, columnDetails);
+        expressionUtils.saveColumnDetails(columnDetails);
+        whereExpressionInfo.setColumnId(columnDetails.getId());
+        whereExpressionInfo.setColumnName(columnDetails.getColumnName());
     }
 
     @Override
@@ -45,7 +46,7 @@ public class WhereProcessor extends AbstractExpressionProcessor {
         final List<? extends Node> children = logicalExpression.getChildren();
         children.forEach(child -> {
             if (child instanceof Expression expression) {
-                whereHelper.processNestedExpression(null, expression);
+                whereHelper.processNestedExpression(whereExpressionInfo, expression);
             }
         });
     }
@@ -71,16 +72,16 @@ public class WhereProcessor extends AbstractExpressionProcessor {
 
     @Override
     public void processLongLiteral(LongLiteral longLiteral) {
-        //
+        whereExpressionInfo.setRightValue(longLiteral.toString());
     }
 
     @Override
     public void processFunctionCall(FunctionCall functionCall) {
-        //
+        System.out.println("vfsdg");
     }
 
     @Override
     public void processIdentifier(Identifier identifier) {
-        //
+        System.out.println("vfsdg");
     }
 }

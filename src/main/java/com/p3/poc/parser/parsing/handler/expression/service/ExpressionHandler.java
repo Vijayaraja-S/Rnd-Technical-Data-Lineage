@@ -74,7 +74,7 @@ public class ExpressionHandler {
     }
 
     public void saveColumnDetails(ColumnDetails columnDetails, NodeType type) {
-        new ExpressionUtils().saveColumnDetails(columnDetails, type);
+        new ExpressionUtils(type).saveColumnDetails(columnDetails);
     }
 
     private void handleUnknownExpression(Expression expression) {

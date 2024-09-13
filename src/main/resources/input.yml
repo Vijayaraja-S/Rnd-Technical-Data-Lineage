@@ -1,132 +1,171 @@
-sqlQuery:  WITH
-  cte_level1 AS (
-  WITH
-  nested_cte1 AS (
-  SELECT
-  t1.column1,
-  t1.column2,
-  ROW_NUMBER() OVER (PARTITION BY t1.column1 ORDER BY t1.column2) AS row_num
-  FROM schema1.table1 t1
-  WHERE t1.column3 IS NOT NULL
-  )
-  SELECT
-  n1.column1,
-  n1.column2,
-  n1.row_num,
-  SUM(n1.column2) OVER (PARTITION BY n1.column1) AS sum_column2
-  FROM nested_cte1 n1
-  WHERE n1.row_num <= 5
-  ),
-  cte_level2 AS (
-  WITH
-  recursive_cte2 AS (
-  SELECT
-  t2.id,
-  t2.parent_id,
-  t2.value AS base_value,
-  1 AS depth
-  FROM schema2.table2 t2
-  WHERE t2.parent_id IS NULL
-  
-  UNION ALL
-  
-  SELECT
-  t3.id,
-  t3.parent_id,
-  t3.value,
-  rc.depth + 1
-  FROM schema2.table2 t3
-  JOIN recursive_cte2 rc ON t3.parent_id = rc.id
-  )
-  SELECT
-  rc2.id,
-  rc2.base_value,
-  rc2.depth
-  FROM recursive_cte2 rc2
-  WHERE rc2.depth <= 5
-  ),
-  cte_level3 AS (
-  WITH
-  nested_cte3 AS (
-  SELECT
-  t4.column1,
-  (SELECT MAX(t5.column2) FROM schema5.table5 t5 WHERE t5.column1 = t4.column1) AS max_column2,
-  ROW_NUMBER() OVER (PARTITION BY t4.column1 ORDER BY t4.column2) AS row_num3
-  FROM schema4.table4 t4
-  WHERE t4.column3 = (SELECT MAX(t6.column3) FROM schema6.table6 t6 WHERE t6.column4 = t4.column4)
-  )
-  SELECT
-  nc3.column1,
-  nc3.max_column2,
-  nc3.row_num3,
-  CASE
-  WHEN nc3.max_column2 > 100 THEN 'High'
-  ELSE 'Low'
-  END AS status
-  FROM nested_cte3 nc3
-  ),
-  cte_level4 AS (
-  WITH
-  nested_cte4 AS (
-  SELECT
-  t7.column1,
-  t7.column2,
-  SUM(t7.column3) AS sum_column3,
-  GROUPING(t7.column1) AS group_col1,
-  GROUPING(t7.column2) AS group_col2
-  FROM schema7.table7 t7
-  GROUP BY CUBE(t7.column1, t7.column2)
-  HAVING SUM(t7.column3) > 100
-  )
-  SELECT
-  n4.column1,
-  n4.column2,
-  n4.sum_column3,
-  (SELECT AVG(t8.column4) FROM schema8.table8 t8 WHERE t8.column1 = n4.column1) AS avg_column4
-  FROM nested_cte4 n4
-  ),
-  cte_level5 AS (
-  WITH
-  recursive_cte5 AS (
-  SELECT
-  t9.column1,
-  t9.column2,
-  1 AS depth
-  FROM schema9.table9 t9
-  WHERE t9.column2 IS NOT NULL
-  
-  UNION ALL
-  
-  SELECT
-  t10.column1,
-  t10.column2,
-  rc5.depth + 1
-  FROM schema10.table10 t10
-  JOIN recursive_cte5 rc5 ON t10.column1 = rc5.column1
-  )
-  SELECT
-  rc5.column1,
-  rc5.column2,
-  rc5.depth,
-  (SELECT COUNT(*) FROM schema11.table11 t11 WHERE t11.column1 = rc5.column1) AS related_count
-  FROM recursive_cte5 rc5
-  )
-  SELECT
-  cte1.column1 AS first_level,
-  cte2.base_value AS second_level,
-  cte3.status AS third_level,
-  cte4.sum_column3 AS fourth_level,
-  cte5.related_count AS fifth_level,
-  CASE
-  WHEN cte5.depth > 5 THEN 'Deep'
-  ELSE 'Shallow'
-  END AS depth_level
-  FROM cte_level1 cte1
-  JOIN cte_level2 cte2 ON cte1.column1 = cte2.id
-  JOIN cte_level3 cte3 ON cte2.id = cte3.column1
-  JOIN cte_level4 cte4 ON cte3.column1 = cte4.column1
-  JOIN cte_level5 cte5 ON cte4.column1 = cte5.column1
-  ORDER BY cte5.depth DESC, cte4.sum_column3 DESC
-  LIMIT 50
+#sqlQuery:  WITH
+#  cte_level1 AS (
+#  WITH
+#  nested_cte1 AS (
+#  SELECT
+#  t1.column1,
+#  t1.column2,
+#  ROW_NUMBER() OVER (PARTITION BY t1.column1 ORDER BY t1.column2) AS row_num
+#  FROM schema1.table1 t1
+#  WHERE t1.column3 IS NOT NULL
+#  )
+#  SELECT
+#  n1.column1,
+#  n1.column2,
+#  n1.row_num,
+#  SUM(n1.column2) OVER (PARTITION BY n1.column1) AS sum_column2
+#  FROM nested_cte1 n1
+#  WHERE n1.row_num <= 5
+#  ),
+#  cte_level2 AS (
+#  WITH
+#  recursive_cte2 AS (
+#  SELECT
+#  t2.id,
+#  t2.parent_id,
+#  t2.value AS base_value,
+#  1 AS depth
+#  FROM schema2.table2 t2
+#  WHERE t2.parent_id IS NULL
+#
+#  UNION ALL
+#
+#  SELECT
+#  t3.id,
+#  t3.parent_id,
+#  t3.value,
+#  rc.depth + 1
+#  FROM schema2.table2 t3
+#  JOIN recursive_cte2 rc ON t3.parent_id = rc.id
+#  )
+#  SELECT
+#  rc2.id,
+#  rc2.base_value,
+#  rc2.depth
+#  FROM recursive_cte2 rc2
+#  WHERE rc2.depth <= 5
+#  ),
+#  cte_level3 AS (
+#  WITH
+#  nested_cte3 AS (
+#  SELECT
+#  t4.column1,
+#  (SELECT MAX(t5.column2) FROM schema5.table5 t5 WHERE t5.column1 = t4.column1) AS max_column2,
+#  ROW_NUMBER() OVER (PARTITION BY t4.column1 ORDER BY t4.column2) AS row_num3
+#  FROM schema4.table4 t4
+#  WHERE t4.column3 = (SELECT MAX(t6.column3) FROM schema6.table6 t6 WHERE t6.column4 = t4.column4)
+#  )
+#  SELECT
+#  nc3.column1,
+#  nc3.max_column2,
+#  nc3.row_num3,
+#  CASE
+#  WHEN nc3.max_column2 > 100 THEN 'High'
+#  ELSE 'Low'
+#  END AS status
+#  FROM nested_cte3 nc3
+#  ),
+#  cte_level4 AS (
+#  WITH
+#  nested_cte4 AS (
+#  SELECT
+#  t7.column1,
+#  t7.column2,
+#  SUM(t7.column3) AS sum_column3,
+#  GROUPING(t7.column1) AS group_col1,
+#  GROUPING(t7.column2) AS group_col2
+#  FROM schema7.table7 t7
+#  GROUP BY CUBE(t7.column1, t7.column2)
+#  HAVING SUM(t7.column3) > 100
+#  )
+#  SELECT
+#  n4.column1,
+#  n4.column2,
+#  n4.sum_column3,
+#  (SELECT AVG(t8.column4) FROM schema8.table8 t8 WHERE t8.column1 = n4.column1) AS avg_column4
+#  FROM nested_cte4 n4
+#  ),
+#  cte_level5 AS (
+#  WITH
+#  recursive_cte5 AS (
+#  SELECT
+#  t9.column1,
+#  t9.column2,
+#  1 AS depth
+#  FROM schema9.table9 t9
+#  WHERE t9.column2 IS NOT NULL
+#
+#  UNION ALL
+#
+#  SELECT
+#  t10.column1,
+#  t10.column2,
+#  rc5.depth + 1
+#  FROM schema10.table10 t10
+#  JOIN recursive_cte5 rc5 ON t10.column1 = rc5.column1
+#  )
+#  SELECT
+#  rc5.column1,
+#  rc5.column2,
+#  rc5.depth,
+#  (SELECT COUNT(*) FROM schema11.table11 t11 WHERE t11.column1 = rc5.column1) AS related_count
+#  FROM recursive_cte5 rc5
+#  )
+#  SELECT
+#  cte1.column1 AS first_level,
+#  cte2.base_value AS second_level,
+#  cte3.status AS third_level,
+#  cte4.sum_column3 AS fourth_level,
+#  cte5.related_count AS fifth_level,
+#  CASE
+#  WHEN cte5.depth > 5 THEN 'Deep'
+#  ELSE 'Shallow'
+#  END AS depth_level
+#  FROM cte_level1 cte1
+#  JOIN cte_level2 cte2 ON cte1.column1 = cte2.id
+#  JOIN cte_level3 cte3 ON cte2.id = cte3.column1
+#  JOIN cte_level4 cte4 ON cte3.column1 = cte4.column1
+#  JOIN cte_level5 cte5 ON cte4.column1 = cte5.column1
+#  ORDER BY cte5.depth DESC, cte4.sum_column3 DESC
+#  LIMIT 50
 
 sunburst: true
+searchName: ADVANCE_SEARCH
+searchId: src_01
+sqlQuery: SELECT
+  t1.COLUMN_1 AS C1,
+  t1.COLUMN_2 AS C2,
+  t2.COLUMN_4 AS additional_info,
+  t3.COLUMN_5 AS more_info
+
+  FROM
+  application1_schema1.table_1 t1
+
+  JOIN
+  application1_schema1.table_2 t2
+  ON t1.COLUMN_3 = t2.COLUMN_3
+
+  LEFT JOIN
+  application2_schema2.table_3 t3
+  ON t1.COLUMN_4 = t3.COLUMN_4
+
+  INNER JOIN
+  application1_schema1.table_4 t4
+  ON t2.COLUMN_5 = t4.COLUMN_5
+
+  WHERE
+  t1.column_1 = 10
+  AND t4.column_6 IS NOT NULL
+  AND t2.column_7 BETWEEN '2023-01-01' AND '2023-12-31'
+
+  GROUP BY
+  t1.COLUMN_1, t1.COLUMN_2, t2.COLUMN_4, t3.COLUMN_5
+
+  HAVING
+  COUNT(*) > 2
+
+  ORDER BY
+  t1.COLUMN_1 ASC, t2.COLUMN_4 DESC
+
+  OFFSET 10
+  LIMIT 20

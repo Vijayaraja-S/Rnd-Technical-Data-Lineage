@@ -7,37 +7,34 @@ import io.trino.sql.tree.DereferenceExpression;
 import io.trino.sql.tree.Expression;
 import io.trino.sql.tree.Identifier;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ExpressionUtils {
-    public ColumnDetails saveColumnDetails(ColumnDetails column, NodeType type) {
-        Map<String, List<ColumnDetails>> overallColumnMap = GlobalCollector.getInstance().getOverAllColumMap();
+    private final Map<String, List<ColumnDetails>> overallColumnMap;
+    private NodeType nodeType;
 
+    public ExpressionUtils(NodeType nodeType) {
+        this.nodeType = nodeType;
+        this.overallColumnMap = GlobalCollector.getInstance().getOverAllColumMap();
+    }
+
+    public void saveColumnDetails(ColumnDetails column) {
+        if (column.getColumnSource().equalsIgnoreCase("DEFAULT_TABLE")){
+            System.out.println(column.getColumnSource());
+        }
         if (overallColumnMap.containsKey(column.getColumnSource())) {
             final List<ColumnDetails> columnDetails = overallColumnMap.get(column.getColumnSource());
             if (columnDetails.stream()
                     .noneMatch(col -> col.getColumnName().equalsIgnoreCase(column.getColumnName()))) {
+
                 List<ColumnDetails> columnList = overallColumnMap.computeIfAbsent(column.getColumnSource(), k -> new ArrayList<>());
                 setColumId(column, columnList);
-                return column;
-            }else{
-                final Optional<ColumnDetails> first = columnDetails.stream()
-                        .filter(col -> col.getColumnName().equalsIgnoreCase(column.getColumnName()))
-                        .findFirst();
-                if (first.isPresent()) {
-                    return first.get();
-                }
             }
-        }else {
+        } else {
             final List<ColumnDetails> value = new ArrayList<>();
             setColumId(column, value);
             overallColumnMap.put(column.getColumnSource(), value);
-            return column;
         }
-        return null;
     }
 
     private void setColumId(ColumnDetails column, List<ColumnDetails> columnList) {
@@ -47,15 +44,15 @@ public class ExpressionUtils {
     }
 
 
-    public ColumnDetails getColumnDetails(DereferenceExpression expression) {
-        final ColumnDetails columnDetails = ColumnDetails.builder().build();
+    public void processColumnDetails(DereferenceExpression expression, ColumnDetails columnDetails) {
         final Optional<Identifier> field = expression.getField();
         final Expression base = expression.getBase();
 
         if (base instanceof Identifier identifier) {
             columnDetails.setColumnSource(identifier.getValue());
+        }else {
+            System.out.println("");
         }
         columnDetails.setColumnName(field.isPresent() ? field.get().toString() : "");
-        return columnDetails;
     }
 }
