@@ -19,16 +19,23 @@ public class ExpressionUtils {
     }
 
     public void saveColumnDetails(ColumnDetails column) {
-        if (column.getColumnSource().equalsIgnoreCase("DEFAULT_TABLE")){
-            System.out.println(column.getColumnSource());
-        }
         if (overallColumnMap.containsKey(column.getColumnSource())) {
             final List<ColumnDetails> columnDetails = overallColumnMap.get(column.getColumnSource());
             if (columnDetails.stream()
                     .noneMatch(col -> col.getColumnName().equalsIgnoreCase(column.getColumnName()))) {
-
                 List<ColumnDetails> columnList = overallColumnMap.computeIfAbsent(column.getColumnSource(), k -> new ArrayList<>());
                 setColumId(column, columnList);
+            }else {
+
+                final Optional<ColumnDetails> first = columnDetails.stream()
+                        .filter(col -> col.getColumnName().equalsIgnoreCase(column.getColumnName()))
+                        .findFirst();
+
+                if (first.isPresent()) {
+                    column.setColumnSource(first.get().getColumnSource());
+                    column.setColumnName(first.get().getColumnName());
+                    column.setId(first.get().getId());
+                }
             }
         } else {
             final List<ColumnDetails> value = new ArrayList<>();
@@ -50,8 +57,6 @@ public class ExpressionUtils {
 
         if (base instanceof Identifier identifier) {
             columnDetails.setColumnSource(identifier.getValue());
-        }else {
-            System.out.println("");
         }
         columnDetails.setColumnName(field.isPresent() ? field.get().toString() : "");
     }
