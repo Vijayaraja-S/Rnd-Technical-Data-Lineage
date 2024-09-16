@@ -2,7 +2,7 @@
   "inputQueryDetails": [
     {
       "queryName": "BANK_CHECK_DEMOS",
-      "query": "select \n    l.LOAN_ID,\n    l.ACCOUNT_ID,\n    a.CLIENT_ID,\n    c.FULL_NAME,\n    format('%1$tB %1$te, %1$tY', \"l\".\"DATE\" ) as DATE_,\n    l.AMOUNT,\n    l.DURATION,\n    l.STATUS\nfrom BANKING_AND_CREDIT_CARDS_LOAN_DETAILS.LOAN l\ninner join BANKING_AND_CREDIT_CARDS_LOAN_DETAILS.ACCOUNT a on a.ACCOUNT_ID = l.ACCOUNT_ID and a.CLIENT_ID = 123\ninner join BANKING_AND_CREDIT_CARDS_LOAN_DETAILS.CLIENT c on a.CLIENT_ID = c.CLIENT_ID\nwhere 1=1\nand l.LOAN_ID = 123\nand any_match(regexp_split ('123',',') , x -> try_cast(x as INTEGER) = l.ACCOUNT_ID ) = true\norder by 3,2"
+      "query": "SELECT \n    CASE\n        WHEN GROUPING(SalesQuarter)=1 AND GROUPING(SalesYear)=0  AND GROUPING(PRODUCT)=0 THEN 'Year Total'\n        WHEN GROUPING(SalesQuarter)=1 AND GROUPING(SalesYear)=1  AND GROUPING(PRODUCT)=0 THEN 'Sub Total'\n        WHEN GROUPING(SalesQuarter)=1 AND GROUPING(SalesYear)=1  AND GROUPING(PRODUCT)=1 THEN  'Grand Total'\n        ELSE 'Item'\n    END AS Listing,\n    CAST(SalesYear AS varchar(10)) as SalesYear,\n    SalesQuarter as SalesQuarter,\n    PRODUCT as product,\n    concat('$ ',format('%,.2f',round(SUM(SalesTotal),2))) AS SalesTotal \nFROM \n    CUSTOM_RESULTS_VIEW_DEMO_DBO.SALES_REPORT \nwhere 1=1\nGROUP BY GROUPING SETS(PRODUCT, (PRODUCT,SalesYear),(PRODUCT,SalesYear,SalesQuarter),())\norder by 4,2,3"
     }
   ]
 }
