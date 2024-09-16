@@ -1,5 +1,6 @@
 package com.p3.poc.parser.parsing.handler.relation;
 
+import com.p3.poc.common.CommonTableProcessUtils;
 import com.p3.poc.parser.bean.parsing_details.ColumnDetails;
 import com.p3.poc.parser.bean.parsing_details.JoinDetailsInfo;
 import com.p3.poc.parser.bean.parsing_details.TableDetails;
@@ -51,7 +52,7 @@ public class RelationProcessor extends RelationHelper {
     }
 
     public void processTable(Table tableRelation) {
-        processTableDetails(tableRelation, tableDetails);
+        new CommonTableProcessUtils(false).processTableDetails(tableRelation, tableDetails);
     }
 
 }

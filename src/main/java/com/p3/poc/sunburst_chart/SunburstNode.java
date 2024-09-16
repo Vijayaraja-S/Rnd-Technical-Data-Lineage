@@ -1,4 +1,4 @@
-package com.p3.poc.chart;
+package com.p3.poc.sunburst_chart;
 
 import lombok.Data;
 import lombok.Getter;

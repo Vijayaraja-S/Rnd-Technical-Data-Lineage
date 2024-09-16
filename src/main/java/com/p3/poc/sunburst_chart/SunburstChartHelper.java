@@ -1,10 +1,11 @@
-package com.p3.poc.chart;
+package com.p3.poc.sunburst_chart;
 
-import com.p3.poc.parser.bean.GlobalCollector;
-import com.p3.poc.parser.bean.parsing_details.*;
+import com.p3.poc.parser.bean.parsing_details.ApplicationDetails;
+import com.p3.poc.parser.bean.parsing_details.ColumnDetails;
+import com.p3.poc.parser.bean.parsing_details.SchemaDetails;
+import com.p3.poc.parser.bean.parsing_details.TableDetails;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 
 import java.util.List;
 import java.util.Map;
@@ -16,10 +17,10 @@ public class SunburstChartHelper {
     private final Map<String, List<TableDetails>> overAllTableMap;
     private final Map<String, List<SchemaDetails>> overAllSchemaMap;
     private final Map<String, List<ApplicationDetails>> overAllApplicationMap;
-    private final GlobalCollector globalCollector;
+    private final SunBurstGlobalCollector globalCollector;
 
     public SunburstChartHelper() {
-        final GlobalCollector instance = GlobalCollector.getInstance();
+        final SunBurstGlobalCollector instance = SunBurstGlobalCollector.getInstance();
         this.globalCollector = instance;
         this.overAllColumnMap = instance.getOverAllColumMap();
         this.overAllTableMap = instance.getOverAllTableMap();
@@ -80,9 +81,10 @@ public class SunburstChartHelper {
 
 
     private List<JSONObject> createTableNodeWithColumns(String schemaId, TableDetails tableDetails) {
-        SunburstNode tableNode = new SunburstNode(tableDetails.getAliasName(), schemaId, tableDetails.getName(), 0);
+        final String tableKeyName = tableDetails.getAliasName().isEmpty()?"DEFAULT_TABLE": tableDetails.getAliasName();
+        SunburstNode tableNode = new SunburstNode(tableKeyName, schemaId, tableDetails.getName(), 0);
 
-        List<JSONObject> columnNodes = overAllColumnMap.getOrDefault(tableDetails.getAliasName(), List.of())
+        List<JSONObject> columnNodes = overAllColumnMap.getOrDefault(tableKeyName, List.of())
                 .parallelStream()
                 .map(column -> createColumnNode(tableNode.getId(), column))
                 .collect(Collectors.toList());
