@@ -47,6 +47,12 @@ public class GlobalCollector {
     private GlobalCollector() {
     }
 
+    public void initialize(String searchId, String searchName) {
+        this.searchId = searchId;
+        this.searchName = searchName;
+    }
+
+
     private static class SingletonHelper {
         private static final GlobalCollector INSTANCE = new GlobalCollector();
     }

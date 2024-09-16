@@ -1,10 +1,8 @@
 {
-  "inputQueryDetails":[
-
+  "inputQueryDetails": [
     {
-      "queryName": "demo2",
-      "query": ""
-
+      "queryName": "BANK_CHECK_DEMOS",
+      "query": "select \n    l.LOAN_ID,\n    l.ACCOUNT_ID,\n    a.CLIENT_ID,\n    c.FULL_NAME,\n    format('%1$tB %1$te, %1$tY', \"l\".\"DATE\" ) as DATE_,\n    l.AMOUNT,\n    l.DURATION,\n    l.STATUS\nfrom BANKING_AND_CREDIT_CARDS_LOAN_DETAILS.LOAN l\ninner join BANKING_AND_CREDIT_CARDS_LOAN_DETAILS.ACCOUNT a on a.ACCOUNT_ID = l.ACCOUNT_ID and a.CLIENT_ID = 123\ninner join BANKING_AND_CREDIT_CARDS_LOAN_DETAILS.CLIENT c on a.CLIENT_ID = c.CLIENT_ID\nwhere 1=1\nand l.LOAN_ID = 123\nand any_match(regexp_split ('123',',') , x -> try_cast(x as INTEGER) = l.ACCOUNT_ID ) = true\norder by 3,2"
     }
   ]
 }

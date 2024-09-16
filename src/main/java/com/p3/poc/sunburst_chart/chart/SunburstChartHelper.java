@@ -1,9 +1,11 @@
-package com.p3.poc.sunburst_chart;
+package com.p3.poc.sunburst_chart.chart;
 
+import com.p3.poc.common.CommonColumProcessUtils;
 import com.p3.poc.parser.bean.parsing_details.ApplicationDetails;
 import com.p3.poc.parser.bean.parsing_details.ColumnDetails;
 import com.p3.poc.parser.bean.parsing_details.SchemaDetails;
 import com.p3.poc.parser.bean.parsing_details.TableDetails;
+import com.p3.poc.sunburst_chart.SunBurstGlobalCollector;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,8 +20,10 @@ public class SunburstChartHelper {
     private final Map<String, List<SchemaDetails>> overAllSchemaMap;
     private final Map<String, List<ApplicationDetails>> overAllApplicationMap;
     private final SunBurstGlobalCollector globalCollector;
+    private final CommonColumProcessUtils commonColumProcessUtils;
 
     public SunburstChartHelper() {
+        this.commonColumProcessUtils = new CommonColumProcessUtils();
         final SunBurstGlobalCollector instance = SunBurstGlobalCollector.getInstance();
         this.globalCollector = instance;
         this.overAllColumnMap = instance.getOverAllColumMap();
@@ -82,9 +86,10 @@ public class SunburstChartHelper {
 
     private List<JSONObject> createTableNodeWithColumns(String schemaId, TableDetails tableDetails) {
         final String tableKeyName = tableDetails.getAliasName().isEmpty()?"DEFAULT_TABLE": tableDetails.getAliasName();
-        SunburstNode tableNode = new SunburstNode(tableKeyName, schemaId, tableDetails.getName(), 0);
+        final String caseInsensitiveMapKey = commonColumProcessUtils.getCaseInsensitiveMapKey(overAllColumnMap, tableKeyName);
+        SunburstNode tableNode = new SunburstNode(caseInsensitiveMapKey, schemaId, tableDetails.getName(), 0);
 
-        List<JSONObject> columnNodes = overAllColumnMap.getOrDefault(tableKeyName, List.of())
+        List<JSONObject> columnNodes = overAllColumnMap.getOrDefault(caseInsensitiveMapKey, List.of())
                 .parallelStream()
                 .map(column -> createColumnNode(tableNode.getId(), column))
                 .collect(Collectors.toList());

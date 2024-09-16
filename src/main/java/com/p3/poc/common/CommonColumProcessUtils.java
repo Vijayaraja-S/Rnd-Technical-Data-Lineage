@@ -35,4 +35,15 @@ public class CommonColumProcessUtils {
         columnList.add(column);
     }
 
+    public <T> String getCaseInsensitiveMapKey(Map<String, List<T>> stringListMap, String key) {
+        String caseInsensitiveKey = key;
+        for (String mapKey : stringListMap.keySet()) {
+            if (mapKey.equalsIgnoreCase(key)) {
+                caseInsensitiveKey = mapKey;
+                break;
+            }
+        }
+        return caseInsensitiveKey;
+    }
+
 }

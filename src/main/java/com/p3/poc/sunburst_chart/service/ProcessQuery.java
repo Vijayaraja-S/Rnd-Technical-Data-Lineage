@@ -1,4 +1,4 @@
-package com.p3.poc.sunburst_chart;
+package com.p3.poc.sunburst_chart.service;
 
 import com.p3.poc.common.CommonColumProcessUtils;
 import com.p3.poc.common.CommonTableProcessUtils;

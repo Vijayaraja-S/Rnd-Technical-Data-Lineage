@@ -1,4 +1,4 @@
-package com.p3.poc;
+package com.p3.poc.constants;
 
 public class RegexConstant {
   public static final String VALIDATE_NAME_REGEX = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,})";

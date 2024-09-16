@@ -12,6 +12,7 @@ import java.util.Map;
 @Setter
 public class SunBurstGlobalCollector {
 
+
     private final Map<String, List<ColumnDetails>> overAllColumMap = new LinkedHashMap<>();
     private final Map<String, List<TableDetails>> overAllTableMap = new LinkedHashMap<>();
     private final Map<String, List<SchemaDetails>> overAllschemaMap = new LinkedHashMap<>();
@@ -20,12 +21,20 @@ public class SunBurstGlobalCollector {
     private String searchName;
     private String searchId;
 
+
     private static class SingletonHelper {
         private static final SunBurstGlobalCollector INSTANCE = new SunBurstGlobalCollector();
     }
 
     public static SunBurstGlobalCollector getInstance() {
         return SingletonHelper.INSTANCE;
+    }
+
+    public void resetCollector() {
+        overAllColumMap.clear();
+        overAllTableMap.clear();
+        overAllschemaMap.clear();
+        overAllApplicationMap.clear();
     }
 
 }

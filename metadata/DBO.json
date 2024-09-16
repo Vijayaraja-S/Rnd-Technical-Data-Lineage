@@ -1,0 +1,254 @@
+{
+  "metadata": {
+    "applicationProperties": null,
+    "schemas": [
+      {
+        "name": "DBO",
+        "sourceName": "DBO",
+        "sourceDatabaseName": "DEMO",
+        "description": "Data Object",
+        "notes": "",
+        "tableCount": 1,
+        "tables": [
+          {
+            "recordCount": 0,
+            "sourceName": "SALES_REPORT",
+            "description": "Mock data of sales for various products over 2019, 20 and 21",
+            "notes": "",
+            "cde": "UNASSIGNED",
+            "columns": [
+              {
+                "name": "PRODUCT",
+                "ordinal": 1,
+                "dataType": "STRING",
+                "length": 3,
+                "description": "Product",
+                "notes": "",
+                "cde": "UNASSIGNED",
+                "sorted": false,
+                "partitioned": false,
+                "bucketing": false,
+                "source": {
+                  "origin": "ADS",
+                  "name": "PRODUCT",
+                  "typeLength": 3,
+                  "type": "STRING",
+                  "index": false
+                },
+                "fieldProperties": {
+                  "precision": 0,
+                  "scale": 0,
+                  "nullable": false,
+                  "autoIncrement": false,
+                  "primaryKey": false,
+                  "possiblePrimaryKey": false,
+                  "foreignKey": false,
+                  "defaultValue": ""
+                },
+                "dataProperties": {
+                  "analysed": false,
+                  "additional": {
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "whiteSpaceCount": 0,
+                    "highFrequencyCharData": [],
+                    "nullCount": 0,
+                    "distinctRecord": 0,
+                    "lengthUniform": false,
+                    "allNumeric": false
+                  }
+                },
+                "encrypt": false,
+                "tags": []
+              },
+              {
+                "name": "SALESMONTH",
+                "ordinal": 2,
+                "dataType": "STRING",
+                "length": 10,
+                "description": "",
+                "notes": "",
+                "cde": "UNASSIGNED",
+                "sorted": false,
+                "partitioned": false,
+                "bucketing": false,
+                "source": {
+                  "origin": "ADS",
+                  "name": "SALESMONTH",
+                  "typeLength": 10,
+                  "type": "STRING",
+                  "index": false
+                },
+                "fieldProperties": {
+                  "precision": 0,
+                  "scale": 0,
+                  "nullable": false,
+                  "autoIncrement": false,
+                  "primaryKey": false,
+                  "possiblePrimaryKey": false,
+                  "foreignKey": false,
+                  "defaultValue": ""
+                },
+                "dataProperties": {
+                  "analysed": false,
+                  "additional": {
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "whiteSpaceCount": 0,
+                    "highFrequencyCharData": [],
+                    "nullCount": 0,
+                    "distinctRecord": 0,
+                    "lengthUniform": false,
+                    "allNumeric": false
+                  }
+                },
+                "encrypt": false,
+                "tags": []
+              },
+              {
+                "name": "SALESQUARTER",
+                "ordinal": 3,
+                "dataType": "STRING",
+                "length": 2,
+                "description": "",
+                "notes": "",
+                "cde": "UNASSIGNED",
+                "sorted": false,
+                "partitioned": false,
+                "bucketing": false,
+                "source": {
+                  "origin": "ADS",
+                  "name": "SALESQUARTER",
+                  "typeLength": 2,
+                  "type": "STRING",
+                  "index": false
+                },
+                "fieldProperties": {
+                  "precision": 0,
+                  "scale": 0,
+                  "nullable": false,
+                  "autoIncrement": false,
+                  "primaryKey": false,
+                  "possiblePrimaryKey": false,
+                  "foreignKey": false,
+                  "defaultValue": ""
+                },
+                "dataProperties": {
+                  "analysed": false,
+                  "additional": {
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "whiteSpaceCount": 0,
+                    "highFrequencyCharData": [],
+                    "nullCount": 0,
+                    "distinctRecord": 0,
+                    "lengthUniform": false,
+                    "allNumeric": false
+                  }
+                },
+                "encrypt": false,
+                "tags": []
+              },
+              {
+                "name": "SALESYEAR",
+                "ordinal": 4,
+                "dataType": "NUMBER",
+                "length": 4,
+                "description": "",
+                "notes": "",
+                "cde": "UNASSIGNED",
+                "sorted": false,
+                "partitioned": false,
+                "bucketing": false,
+                "source": {
+                  "origin": "ADS",
+                  "name": "SALESYEAR",
+                  "typeLength": 0,
+                  "type": "NUMBER",
+                  "index": false
+                },
+                "fieldProperties": {
+                  "precision": 0,
+                  "scale": 0,
+                  "nullable": false,
+                  "autoIncrement": false,
+                  "primaryKey": false,
+                  "possiblePrimaryKey": false,
+                  "foreignKey": false,
+                  "defaultValue": ""
+                },
+                "dataProperties": {
+                  "analysed": false,
+                  "additional": {
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "whiteSpaceCount": 0,
+                    "highFrequencyCharData": [],
+                    "nullCount": 0,
+                    "distinctRecord": 0,
+                    "lengthUniform": false,
+                    "allNumeric": false
+                  }
+                },
+                "encrypt": false,
+                "tags": []
+              },
+              {
+                "name": "SALESTOTAL",
+                "ordinal": 5,
+                "dataType": "DECIMAL",
+                "length": 10,
+                "description": "",
+                "notes": "",
+                "cde": "UNASSIGNED",
+                "sorted": false,
+                "partitioned": false,
+                "bucketing": false,
+                "source": {
+                  "origin": "ADS",
+                  "name": "SALESTOTAL",
+                  "typeLength": 10,
+                  "type": "DECIMAL",
+                  "index": false
+                },
+                "fieldProperties": {
+                  "precision": 5,
+                  "scale": 2,
+                  "nullable": false,
+                  "autoIncrement": false,
+                  "primaryKey": false,
+                  "possiblePrimaryKey": false,
+                  "foreignKey": false,
+                  "defaultValue": ""
+                },
+                "dataProperties": {
+                  "analysed": false,
+                  "additional": {
+                    "minValue": 0,
+                    "maxValue": 0,
+                    "whiteSpaceCount": 0,
+                    "highFrequencyCharData": [],
+                    "nullCount": 0,
+                    "distinctRecord": 0,
+                    "lengthUniform": false,
+                    "allNumeric": false
+                  }
+                },
+                "encrypt": false,
+                "tags": []
+              }
+            ],
+            "name": "SALES_REPORT",
+            "columnCount": 5,
+            "relationship": [],
+            "partitionBucketingOrder": [],
+            "partitionOrder": [],
+            "sortOrder": [],
+            "tags": []
+          }
+        ],
+        "tags": []
+      }
+    ]
+  }
+}

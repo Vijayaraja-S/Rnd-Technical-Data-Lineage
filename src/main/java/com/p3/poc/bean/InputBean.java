@@ -8,4 +8,6 @@ public class InputBean {
     private String searchName;
     private String searchId;
     private String inputFilePath;
+    private String metadataFilePath;
+    private boolean doMetadataValidation;
 }

@@ -4,7 +4,7 @@ import com.p3.poc.bean.InputBean;
 import com.p3.poc.parser.bean.GlobalCollector;
 import com.p3.poc.parser.parsing.exception.InvalidStatement;
 import com.p3.poc.parser.parsing.handler.statement.StatementHandler;
-import com.p3.poc.sunburst_chart.ProcessQuery;
+import com.p3.poc.sunburst_chart.service.ProcessQuery;
 import io.trino.sql.parser.ParsingOptions;
 import io.trino.sql.parser.SqlParser;
 import io.trino.sql.tree.Query;
