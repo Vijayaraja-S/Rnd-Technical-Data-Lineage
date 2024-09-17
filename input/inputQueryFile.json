@@ -1,8 +1,9 @@
 {
   "inputQueryDetails": [
     {
-      "queryName": "BANK_CHECK_DEMOS",
-      "query": "SELECT \n    CASE\n        WHEN GROUPING(SalesQuarter)=1 AND GROUPING(SalesYear)=0  AND GROUPING(PRODUCT)=0 THEN 'Year Total'\n        WHEN GROUPING(SalesQuarter)=1 AND GROUPING(SalesYear)=1  AND GROUPING(PRODUCT)=0 THEN 'Sub Total'\n        WHEN GROUPING(SalesQuarter)=1 AND GROUPING(SalesYear)=1  AND GROUPING(PRODUCT)=1 THEN  'Grand Total'\n        ELSE 'Item'\n    END AS Listing,\n    CAST(SalesYear AS varchar(10)) as SalesYear,\n    SalesQuarter as SalesQuarter,\n    PRODUCT as product,\n    concat('$ ',format('%,.2f',round(SUM(SalesTotal),2))) AS SalesTotal \nFROM \n    CUSTOM_RESULTS_VIEW_DEMO_DBO.SALES_REPORT \nwhere 1=1\nGROUP BY GROUPING SETS(PRODUCT, (PRODUCT,SalesYear),(PRODUCT,SalesYear,SalesQuarter),())\norder by 4,2,3"
+      "queryName": "QUERY_2",
+      "query": "select\nl_returnflag,\nl_linestatus,\nsum(l_quantity) as sum_qty,\nsum(l_extendedprice) as sum_base_price,\nsum(l_extendedprice*(1-l_discount)) as sum_disc_price,\nsum(l_extendedprice*(1-l_discount)*(1+l_tax)) as sum_charge,\navg(l_quantity) as avg_qty,\navg(l_extendedprice) as avg_price,\navg(l_discount) as avg_disc,\ncount(*) as count_order\nfrom\n\nTST_PERFORMANCE_34GB_DBO.LINEITEM\n\n@@ where\nl_shipdate <= date '1998-12-01' - interval '${delta}' day @@\ngroup by\nl_returnflag,\nl_linestatus\norder by\nl_returnflag,\nl_linestatus"
     }
   ]
 }
+

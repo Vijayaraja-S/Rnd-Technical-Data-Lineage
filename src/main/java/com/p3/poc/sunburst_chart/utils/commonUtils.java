@@ -1,4 +1,4 @@
-package com.p3.poc.common;
+package com.p3.poc.sunburst_chart.utils;
 
 import com.p3.poc.parser.bean.parsing_details.ColumnDetails;
 import com.p3.poc.sunburst_chart.SunBurstGlobalCollector;
@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class CommonColumProcessUtils {
+public class commonUtils {
     private final Map<String, List<ColumnDetails>> overallColumnMap;
 
-    public CommonColumProcessUtils() {
+    public commonUtils() {
         this.overallColumnMap = SunBurstGlobalCollector.getInstance().getOverAllColumMap();
     }
 

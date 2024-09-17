@@ -4,4 +4,4 @@ searchName: ADVANCE_SEARCH
 searchId: src_01
 inputFilePath: /home/vijayaraja/Documents/Technical-Data-Lineage-POC/input/inputQueryFile.json
 metadataFilePath: /home/vijayaraja/Documents/Technical-Data-Lineage-POC/metadata/DBO.json
-doMetadataValidation: false
+doMetadataValidation: true

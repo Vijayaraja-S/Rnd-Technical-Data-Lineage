@@ -13,15 +13,16 @@ import java.util.*;
 
 public class CommonTableProcessUtils {
 
-    private final GlobalCollector instance;
+    private final GlobalCollector globalCollector;
     private final SunBurstGlobalCollector sunBurstGlobalCollector;
     private final boolean isChartView;
 
     public CommonTableProcessUtils(boolean isChartView) {
         this.isChartView = isChartView;
         this.sunBurstGlobalCollector = SunBurstGlobalCollector.getInstance();
-        this.instance = GlobalCollector.getInstance();
+        this.globalCollector = GlobalCollector.getInstance();
     }
+
     public void processTableDetails(Table tableRelation, TableDetails tableDetails) {
         tableDetails.setId(generateTableId());
         tableDetails.setFullName(tableRelation.getName().toString());
@@ -68,7 +69,7 @@ public class CommonTableProcessUtils {
         if (isChartView) {
             return getApplicationDetails(applicationName, sunBurstGlobalCollector.getOverAllApplicationMap(), sunBurstGlobalCollector.getSearchId());
         }
-        return getApplicationDetails(applicationName, instance.getOverAllApplicationMap(), instance.getSearchId());
+        return getApplicationDetails(applicationName, globalCollector.getOverAllApplicationMap(), globalCollector.getSearchId());
     }
 
     private ApplicationDetails getApplicationDetails(String applicationName, Map<String, List<ApplicationDetails>> overAllApplicationMap, String searchId) {
@@ -90,7 +91,7 @@ public class CommonTableProcessUtils {
         if (isChartView) {
             return getSchemaDetails(applicationId, schemaName, sunBurstGlobalCollector.getOverAllschemaMap());
         }
-        return getSchemaDetails(applicationId, schemaName, instance.getOverAllschemaMap());
+        return getSchemaDetails(applicationId, schemaName, globalCollector.getOverAllschemaMap());
     }
 
     private SchemaDetails getSchemaDetails(String applicationId, String schemaName, Map<String, List<SchemaDetails>> overAllschemaMap) {
@@ -112,9 +113,31 @@ public class CommonTableProcessUtils {
         Map<String, List<TableDetails>> tableMap;
         if (isChartView) {
             tableMap = sunBurstGlobalCollector.getOverAllTableMap();
-        }else {
-            tableMap = instance.getOverAllTableMap();
+        } else {
+            tableMap = globalCollector.getOverAllTableMap();
         }
+        if (tableMap.containsKey(schemaId)) {
+            final List<TableDetails> tableDetailsList = tableMap.get(schemaId);
+            final Optional<TableDetails> first = tableDetailsList.stream()
+                    .filter(t -> t.getName().equals(tableDetails.getName()))
+                    .findFirst();
+            // handle duplicate tables with different reference(alias)
+            if (first.isPresent()) {
+                final TableDetails tb = first.get();
+                if (!tableDetails.getAliasName().isEmpty()) {
+                    // IF alias name present only save
+                    tb.setHavingDuplicate(true);
+                    tb.getDuplicateReference().add(tableDetails.getAliasName());
+                }
+            } else {
+                saveTableDetails(schemaId, tableDetails, tableMap);
+            }
+        } else {
+            saveTableDetails(schemaId, tableDetails, tableMap);
+        }
+    }
+
+    private void saveTableDetails(String schemaId, TableDetails tableDetails, Map<String, List<TableDetails>> tableMap) {
         tableMap.computeIfAbsent(schemaId, k -> new ArrayList<>()).add(tableDetails);
     }
 

@@ -2,6 +2,9 @@ package com.p3.poc.parser.bean.parsing_details;
 
 import lombok.*;
 
+import java.util.LinkedList;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,5 +22,9 @@ public class TableDetails {
     private String aliasName = "";
     @Builder.Default
     private String schemaName = "";
+    @Builder.Default
+    private List<String> duplicateReference = new LinkedList<>();
+    @Builder.Default
+    private boolean isHavingDuplicate = false;
 
 }

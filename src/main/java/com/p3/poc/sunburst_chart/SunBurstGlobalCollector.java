@@ -12,11 +12,12 @@ import java.util.Map;
 @Setter
 public class SunBurstGlobalCollector {
 
-
     private final Map<String, List<ColumnDetails>> overAllColumMap = new LinkedHashMap<>();
     private final Map<String, List<TableDetails>> overAllTableMap = new LinkedHashMap<>();
     private final Map<String, List<SchemaDetails>> overAllschemaMap = new LinkedHashMap<>();
     private final Map<String, List<ApplicationDetails>> overAllApplicationMap = new LinkedHashMap<>();
+
+    private final Map<String,List<TableDetails>> duplicateTablesdetailsMap = new LinkedHashMap<>();
 
     private String searchName;
     private String searchId;

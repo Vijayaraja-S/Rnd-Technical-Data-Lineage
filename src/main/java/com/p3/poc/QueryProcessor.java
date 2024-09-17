@@ -6,10 +6,10 @@ import com.p3.poc.bean.InputBean;
 import com.p3.poc.constants.RegexConstant;
 import com.p3.poc.parser.SQLParserApplication;
 import com.p3.poc.parser.bean.GlobalCollector;
+import com.p3.poc.parser.bean.parsing_details.ColumnDetails;
+import com.p3.poc.parser.bean.parsing_details.TableDetails;
 import com.p3.poc.parser.parsing.exception.InvalidStatement;
 import com.p3.poc.sunburst_chart.SunBurstGlobalCollector;
-import com.p3.poc.sunburst_chart.bean.metadata.ExportMetadata;
-import com.p3.poc.sunburst_chart.bean.metadata.SchemaMetadata;
 import com.p3.poc.sunburst_chart.chart.SunburstChartHelper;
 import com.p3.poc.sunburst_chart.bean.InputQueryBean;
 import com.p3.poc.sunburst_chart.bean.InputQueryDetails;
@@ -21,10 +21,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class QueryProcessor {
     final Gson gson = new Gson();
@@ -39,7 +40,7 @@ public class QueryProcessor {
         return inputBean;
     }
 
-    private  void setSearchDetails(SunBurstGlobalCollector instance, InputBean inputBean, GlobalCollector globalCollector) {
+    private void setSearchDetails(SunBurstGlobalCollector instance, InputBean inputBean, GlobalCollector globalCollector) {
         instance.setSearchId(inputBean.getSearchId());
         instance.setSearchName(inputBean.getSearchName());
         globalCollector.setSearchId(inputBean.getSearchId());
@@ -93,15 +94,15 @@ public class QueryProcessor {
         SQLParserApplication parser = new SQLParserApplication();
 
         parser.parse(executableQuery, inputBean);
-        final String metadataFilePath = inputBean.getMetadataFilePath();
-        final String metadataValue = readJsonFile(metadataFilePath);
-        final ExportMetadata metadata = gson.fromJson(metadataValue, ExportMetadata.class);
-        final MetadataValidation metadataValidation = new MetadataValidation(metadata);
-        if (inputBean.isDoMetadataValidation()){
+
+        if (inputBean.isDoMetadataValidation()) {
+            final MetadataValidation metadataValidation = new MetadataValidation(inputBean);
             metadataValidation.processMetadata();
         }
 
         SunburstChartHelper chartHelper = new SunburstChartHelper();
         return chartHelper.generateSunburst();
     }
+
+
 }
