@@ -21,6 +21,12 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.json:json:20230227'
+    // https://mvnrepository.com/artifact/org.open-metadata/common
+    implementation group: 'org.open-metadata', name: 'common', version: '1.5.4'
+    // https://mvnrepository.com/artifact/org.open-metadata/openmetadata-spec
+    implementation group: 'org.open-metadata', name: 'openmetadata-spec', version: '1.5.4'
+
+
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'

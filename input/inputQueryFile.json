@@ -2,8 +2,11 @@
   "inputQueryDetails": [
     {
       "queryName": "QUERY_2",
-      "query": "select\nl_returnflag,\nl_linestatus,\nsum(l_quantity) as sum_qty,\nsum(l_extendedprice) as sum_base_price,\nsum(l_extendedprice*(1-l_discount)) as sum_disc_price,\nsum(l_extendedprice*(1-l_discount)*(1+l_tax)) as sum_charge,\navg(l_quantity) as avg_qty,\navg(l_extendedprice) as avg_price,\navg(l_discount) as avg_disc,\ncount(*) as count_order\nfrom\n\nTST_PERFORMANCE_34GB_DBO.LINEITEM\n\n@@ where\nl_shipdate <= date '1998-12-01' - interval '${delta}' day @@\ngroup by\nl_returnflag,\nl_linestatus\norder by\nl_returnflag,\nl_linestatus"
+      "query": "SELECT \n    customer_id,\n    (SELECT COUNT(*) \n     FROM orders \n     WHERE customer_id = customer_id \n       AND order_date > CURRENT_DATE - INTERVAL '30 days') AS recent_orders_count,\n    (SELECT MAX(order_total) \n     FROM orders \n     WHERE customer_id = customer_id) AS max_order_total\nFROM customers\nJOIN orders ON customer_id = customer_id\nWHERE customer_id IN (\n    SELECT customer_id \n    FROM orders \n    WHERE order_total > 500\n    UNION\n    SELECT customer_id \n    FROM orders \n    WHERE order_date > CURRENT_DATE - INTERVAL '1 year'\n    UNION ALL\n    SELECT customer_id \n    FROM orders \n    WHERE order_status = 'Pending'\n)\nUNION\nSELECT \n    supplier_id AS customer_id,\n    (SELECT COUNT(*) \n     FROM supply_orders \n     WHERE supplier_id = supplier_id \n       AND supply_order_date > CURRENT_DATE - INTERVAL '30 days') AS recent_orders_count,\n    (SELECT MAX(supply_order_total) \n     FROM supply_orders \n     WHERE supplier_id = supplier_id) AS max_order_total\nFROM suppliers\nJOIN supply_orders ON supplier_id = supplier_id\nWHERE supplier_id IN (\n    SELECT supplier_id \n    FROM supply_orders \n    WHERE supply_order_total > 1000\n    UNION ALL\n    SELECT supplier_id \n    FROM supply_orders \n    WHERE supply_order_status = 'Shipped'\n)\n"
     }
   ]
 }
+
+
+
 

@@ -1,7 +1,8 @@
 package com.p3.poc;
 
-import com.p3.poc.bean.InputBean;
-import com.p3.poc.parser.parsing.exception.InvalidStatement;
+import com.p3.poc.lineage.QueryProcessor;
+import com.p3.poc.lineage.bean.InputBean;
+import com.p3.poc.lineage.parser.parsing.exception.InvalidStatement;
 
 import java.io.IOException;
 
